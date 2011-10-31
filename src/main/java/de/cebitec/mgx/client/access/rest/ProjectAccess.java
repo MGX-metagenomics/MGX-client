@@ -27,7 +27,9 @@ public class ProjectAccess<T, U> extends AccessBase<T, U> {
         Project save = master.getProject();
         master.setProject(new Project("GPMS"));
         List<MembershipDTO> membershipList = get("/Project/fetchall/", MembershipDTOList.class).getMembershipList();
-        master.setProject(save);
+        if (save != null) {
+            master.setProject(save);
+        }
         return membershipList;
     }
 }
