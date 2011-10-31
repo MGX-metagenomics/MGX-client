@@ -31,11 +31,11 @@ import java.util.logging.Logger;
  */
 public class MGXMaster {
 
-    private User user;
-    private String baseuri;
-    private Project project;
+    private User user = null;
+    private String baseuri = null;
+    private Project project = null;
     private Client client = null;
-    private WebResource res;
+    private WebResource res = null;
     private static final Logger logger = Logger.getLogger("MGX");
     private Map<Class, AccessBase> accessors;
 
