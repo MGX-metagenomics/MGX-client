@@ -35,7 +35,6 @@ public class App {
             p = new Project(m.getProject());
         }
         master.setProject(p);
-        System.exit(0);
 
         // create habitat
         HabitatDTO h1 = HabitatDTO.newBuilder()
