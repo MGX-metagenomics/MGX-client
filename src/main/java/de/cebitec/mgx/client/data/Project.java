@@ -7,7 +7,7 @@ package de.cebitec.mgx.client.data;
  */
 public class Project {
 
-    private final String project;
+    private String project = null;
 
     public Project(String project) {
         this.project = project;
