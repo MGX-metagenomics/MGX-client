@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.access.rest;
 
-import de.cebitec.mgx.client.MGXMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.MGXLong;
@@ -18,40 +17,28 @@ public abstract class AccessBase<T, U> extends RESTMethods {
 
     protected final static RESTPathResolver r = RESTPathResolver.getInstance();
 
-    public final void setMaster(MGXMaster m) {
-        this.master = m;
-    }
-
-    protected final MGXMaster getMaster() {
-        return master;
-    }
-
-    abstract Class getType();
-
-    abstract Class getListType();
-
-    public final Long create(T dto) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(getType(), "create");
+    protected final Long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
+        String resolve = r.resolve(c, "create");
         return put(resolve, dto, MGXLong.class).getValue();
     }
 
-    public final void update(T dto) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(getType(), "update");
+    protected final void update(T dto, Class<T> c) throws MGXServerException, MGXClientException {
+        String resolve = r.resolve(c, "update");
         post(resolve, dto);
     }
 
-    public final T fetch(Long id) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(getType(), "fetch");
-        return (T) get(resolve + id, getType());
+    protected final T fetch(Long id, Class<T> c) throws MGXServerException, MGXClientException {
+        String resolve = r.resolve(c, "fetch");
+        return (T) get(resolve + id, c);
     }
 
-    public final U fetchlist() throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(getType(), "fetchall");
-        return (U) get(resolve, getListType());
+    protected U fetchlist(Class<U> c) throws MGXServerException, MGXClientException {
+        String resolve = r.resolve(c, "fetchall");
+        return this.<U>get(resolve, c);
     }
 
-    public final void delete(Long id) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(getType(), "delete");
+    protected final void delete(Long id, Class<T> c) throws MGXServerException, MGXClientException {
+        String resolve = r.resolve(c, "delete");
         delete(resolve + id);
     }
 

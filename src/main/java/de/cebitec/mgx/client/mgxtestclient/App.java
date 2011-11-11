@@ -1,12 +1,13 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
+import de.cebitec.gpms.core.MembershipI;
+import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.MGXMaster;
-import de.cebitec.mgx.client.data.Project;
-import de.cebitec.mgx.client.data.User;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.*;
 import de.cebitec.mgx.dto.JobDTO.JobState;
+import de.cebitec.mgx.restgpms.GPMS;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import java.io.Console;
@@ -24,17 +25,22 @@ public class App {
         Console con = System.console();
         String username = con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
-        User u = new User(username, password);
 
-        MGXMaster master = new MGXMaster(u, "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        MGXMaster master = null;
 
-        Project p = null;
-        Collection<MembershipDTO> ms = master.Project().fetchall();
-        for (MembershipDTO m : ms) {
-            System.out.println(m.getProject() + " --> " + m.getRole());
-            p = new Project(m.getProject());
+        GPMSClientI gpms = new GPMS("http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        if (!gpms.login(username, new String(password))) {
+            System.err.println("login failed");
+            System.exit(1);
         }
-        master.setProject(p);
+        for (MembershipI m : gpms.getMemberships()) {
+            if ("MGX".equals(m.getProject().getProjectClass().getName())) {
+                master = new MGXMaster(gpms, m);
+                break; // just use the first project we find
+            }
+        }
+
+        System.err.println("using "+master.getProject().getName());
 
         // create habitat
         HabitatDTO h1 = HabitatDTO.newBuilder()

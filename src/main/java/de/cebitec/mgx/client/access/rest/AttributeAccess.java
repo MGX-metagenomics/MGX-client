@@ -11,17 +11,7 @@ import java.util.List;
  *
  * @author sjaenick
  */
-public class AttributeAccess<T, U> extends AccessBase<T, U> {
-
-    @Override
-    Class getType() {
-        return AttributeDTO.class;
-    }
-
-    @Override
-    Class getListType() {
-        return AttributeDTOList.class;
-    }
+public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
     public Collection<AttributeDTO> listTypes() throws MGXServerException {
         return get("/Attribute/listTypes/", AttributeDTOList.class).getAttributeList();

@@ -10,24 +10,18 @@ import java.util.Collection;
  *
  * @author sjaenick
  */
-public class SeqRunAccess<T, U> extends AccessBase<T, U> {
-
-    @Override
-    Class getType() {
-        return SeqRunDTO.class;
-    }
-
-    @Override
-    Class getListType() {
-        return SeqRunDTOList.class;
-    }
+public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     public Collection<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {
-        return ((SeqRunDTOList) fetchlist()).getSeqrunList();
+        return fetchlist(SeqRunDTOList.class).getSeqrunList();
     }
 
     public Collection<SeqRunDTO> ByExtract(Long extract_id) throws MGXServerException, MGXClientException {
-        return ((SeqRunDTOList) get(r.resolve(getType(), "/byExtract/") + extract_id, getListType())).getSeqrunList();
+        return get(r.resolve(SeqRunDTO.class, "/byExtract/") + extract_id, SeqRunDTOList.class).getSeqrunList();
+    }
+
+    public Long create(SeqRunDTO sr) throws MGXServerException, MGXClientException {
+        return super.create(sr, SeqRunDTO.class);
     }
 
 }

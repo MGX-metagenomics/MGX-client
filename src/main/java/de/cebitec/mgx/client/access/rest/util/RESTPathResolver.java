@@ -24,7 +24,7 @@ public class RESTPathResolver {
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
-        objmappings.put(MembershipDTO.class, "Project");
+        //objmappings.put(MembershipDTO.class, "Project");
 
         methodmappings.put("create", "create");
         methodmappings.put("update", "update");
