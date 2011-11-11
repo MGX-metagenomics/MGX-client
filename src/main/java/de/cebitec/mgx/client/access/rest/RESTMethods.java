@@ -25,8 +25,17 @@ public abstract class RESTMethods {
         return wr;
     }
 
+    /**
+     *
+     * @param <U>
+     * @param path REST URI
+     * @param obj object to send
+     * @param c class of U
+     * @return
+     * @throws MGXServerException
+     */
     protected final <U> U put(String path, Object obj, Class<U> c) throws MGXServerException {
-        System.err.println("PUT uri: " +wr.path(path).getURI().toASCIIString());
+        // System.err.println("PUT uri: " +wr.path(path).getURI().toASCIIString());
         Builder accept = wr.path(path).type("application/x-protobuf").accept("application/x-protobuf");
         ClientResponse res = accept.put(ClientResponse.class, obj);
         catchException(res);
