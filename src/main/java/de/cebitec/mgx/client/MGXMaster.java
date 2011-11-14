@@ -55,9 +55,9 @@ public class MGXMaster {
         return restmaster.getUser().getLogin();
     }
 
-    WebResource getResource() {
-        return wr;
-    }
+//    WebResource getResource() {
+//        return wr;
+//    }
 
     public HabitatAccess Habitat() {
         return getAccessor(HabitatAccess.class);
