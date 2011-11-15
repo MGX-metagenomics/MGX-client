@@ -74,7 +74,7 @@ public class App {
         // create dnaextract
         DNAExtractDTO d = DNAExtractDTO.newBuilder()
                 .setSampleId(sample_id)
-                .setMethod("My method")
+                .setMethod("My extraction method")
                 .build();
         Long extract_id = master.DNAExtract().create(d);
         System.err.println("  created extract " + d.getMethod() + " with id " + extract_id);
