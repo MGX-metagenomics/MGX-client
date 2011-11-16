@@ -29,7 +29,7 @@ public abstract class AccessBase<T, U> extends RESTMethods {
 
     protected final T fetch(Long id, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "fetch");
-        return (T) get(resolve + id, c);
+        return get(resolve + id, c);
     }
 
     protected U fetchlist(Class<U> c) throws MGXServerException, MGXClientException {

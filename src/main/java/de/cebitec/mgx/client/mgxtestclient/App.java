@@ -28,7 +28,7 @@ public class App {
 
         MGXMaster master = null;
 
-        GPMSClientI gpms = new GPMS("http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
         if (!gpms.login(username, new String(password))) {
             System.err.println("login failed");
             System.exit(1);

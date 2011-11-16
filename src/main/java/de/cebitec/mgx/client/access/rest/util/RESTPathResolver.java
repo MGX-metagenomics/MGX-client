@@ -17,6 +17,8 @@ public class RESTPathResolver {
 
     static {
         objmappings.put(HabitatDTO.class, "Habitat");
+        objmappings.put(HabitatDTOList.class, "Habitat");
+        //
         objmappings.put(SampleDTO.class, "Sample");
         objmappings.put(DNAExtractDTO.class, "DNAExtract");
         objmappings.put(SeqRunDTO.class, "SeqRun");
