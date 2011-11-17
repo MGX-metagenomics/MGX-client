@@ -2,8 +2,8 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.HabitatDTO;
-import de.cebitec.mgx.dto.HabitatDTOList;
+import de.cebitec.mgx.dto.dto.HabitatDTO;
+import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import java.util.Collection;
 
 /**

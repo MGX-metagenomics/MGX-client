@@ -1,9 +1,9 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.AttributeDTO;
-import de.cebitec.mgx.dto.AttributeDTOList;
-import de.cebitec.mgx.dto.AttributeDistribution;
+import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.AttributeDTOList;
+import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import java.util.Collection;
 import java.util.List;
 

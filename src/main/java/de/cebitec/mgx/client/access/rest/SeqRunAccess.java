@@ -2,8 +2,8 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.SeqRunDTO;
-import de.cebitec.mgx.dto.SeqRunDTOList;
+import de.cebitec.mgx.dto.dto.SeqRunDTO;
+import de.cebitec.mgx.dto.dto.SeqRunDTOList;
 import java.util.Collection;
 
 /**

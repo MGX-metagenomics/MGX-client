@@ -2,9 +2,9 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.JobDTO;
-import de.cebitec.mgx.dto.JobDTOList;
-import de.cebitec.mgx.dto.MGXBoolean;
+import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.JobDTOList;
+import de.cebitec.mgx.dto.dto.MGXBoolean;
 
 /**
  *

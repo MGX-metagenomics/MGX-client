@@ -2,8 +2,8 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.DNAExtractDTO;
-import de.cebitec.mgx.dto.DNAExtractDTOList;
+import de.cebitec.mgx.dto.dto.DNAExtractDTO;
+import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
 import java.util.Collection;
 
 /**

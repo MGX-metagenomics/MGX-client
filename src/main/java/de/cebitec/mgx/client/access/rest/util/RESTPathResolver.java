@@ -1,7 +1,7 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.dto.*;
+import de.cebitec.mgx.dto.dto.*;
 import java.util.HashMap;
 import java.util.Map;
 

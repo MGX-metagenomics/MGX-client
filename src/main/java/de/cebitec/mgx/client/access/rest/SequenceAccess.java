@@ -2,9 +2,9 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXServerException;
 import com.sun.jersey.api.client.ClientResponse;
-import de.cebitec.mgx.dto.SequenceDTO;
-import de.cebitec.mgx.dto.SequenceDTOList;
-import de.cebitec.mgx.dto.SequenceDTOList.Builder;
+import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
+import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import javax.ws.rs.core.MediaType;
@@ -20,7 +20,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         catchException(res);
         String session_uuid = res.getEntity(String.class);
 
-        Builder seqListBuilder = de.cebitec.mgx.dto.SequenceDTOList.newBuilder();
+        Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         int num_elements = 0;
         while (reader.hasMoreElements()) {
             DNASequenceI nextElement = reader.nextElement();
@@ -32,7 +32,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
                 System.err.println("sending chunk with " + num_elements + " seqs");
                 sendChunk(seqListBuilder.build(), session_uuid);
                 num_elements = 0;
-                seqListBuilder = de.cebitec.mgx.dto.SequenceDTOList.newBuilder();
+                seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
             }
         }
         if (num_elements > 0) {

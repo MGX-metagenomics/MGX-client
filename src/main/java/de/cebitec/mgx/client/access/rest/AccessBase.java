@@ -2,7 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.MGXLong;
+import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.client.access.rest.util.RESTPathResolver;
 import java.util.ArrayList;
 import java.util.Arrays;
