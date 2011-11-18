@@ -61,13 +61,16 @@ public abstract class RESTMethods {
 
     protected final void catchException(ClientResponse res) throws MGXServerException {
         if (res.getClientResponseStatus() != Status.OK) {
-            BufferedReader r = new BufferedReader(new InputStreamReader(res.getEntityInputStream()));
+            InputStreamReader isr = new InputStreamReader(res.getEntityInputStream());
+            BufferedReader r = new BufferedReader(isr);
             StringBuilder msg = new StringBuilder();
             String buf;
             try {
                 while ((buf = r.readLine()) != null) {
                     msg.append(buf);
                 }
+                r.close();
+                isr.close();
             } catch (IOException ex) {
             }
             throw new MGXServerException(msg.toString());
