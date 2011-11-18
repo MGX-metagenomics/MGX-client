@@ -52,7 +52,7 @@ public class App {
 
         // create habitat
         HabitatDTO h1 = HabitatDTO.newBuilder()
-                .setName("Biogas Stadtwerke")
+                .setName("Wurstwasser")
                 .setGPSlocation("42'07N 23'11E")
                 .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
                 .setAltitude(100)
@@ -61,6 +61,16 @@ public class App {
         Long hab_id = master.Habitat().create(h1);
 
         System.err.println("  created habitat " + h1.getName() + " with id " + hab_id);
+
+        // create habitat
+        HabitatDTO h2 = HabitatDTO.newBuilder()
+                .setName("Biogas Stadtwerke 2")
+                .setGPSlocation("42'07N 23'11E")
+                .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
+                .setAltitude(100)
+                .setBiome("fermenter")
+                .build();
+        hab_id = master.Habitat().create(h2);
         //HabitatDTO fetch = master.Habitat().fetch(hab_id);
         //master.Habitat().update(fetch);
         //master.Habitat().delete(hab_id);

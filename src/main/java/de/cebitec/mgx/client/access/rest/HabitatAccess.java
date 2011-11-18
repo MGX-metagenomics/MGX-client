@@ -12,8 +12,6 @@ import java.util.Collection;
  */
 public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
 
-
-
     public Collection<HabitatDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(HabitatDTOList.class).getHabitatList();
     }

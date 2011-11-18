@@ -16,8 +16,8 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
         return fetchlist(DNAExtractDTOList.class).getExtractList();
     }
 
-    public Collection<DNAExtractDTO> BySample(Long sample_id) throws MGXServerException {
-        return get("/DNAExtract/bySample/"+sample_id, DNAExtractDTOList.class).getExtractList();
+    public Collection<DNAExtractDTO> BySample(Long sample_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(DNAExtractDTO.class, "bySample") + sample_id, DNAExtractDTOList.class).getExtractList();
     }
 
     public Long create(DNAExtractDTO d) throws MGXServerException, MGXClientException {

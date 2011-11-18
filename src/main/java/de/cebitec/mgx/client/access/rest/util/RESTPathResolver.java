@@ -17,8 +17,6 @@ public class RESTPathResolver {
 
     static {
         objmappings.put(HabitatDTO.class, "Habitat");
-        objmappings.put(HabitatDTOList.class, "Habitat");
-        //
         objmappings.put(SampleDTO.class, "Sample");
         objmappings.put(DNAExtractDTO.class, "DNAExtract");
         objmappings.put(SeqRunDTO.class, "SeqRun");
@@ -26,16 +24,27 @@ public class RESTPathResolver {
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
-        //objmappings.put(MembershipDTO.class, "Project");
 
+
+        // list types
+        objmappings.put(HabitatDTOList.class, "Habitat");
+        objmappings.put(SampleDTOList.class, "Sample");
+        objmappings.put(DNAExtractDTOList.class, "DNAExtract");
+        objmappings.put(SeqRunDTOList.class, "SeqRun");
+
+        // methods
         methodmappings.put("create", "create");
         methodmappings.put("update", "update");
         methodmappings.put("fetch", "fetch");
         methodmappings.put("fetchall", "fetchall");
         methodmappings.put("delete", "delete");
+        //
+        methodmappings.put("byHabitat", "byHabitat");
+        methodmappings.put("byExtract", "byExtract");
+        methodmappings.put("bySample", "bySample");
     }
 
-    protected RESTPathResolver() {
+    private RESTPathResolver() {
     }
 
     public static String objPath(Class c) {
@@ -47,8 +56,11 @@ public class RESTPathResolver {
     }
 
     public final String resolve(Class c, String m) throws MGXClientException {
-        if (!objmappings.containsKey(c) || ! methodmappings.containsKey(m))
-            throw new MGXClientException("Missing REST path for "+c+"/"+m);
+        if (!objmappings.containsKey(c))
+            throw new MGXClientException("Missing REST object mapping path for class " + c.getName() + "/" + m);
+
+        if (!methodmappings.containsKey(m))
+            throw new MGXClientException("Missing REST method mapping for class "+ c.getName() + ", method call " + m);
 
         return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }

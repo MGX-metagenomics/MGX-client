@@ -5,12 +5,17 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTOList;
 import de.cebitec.mgx.dto.dto.MGXBoolean;
+import java.util.Collection;
 
 /**
  *
  * @author sjaenick
  */
 public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
+
+    public Collection<JobDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(JobDTOList.class).getJobList();
+    }
 
     public boolean verify(Long jobId) throws MGXServerException {
         return get("/Job/verify/" + jobId.toString(), MGXBoolean.class).getValue();

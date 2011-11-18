@@ -16,8 +16,8 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         return fetchlist(SampleDTOList.class).getSampleList();
     }
 
-    public Collection<SampleDTO> ByHabitat(Long habitat_id) throws MGXServerException {
-        return get("/Sample/byHabitat/" + habitat_id, SampleDTOList.class).getSampleList();
+    public Collection<SampleDTO> ByHabitat(Long habitat_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList();
     }
 
     public Long create(SampleDTO s) throws MGXServerException, MGXClientException {
