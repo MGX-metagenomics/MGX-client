@@ -14,7 +14,6 @@ import de.cebitec.mgx.client.access.rest.SampleAccess;
 import de.cebitec.mgx.client.access.rest.SeqRunAccess;
 import de.cebitec.mgx.client.access.rest.SequenceAccess;
 import de.cebitec.mgx.client.access.rest.ToolAccess;
-import de.cebitec.mgx.dto.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

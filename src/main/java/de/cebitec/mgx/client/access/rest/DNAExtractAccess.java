@@ -23,4 +23,12 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     public Long create(DNAExtractDTO d) throws MGXServerException, MGXClientException {
         return super.create(d, DNAExtractDTO.class);
     }
+    
+    public void update(DNAExtractDTO d) throws MGXServerException, MGXClientException {
+        super.update(d, DNAExtractDTO.class);
+    }
+    
+    public void delete(DNAExtractDTO s) throws MGXServerException, MGXClientException {
+        super.delete(s.getId(), DNAExtractDTO.class);
+    }
 }

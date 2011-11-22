@@ -29,5 +29,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         MGXLong local_id = res.getEntity(MGXLong.class);
         return local_id.getValue();
     }
-
+        
+    public void delete(ToolDTO s) throws MGXServerException, MGXClientException {
+        super.delete(s.getId(), ToolDTO.class);
+    }
 }

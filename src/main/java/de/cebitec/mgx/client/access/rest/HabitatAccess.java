@@ -19,4 +19,12 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     public Long create(HabitatDTO h1) throws MGXServerException, MGXClientException {
         return super.create(h1, HabitatDTO.class);
     }
+
+    public void update(HabitatDTO d) throws MGXServerException, MGXClientException {
+        super.update(d, HabitatDTO.class);
+    }
+
+    public void delete(HabitatDTO s) throws MGXServerException, MGXClientException {
+        super.delete(s.getId(), HabitatDTO.class);
+    }
 }
