@@ -24,7 +24,7 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
         super.update(d, HabitatDTO.class);
     }
 
-    public void delete(HabitatDTO s) throws MGXServerException, MGXClientException {
-        super.delete(s.getId(), HabitatDTO.class);
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        super.delete(id, HabitatDTO.class);
     }
 }

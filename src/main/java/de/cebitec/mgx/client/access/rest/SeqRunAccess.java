@@ -28,7 +28,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         super.update(d, SeqRunDTO.class);
     }
 
-    public void delete(SeqRunDTO s) throws MGXServerException, MGXClientException {
-        super.delete(s.getId(), SeqRunDTO.class);
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        super.delete(id, SeqRunDTO.class);
     }
 }

@@ -30,7 +30,7 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         return local_id.getValue();
     }
         
-    public void delete(ToolDTO s) throws MGXServerException, MGXClientException {
-        super.delete(s.getId(), ToolDTO.class);
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        super.delete(id, ToolDTO.class);
     }
 }

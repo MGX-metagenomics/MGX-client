@@ -37,7 +37,7 @@ public abstract class AccessBase<T, U> extends RESTMethods {
         return this.<U>get(resolve, c);
     }
 
-    protected final void delete(Long id, Class<T> c) throws MGXServerException, MGXClientException {
+    protected final void delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "delete");
         delete(resolve + id);
     }

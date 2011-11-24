@@ -28,7 +28,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         super.update(d, SampleDTO.class);
     }
 
-    public void delete(SampleDTO s) throws MGXServerException, MGXClientException {
-        super.delete(s.getId(), SampleDTO.class);
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        super.delete(id, SampleDTO.class);
     }
 }
