@@ -3,7 +3,7 @@ package de.cebitec.mgx.client.mgxtestclient;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.MGXMaster;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
@@ -34,7 +34,7 @@ public class App {
         String username = con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
-        MGXMaster master = null;
+        MGXDTOMaster master = null;
 
         // http://localhost:8080/MGX-maven-web/webresources/
         GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
@@ -44,7 +44,7 @@ public class App {
         }
         for (MembershipI m : gpms.getMemberships()) {
             if ("MGX".equals(m.getProject().getProjectClass().getName())) {
-                master = new MGXMaster(gpms, m);
+                master = new MGXDTOMaster(gpms, m);
                 break; // just use the first project we find
             }
         }
@@ -201,7 +201,7 @@ public class App {
         //master.Habitat().delete(hab_id);
     }
 
-    public static void printObjTree(MGXMaster m) throws MGXServerException, MGXClientException {
+    public static void printObjTree(MGXDTOMaster m) throws MGXServerException, MGXClientException {
         System.out.println("\n.------------------------------------------------------------");
         System.err.println("| DB Contents (" + m.getProject() + ")\n|");
         for (HabitatDTO h : m.Habitat().fetchall()) {
