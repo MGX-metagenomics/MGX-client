@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class MGXDTOMaster {
 
     private RESTMasterI restmaster;
-    private static final Logger logger = Logger.getLogger("MGX");
+    private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private Map<Class, AccessBase> accessors;
     private WebResource wr;
 
