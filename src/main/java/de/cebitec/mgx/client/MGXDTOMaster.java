@@ -25,14 +25,14 @@ import java.util.logging.Logger;
  *
  * @author sjaenick
  */
-public class MGXMaster {
+public class MGXDTOMaster {
 
     private RESTMasterI restmaster;
     private static final Logger logger = Logger.getLogger("MGX");
     private Map<Class, AccessBase> accessors;
     private WebResource wr;
 
-    public MGXMaster(GPMSClientI gpms, MembershipI m) {
+    public MGXDTOMaster(GPMSClientI gpms, MembershipI m) {
         restmaster = gpms.createMaster(m);
         accessors = new HashMap<Class, AccessBase>();
 
