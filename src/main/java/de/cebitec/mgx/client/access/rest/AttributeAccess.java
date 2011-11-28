@@ -49,7 +49,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public void delete(Long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

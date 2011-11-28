@@ -12,10 +12,12 @@ import java.util.Collection;
  */
 public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
 
+    @Override
     public Collection<SampleDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(SampleDTOList.class).getSampleList();
     }
 
+    @Override
     public SampleDTO fetch(Long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, SampleDTO.class);
     }
@@ -24,15 +26,18 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList();
     }
 
+    @Override
     public Long create(SampleDTO s) throws MGXServerException, MGXClientException {
         return super.create(s, SampleDTO.class);
     }
 
+    @Override
     public void update(SampleDTO d) throws MGXServerException, MGXClientException {
         super.update(d, SampleDTO.class);
     }
 
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    @Override
+    public void delete(Long id) throws MGXServerException, MGXClientException {
         super.delete(id, SampleDTO.class);
     }
 }

@@ -72,7 +72,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public void delete(Long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
