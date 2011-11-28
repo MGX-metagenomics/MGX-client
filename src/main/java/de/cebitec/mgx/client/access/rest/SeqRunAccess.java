@@ -12,22 +12,31 @@ import java.util.Collection;
  */
 public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
+    @Override
     public Collection<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(SeqRunDTOList.class).getSeqrunList();
+    }
+    
+    @Override
+    public SeqRunDTO fetch(Long id) throws MGXServerException, MGXClientException {
+        return super.fetch(id, SeqRunDTO.class);
     }
 
     public Collection<SeqRunDTO> ByExtract(Long extract_id) throws MGXServerException, MGXClientException {
         return get(r.resolve(SeqRunDTO.class, "byExtract") + extract_id, SeqRunDTOList.class).getSeqrunList();
     }
 
+    @Override
     public Long create(SeqRunDTO sr) throws MGXServerException, MGXClientException {
         return super.create(sr, SeqRunDTO.class);
     }
 
+    @Override
     public void update(SeqRunDTO d) throws MGXServerException, MGXClientException {
         super.update(d, SeqRunDTO.class);
     }
 
+    @Override
     public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, SeqRunDTO.class);
     }

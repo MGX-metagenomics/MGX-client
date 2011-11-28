@@ -178,10 +178,9 @@ public class App {
                 // fetch attribute distribution and write to file
                 List<Long> l = new ArrayList<Long>();
                 l.add(seqrun_id);
-                AttributeDistribution distribution = master.Attribute().getDistribution(attr, job_id, l);
 
                 FileWriter w = new FileWriter("dist_" + attr);
-                for (AttributeCount ac : distribution.getAttributecountList()) {
+                for (AttributeCount ac : master.Attribute().getDistribution(attr, job_id, l)) {
                     AttributeDTO attribute = ac.getAttribute();
                     Long count = ac.getCount();
                     w.write(attribute.getType());

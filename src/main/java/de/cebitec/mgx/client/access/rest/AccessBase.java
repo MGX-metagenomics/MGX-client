@@ -6,6 +6,7 @@ import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.client.access.rest.util.RESTPathResolver;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +17,12 @@ import java.util.List;
 public abstract class AccessBase<T, U> extends RESTMethods {
 
     protected final static RESTPathResolver r = RESTPathResolver.getInstance();
+    
+    public abstract T fetch(Long id) throws MGXServerException, MGXClientException;
+    public abstract Collection<T> fetchall() throws MGXServerException, MGXClientException;
+    public abstract Long create(T t) throws MGXServerException, MGXClientException;
+    public abstract void update(T t) throws MGXServerException, MGXClientException;
+    public abstract void delete(long id) throws MGXServerException, MGXClientException;
 
     protected final Long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "create");

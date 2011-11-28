@@ -14,6 +14,7 @@ import java.util.Collection;
  */
 public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
 
+    @Override
     public Collection<ToolDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(ToolDTOList.class).getToolList();
     }
@@ -30,7 +31,23 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         return local_id.getValue();
     }
         
+    @Override
     public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, ToolDTO.class);
+    }
+
+    @Override
+    public ToolDTO fetch(Long id) throws MGXServerException, MGXClientException {
+        return super.fetch(id, ToolDTO.class);
+    }
+
+    @Override
+    public Long create(ToolDTO t) throws MGXServerException, MGXClientException {
+        return super.create(t, ToolDTO.class);
+    }
+
+    @Override
+    public void update(ToolDTO t) throws MGXServerException, MGXClientException {
+        super.update(t, ToolDTO.class);
     }
 }

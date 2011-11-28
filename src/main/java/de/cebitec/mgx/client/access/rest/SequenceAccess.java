@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import com.sun.jersey.api.client.ClientResponse;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -7,6 +8,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
+import java.util.Collection;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -47,5 +49,30 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
         ClientResponse res = getWebResource().path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
         catchException(res);
+    }
+
+    @Override
+    public SequenceDTO fetch(Long id) throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Collection<SequenceDTO> fetchall() throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Long create(SequenceDTO t) throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void update(SequenceDTO t) throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -13,6 +13,7 @@ import java.util.Collection;
  */
 public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
 
+    @Override
     public Collection<JobDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(JobDTOList.class).getJobList();
     }
@@ -29,11 +30,23 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
         return get("/Job/cancel/" + jobId.toString(), MGXBoolean.class).getValue();
     }
 
+    @Override
     public Long create(JobDTO dto) throws MGXServerException, MGXClientException {
         return super.create(dto, JobDTO.class);
     }
 
+    @Override
     public JobDTO fetch(Long job_id) throws MGXServerException, MGXClientException {
         return super.fetch(job_id, JobDTO.class);
+    }
+
+    @Override
+    public void update(JobDTO t) throws MGXServerException, MGXClientException {
+        super.update(t, JobDTO.class);
+    }
+
+    @Override
+    public void delete(long id) throws MGXServerException, MGXClientException {
+        super.delete(id, JobDTO.class);
     }
 }
