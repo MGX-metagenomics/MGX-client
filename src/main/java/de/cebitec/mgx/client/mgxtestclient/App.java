@@ -7,7 +7,6 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
-import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
