@@ -53,7 +53,8 @@ public class App {
         // create habitat
         HabitatDTO h1 = HabitatDTO.newBuilder()
                 .setName("Wurstwasser")
-                .setGPSlocation("42'07N 23'11E")
+                .setGpsLatitude(12.1)
+                .setGpsLongitude(23.1)
                 .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
                 .setAltitude(100)
                 .setBiome("fermenter")
@@ -65,7 +66,8 @@ public class App {
         // create habitat
         HabitatDTO h2 = HabitatDTO.newBuilder()
                 .setName("Biogas Stadtwerke 2")
-                .setGPSlocation("42'07N 23'11E")
+                .setGpsLatitude(12.1)
+                .setGpsLongitude(23.1)
                 .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
                 .setAltitude(100)
                 .setBiome("fermenter")
