@@ -24,13 +24,14 @@ public class RESTPathResolver {
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
-
+        objmappings.put(FileOrDirectory.class, "File");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
         objmappings.put(SampleDTOList.class, "Sample");
         objmappings.put(DNAExtractDTOList.class, "DNAExtract");
         objmappings.put(SeqRunDTOList.class, "SeqRun");
+        objmappings.put(FoDList.class, "File");
 
         // methods
         methodmappings.put("create", "create");
@@ -56,11 +57,13 @@ public class RESTPathResolver {
     }
 
     public final String resolve(Class c, String m) throws MGXClientException {
-        if (!objmappings.containsKey(c))
+        if (!objmappings.containsKey(c)) {
             throw new MGXClientException("Missing REST object mapping path for class " + c.getName() + "/" + m);
+        }
 
-        if (!methodmappings.containsKey(m))
-            throw new MGXClientException("Missing REST method mapping for class "+ c.getName() + ", method call " + m);
+        if (!methodmappings.containsKey(m)) {
+            throw new MGXClientException("Missing REST method mapping for class " + c.getName() + ", method call " + m);
+        }
 
         return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }

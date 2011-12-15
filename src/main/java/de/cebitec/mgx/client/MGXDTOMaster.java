@@ -8,6 +8,7 @@ import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.AccessBase;
 import de.cebitec.mgx.client.access.rest.AttributeAccess;
 import de.cebitec.mgx.client.access.rest.DNAExtractAccess;
+import de.cebitec.mgx.client.access.rest.FileAccess;
 import de.cebitec.mgx.client.access.rest.HabitatAccess;
 import de.cebitec.mgx.client.access.rest.JobAccess;
 import de.cebitec.mgx.client.access.rest.SampleAccess;
@@ -40,8 +41,9 @@ public class MGXDTOMaster {
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBWriter.class);
 
         StringBuilder projecturi = new StringBuilder(gpms.getBaseURI());
-        if (!gpms.getBaseURI().endsWith("/"))
+        if (!gpms.getBaseURI().endsWith("/")) {
             projecturi.append("/");
+        }
 
         wr = restmaster.getClient().resource(projecturi.append(m.getProject().getName()).toString());
     }
@@ -57,7 +59,6 @@ public class MGXDTOMaster {
 //    WebResource getResource() {
 //        return wr;
 //    }
-
     public HabitatAccess Habitat() {
         return getAccessor(HabitatAccess.class);
     }
@@ -88,6 +89,10 @@ public class MGXDTOMaster {
 
     public JobAccess Job() {
         return getAccessor(JobAccess.class);
+    }
+
+    public FileAccess File() {
+        return getAccessor(FileAccess.class);
     }
 
     void log(Level lvl, String msg) {
