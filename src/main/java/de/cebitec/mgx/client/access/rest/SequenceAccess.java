@@ -3,7 +3,6 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.upload.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import com.sun.jersey.api.client.ClientResponse;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.SeqReaderI;
@@ -21,8 +20,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         if (!success) {
             throw new MGXServerException(seqUploader.getError());
         }
-        
-        
+    }
         
 //        ClientResponse res = getWebResource().path("/Sequence/init/" + seqrun_id).accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 //        catchException(res);
@@ -49,12 +47,12 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 //        }
 //        res = getWebResource().path("/Sequence/close/" + session_uuid).get(ClientResponse.class);
 //        catchException(res);
-    }
+//    }
 
-    private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
-        ClientResponse res = getWebResource().path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
-        catchException(res);
-    }
+//    private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
+//        ClientResponse res = getWebResource().path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
+//        catchException(res);
+//    }
 
     @Override
     public SequenceDTO fetch(Long id) throws MGXServerException, MGXClientException {
