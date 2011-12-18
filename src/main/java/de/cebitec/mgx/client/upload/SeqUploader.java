@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.upload;
 
-import de.cebitec.mgx.client.upload.CallbackI;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
@@ -19,24 +18,21 @@ import javax.ws.rs.core.MediaType;
  *
  * @author sj
  */
-public class SeqUploader {
+public class SeqUploader extends UploadBase {
 
     private WebResource wr;
     private long seqrun_id;
-    private CallbackI cb = null;
-    private String error_message = "";
+    private SeqReaderI reader = null;
 
-    public SeqUploader(WebResource wr, long seqrun_id) {
+    public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI reader) {
         this.wr = wr;
         this.seqrun_id = seqrun_id;
+        this.reader = reader;
     }
 
-    public void setProgressCallback(CallbackI cb) {
-        this.cb = cb;
-    }
-
-    public boolean upload(SeqReaderI reader) {
-        cb = cb == null ? new NullCallBack() : cb;
+    @Override
+    public boolean upload() {
+        CallbackI cb = getProgressCallback();
         int current_num_elements = 0;
         int total_elements = 0;
 
@@ -88,10 +84,6 @@ public class SeqUploader {
         return true;
     }
 
-    public String getError() {
-        return error_message;
-    }
-
     private String initTransfer(long seqrun_id) throws MGXServerException {
         // FIXME use MGXString and application/protobuf instead
         ClientResponse res = wr.path("/Sequence/init/" + seqrun_id).accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
@@ -106,38 +98,12 @@ public class SeqUploader {
     }
 
     private void abortTransfer(String reason) {
-        error_message = reason;
+        setErrorMessage(reason);
         // FIXME
     }
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
         catchException(res);
-    }
-
-    private void catchException(ClientResponse res) throws MGXServerException {
-        if (res.getClientResponseStatus() != Status.OK) {
-            InputStreamReader isr = new InputStreamReader(res.getEntityInputStream());
-            BufferedReader r = new BufferedReader(isr);
-            StringBuilder msg = new StringBuilder();
-            String buf;
-            try {
-                while ((buf = r.readLine()) != null) {
-                    msg.append(buf);
-                }
-                r.close();
-                isr.close();
-            } catch (IOException ex) {
-            }
-            throw new MGXServerException(msg.toString());
-        }
-    }
-
-    private final class NullCallBack implements CallbackI {
-
-        @Override
-        public void callback(int i) {
-            System.err.println("sent " + i + " seqs");
-        }
     }
 }
