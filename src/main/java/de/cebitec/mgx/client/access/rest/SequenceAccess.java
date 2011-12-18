@@ -15,10 +15,10 @@ import java.util.Collection;
 public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 
     public void sendSequences(long seqrun_id, SeqReaderI reader) throws MGXServerException {
-        SeqUploader seqUploader = new SeqUploader(getWebResource(), seqrun_id);
-        boolean success = seqUploader.upload(reader);
+        SeqUploader seqUploader = new SeqUploader(getWebResource(), seqrun_id, reader);
+        boolean success = seqUploader.upload();
         if (!success) {
-            throw new MGXServerException(seqUploader.getError());
+            throw new MGXServerException(seqUploader.getErrorMessage());
         }
     }
         
