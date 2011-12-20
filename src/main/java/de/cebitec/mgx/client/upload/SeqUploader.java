@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.upload;
 
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -9,9 +8,6 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import javax.ws.rs.core.MediaType;
 
 /**

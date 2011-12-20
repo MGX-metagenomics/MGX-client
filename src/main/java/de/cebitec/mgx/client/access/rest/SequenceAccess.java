@@ -21,6 +21,10 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
             throw new MGXServerException(seqUploader.getErrorMessage());
         }
     }
+    
+    public SeqUploader createUploader(long seqrun_id, SeqReaderI reader) {
+        return new SeqUploader(getWebResource(), seqrun_id, reader);
+    }
         
 //        ClientResponse res = getWebResource().path("/Sequence/init/" + seqrun_id).accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 //        catchException(res);
