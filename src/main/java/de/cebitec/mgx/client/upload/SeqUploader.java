@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
  */
 public class SeqUploader extends UploadBase {
 
+    public static final String NUM_SEQUENCES = "numSequences";
     private WebResource wr;
     private long seqrun_id;
     private SeqReaderI reader = null;
@@ -32,7 +33,7 @@ public class SeqUploader extends UploadBase {
         this.reader = reader;
         pcs = new PropertyChangeSupport(this);
     }
-    
+
     public void setChunkSize(int i) {
         chunk_size = i;
     }
@@ -98,6 +99,7 @@ public class SeqUploader extends UploadBase {
         // FIXME use MGXString and application/protobuf instead
         ClientResponse res = wr.path("/Sequence/init/" + seqrun_id).accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
         catchException(res);
+        fireTaskChange();
         String session_uuid = res.getEntity(String.class);
         return session_uuid;
     }
@@ -129,6 +131,6 @@ public class SeqUploader extends UploadBase {
     }
 
     private void fireTaskChange() {
-        pcs.firePropertyChange("PROP_CHANGED", 0, 1);
+        pcs.firePropertyChange(NUM_SEQUENCES, 0, total_elements);
     }
 }

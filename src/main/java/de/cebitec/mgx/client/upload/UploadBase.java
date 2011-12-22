@@ -41,7 +41,6 @@ public abstract class UploadBase {
 
         @Override
         public void callback(int i) {
-            Logger.getLogger(UploadBase.class.getName()).log(Level.INFO, "sent {0} elements", i);
         }
     }
 
