@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.upload;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
@@ -96,12 +97,11 @@ public class SeqUploader extends UploadBase {
     }
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
-        // FIXME use MGXString and application/protobuf instead
-        ClientResponse res = wr.path("/Sequence/init/" + seqrun_id).accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        ClientResponse res = wr.path("/Sequence/init/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange();
-        String session_uuid = res.getEntity(String.class);
-        return session_uuid;
+        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
+        return session_uuid.getValue();
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {

@@ -37,7 +37,7 @@ public abstract class UploadBase {
 
     public abstract boolean upload();
 
-    private final class NullCallBack implements CallbackI {
+    private final static class NullCallBack implements CallbackI {
 
         @Override
         public void callback(int i) {
