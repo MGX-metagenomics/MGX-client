@@ -31,7 +31,7 @@ public class MGXDTOMaster {
     private RESTMasterI restmaster;
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private Map<Class, AccessBase> accessors;
-    private WebResource wr;
+    private String resource;
 
     public MGXDTOMaster(GPMSClientI gpms, MembershipI m) {
         restmaster = gpms.createMaster(m);
@@ -40,12 +40,7 @@ public class MGXDTOMaster {
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBReader.class);
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBWriter.class);
 
-        StringBuilder projecturi = new StringBuilder(gpms.getBaseURI());
-        if (!gpms.getBaseURI().endsWith("/")) {
-            projecturi.append("/");
-        }
-
-        wr = restmaster.getClient().resource(projecturi.append(m.getProject().getName()).toString());
+        resource = new StringBuilder(gpms.getBaseURI()).append(m.getProject().getName()).toString();
     }
 
     public ProjectI getProject() {
@@ -56,9 +51,6 @@ public class MGXDTOMaster {
         return restmaster.getUser().getLogin();
     }
 
-//    WebResource getResource() {
-//        return wr;
-//    }
     public HabitatAccess Habitat() {
         return getAccessor(HabitatAccess.class);
     }
@@ -110,7 +102,8 @@ public class MGXDTOMaster {
         try {
             Constructor<T> ctor = clazz.getConstructor();
             T instance = ctor.newInstance();
-            instance.setWebResource(wr);
+//            instance.setWebResource(restmaster.getClient().resource(resource));
+            instance.setClient(restmaster.getClient(), resource);
             return instance;
         } catch (InstantiationException ex) {
             logger.log(Level.SEVERE, null, ex);

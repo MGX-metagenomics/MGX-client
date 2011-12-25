@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import com.sun.jersey.api.client.Client;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -8,6 +9,10 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,14 +20,20 @@ import java.io.InputStreamReader;
  */
 public abstract class RESTMethods {
 
-    protected WebResource wr;
+    private Client client;
+    private URI resource;
 
-    public final void setWebResource(WebResource wr) {
-        this.wr = wr;
+    public final void setClient(Client c, String res) {
+        client = c;
+        try {
+            resource = new URI(res);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(RESTMethods.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected final WebResource getWebResource() {
-        return wr;
+        return client.resource(resource);
     }
 
     /**
@@ -36,7 +47,7 @@ public abstract class RESTMethods {
      */
     protected final <U> U put(String path, Object obj, Class<U> c) throws MGXServerException {
         // System.err.println("PUT uri: " +wr.path(path).getURI().toASCIIString());
-        Builder accept = wr.path(path).type("application/x-protobuf").accept("application/x-protobuf");
+        Builder accept = getWebResource().path(path).type("application/x-protobuf").accept("application/x-protobuf");
         ClientResponse res = accept.put(ClientResponse.class, obj);
         catchException(res);
         return res.<U>getEntity(c);
@@ -44,18 +55,18 @@ public abstract class RESTMethods {
 
     protected <U> U get(String path, Class<U> c) throws MGXServerException {
         //System.err.println("GET uri: " +master.getResource().path(path).getURI().toASCIIString());
-        ClientResponse res = wr.path(path).type("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = getWebResource().path(path).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         return res.<U>getEntity(c);
     }
 
     protected final void delete(String path) throws MGXServerException {
-        ClientResponse res = wr.path(path).type("application/x-protobuf").delete(ClientResponse.class);
+        ClientResponse res = getWebResource().path(path).type("application/x-protobuf").delete(ClientResponse.class);
         catchException(res);
     }
 
     protected final <U> void post(String path, U obj) throws MGXServerException {
-        ClientResponse res = wr.path(path).type("application/x-protobuf").post(ClientResponse.class, obj);
+        ClientResponse res = getWebResource().path(path).type("application/x-protobuf").post(ClientResponse.class, obj);
         catchException(res);
     }
 
