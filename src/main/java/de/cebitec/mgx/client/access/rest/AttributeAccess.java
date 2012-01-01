@@ -23,6 +23,10 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         return get("/Attribute/listTypesByJob/" + jobId, AttributeDTOList.class).getAttributeList();
     }
 
+    public Collection<AttributeDTO> listTypesBySeqRun(Long seqrunId) throws MGXServerException {
+        return get("/Attribute/listTypesBySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
+    }
+
     public List<AttributeCount> getDistribution(String attributeName, Long jobId, List<Long> seqrun_ids) throws MGXServerException {
         String uri = new StringBuilder("/Attribute/getDistribution/").append(attributeName).append("/").append(jobId.toString()).append("/").append(join(seqrun_ids, ",")).toString();
         return get(uri, AttributeDistribution.class).getAttributecountList();

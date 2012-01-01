@@ -48,6 +48,7 @@ public class App {
             }
         }
 
+        assert master != null;
         System.err.println("using "+master.getProject().getName());
 
         // create habitat
