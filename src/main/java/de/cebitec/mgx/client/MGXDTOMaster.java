@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client;
 
-import com.sun.jersey.api.client.WebResource;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.core.ProjectI;
 import de.cebitec.gpms.rest.GPMSClientI;
