@@ -11,6 +11,7 @@ import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTO.JobState;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
@@ -112,7 +113,7 @@ public class App {
         System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
 
         // upload sequence data
-        SeqReaderI reader = SeqReaderFactory.getReader("/tmp/test.fas");
+        SeqReaderI reader = SeqReaderFactory.getReader("/homes/sjaenick/xxx.fas");
         master.Sequence().sendSequences(seqrun_id, reader);
 
         //System.exit(0);
@@ -166,16 +167,16 @@ public class App {
 
         // list generated attributes
         System.out.println("All attributes:");
-        for (AttributeDTO a : master.Attribute().listTypes()) {
-            System.out.print(" " + a.getType());
+        for (MGXString a : master.Attribute().listTypes()) {
+            System.out.print(" " + a.getValue());
         }
         System.out.println();
 
         for (Long job_id : jobIDs) {
             System.out.println("Attributes for job " + job_id + ": ");
-            for (AttributeDTO a : master.Attribute().listTypesByJob(job_id)) {
-                System.out.print(" " + a.getType());
-                String attr = a.getType();
+            for (MGXString a : master.Attribute().listTypesByJob(job_id)) {
+                System.out.print(" " + a.getValue());
+                String attr = a.getValue();
 
                 // fetch attribute distribution and write to file
                 List<Long> l = new ArrayList<Long>();

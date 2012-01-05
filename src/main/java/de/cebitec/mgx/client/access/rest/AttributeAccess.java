@@ -6,6 +6,8 @@ import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
+import de.cebitec.mgx.dto.dto.MGXString;
+import de.cebitec.mgx.dto.dto.MGXStringList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,16 +17,16 @@ import java.util.List;
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
-    public Collection<AttributeDTO> listTypes() throws MGXServerException {
-        return get("/Attribute/listTypes/", AttributeDTOList.class).getAttributeList();
+    public Collection<MGXString> listTypes() throws MGXServerException {
+        return get("/Attribute/listTypes/", MGXStringList.class).getStringList();
     }
 
-    public Collection<AttributeDTO> listTypesByJob(Long jobId) throws MGXServerException {
-        return get("/Attribute/listTypesByJob/" + jobId, AttributeDTOList.class).getAttributeList();
+    public Collection<MGXString> listTypesByJob(Long jobId) throws MGXServerException {
+        return get("/Attribute/listTypesByJob/" + jobId, MGXStringList.class).getStringList();
     }
 
-    public Collection<AttributeDTO> listTypesBySeqRun(Long seqrunId) throws MGXServerException {
-        return get("/Attribute/listTypesBySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
+    public Collection<MGXString> listTypesBySeqRun(Long seqrunId) throws MGXServerException {
+        return get("/Attribute/listTypesBySeqRun/" + seqrunId, MGXStringList.class).getStringList();
     }
 
     public List<AttributeCount> getDistribution(String attributeName, Long jobId, List<Long> seqrun_ids) throws MGXServerException {
