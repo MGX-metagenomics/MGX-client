@@ -30,7 +30,19 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     public List<AttributeCount> getDistribution(String attributeName, Long jobId, List<Long> seqrun_ids) throws MGXServerException {
-        String uri = new StringBuilder("/Attribute/getDistribution/").append(attributeName).append("/").append(jobId.toString()).append("/").append(join(seqrun_ids, ",")).toString();
+        String uri = new StringBuilder("/Attribute/getDistribution/")
+                .append(attributeName).append("/")
+                .append(jobId.toString()).append("/")
+                .append(join(seqrun_ids, ","))
+                .toString();
+        return get(uri, AttributeDistribution.class).getAttributecountList();
+    }
+
+    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
+        String uri = new StringBuilder("/Attribute/getDistributionByRuns/")
+                .append(attributeName).append("/")
+                .append(join(seqrun_ids, ","))
+                .toString();
         return get(uri, AttributeDistribution.class).getAttributecountList();
     }
 
