@@ -186,7 +186,7 @@ public class App {
                 for (AttributeCount ac : master.Attribute().getDistribution(attr, job_id, l)) {
                     AttributeDTO attribute = ac.getAttribute();
                     Long count = ac.getCount();
-                    w.write(attribute.getType());
+                    w.write(attribute.getType().getName());
                     w.write("\t");
                     w.write(count.toString());
                     w.write("\n");
