@@ -7,6 +7,7 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -167,35 +168,35 @@ public class App {
 
         // list generated attributes
         System.out.println("All attributes:");
-        for (MGXString a : master.Attribute().listTypes()) {
-            System.out.print(" " + a.getValue());
+        for (AttributeTypeDTO atype : master.AttributeType().BySeqRun(seqrun_id)) {
+            System.out.print(" " + atype.getName());
         }
         System.out.println();
 
-        for (Long job_id : jobIDs) {
-            System.out.println("Attributes for job " + job_id + ": ");
-            for (MGXString a : master.Attribute().listTypesByJob(job_id)) {
-                System.out.print(" " + a.getValue());
-                String attr = a.getValue();
-
-                // fetch attribute distribution and write to file
-                List<Long> l = new ArrayList<Long>();
-                l.add(seqrun_id);
-
-                FileWriter w = new FileWriter("dist_" + attr);
-                for (AttributeCount ac : master.Attribute().getDistribution(attr, job_id, l)) {
-                    AttributeDTO attribute = ac.getAttribute();
-                    Long count = ac.getCount();
-                    w.write(attribute.getType().getName());
-                    w.write("\t");
-                    w.write(count.toString());
-                    w.write("\n");
-                }
-                w.close();
-
-            }
-            System.out.println();
-        }
+//        for (Long job_id : jobIDs) {
+//            System.out.println("Attributes for job " + job_id + ": ");
+//            for (MGXString a : master.Attribute().listTypesByJob(job_id)) {
+//                System.out.print(" " + a.getValue());
+//                String attr = a.getValue();
+//
+//                // fetch attribute distribution and write to file
+//                List<Long> l = new ArrayList<Long>();
+//                l.add(seqrun_id);
+//
+//                FileWriter w = new FileWriter("dist_" + attr);
+//                for (AttributeCount ac : master.Attribute().getDistribution(attr, job_id, l)) {
+//                    AttributeDTO attribute = ac.getAttribute();
+//                    Long count = ac.getCount();
+//                    w.write(attribute.getType().getName());
+//                    w.write("\t");
+//                    w.write(count.toString());
+//                    w.write("\n");
+//                }
+//                w.close();
+//
+//            }
+//            System.out.println();
+//        }
 
         //System.out.println("sending cancel()");
         //master.Job().cancel(lastjob);

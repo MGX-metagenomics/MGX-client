@@ -5,12 +5,17 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTOList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author sjaenick
  */
 public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeTypeDTOList> {
+
+    public List<AttributeTypeDTO> BySeqRun(Long seqrunId) throws MGXServerException, MGXClientException {
+        return get("/AttributeType/BySeqRun/" + seqrunId, AttributeTypeDTOList.class).getAttributeTypeList();
+    }
 
     @Override
     public AttributeTypeDTO fetch(Long id) throws MGXServerException, MGXClientException {
@@ -36,5 +41,8 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     public void delete(Long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
+    public Iterable<AttributeTypeDTO> ByJob(Long seqrun_id) throws MGXServerException {
+        return get("/AttributeType/ByJob/" + seqrun_id, AttributeTypeDTOList.class).getAttributeTypeList();
+    }
 }

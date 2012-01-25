@@ -6,6 +6,7 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.AccessBase;
 import de.cebitec.mgx.client.access.rest.AttributeAccess;
+import de.cebitec.mgx.client.access.rest.AttributeTypeAccess;
 import de.cebitec.mgx.client.access.rest.DNAExtractAccess;
 import de.cebitec.mgx.client.access.rest.FileAccess;
 import de.cebitec.mgx.client.access.rest.HabitatAccess;
@@ -56,6 +57,10 @@ public class MGXDTOMaster {
 
     public AttributeAccess Attribute() {
         return getAccessor(AttributeAccess.class);
+    }
+    
+    public AttributeTypeAccess AttributeType() {
+        return getAccessor(AttributeTypeAccess.class);
     }
 
     public SampleAccess Sample() {
