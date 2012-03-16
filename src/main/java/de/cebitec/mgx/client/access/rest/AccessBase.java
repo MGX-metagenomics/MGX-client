@@ -49,22 +49,22 @@ public abstract class AccessBase<T, U> extends RESTMethods {
         delete(resolve + id);
     }
 
-    /*
-     * from http://snippets.dzone.com/posts/show/91
-     */
-    protected static String join(Iterable< ? extends Object> pColl, String separator) {
-        Iterator< ? extends Object> oIter;
-        if (pColl == null || (!(oIter = pColl.iterator()).hasNext())) {
-            return "";
-        }
-        StringBuilder oBuilder = new StringBuilder(String.valueOf(oIter.next()));
-        while (oIter.hasNext()) {
-            oBuilder.append(separator).append(oIter.next());
-        }
-        return oBuilder.toString();
-    }
-
-    protected static List<String> split(String message, String separator) {
-        return new ArrayList<String>(Arrays.asList(message.split(separator)));
-    }
+//    /*
+//     * from http://snippets.dzone.com/posts/show/91
+//     */
+//    protected static String join(Iterable< ? extends Object> pColl, String separator) {
+//        Iterator< ? extends Object> oIter;
+//        if (pColl == null || (!(oIter = pColl.iterator()).hasNext())) {
+//            return "";
+//        }
+//        StringBuilder oBuilder = new StringBuilder(String.valueOf(oIter.next()));
+//        while (oIter.hasNext()) {
+//            oBuilder.append(separator).append(oIter.next());
+//        }
+//        return oBuilder.toString();
+//    }
+//
+//    protected static List<String> split(String message, String separator) {
+//        return new ArrayList<String>(Arrays.asList(message.split(separator)));
+//    }
 }

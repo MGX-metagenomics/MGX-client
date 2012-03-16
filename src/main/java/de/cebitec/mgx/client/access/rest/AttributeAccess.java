@@ -30,6 +30,10 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     public List<AttributeCount> getDistribution(Long attrType_id, Long job_id) throws MGXServerException {
         return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributecountList();
     }
+    
+    public List<AttributeCount> getHierarchy(Long attrType_id, Long job_id) throws MGXServerException {
+        return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributecountList();
+    }
 
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
 //        String uri = new StringBuilder("/Attribute/getDistributionByRuns/")
