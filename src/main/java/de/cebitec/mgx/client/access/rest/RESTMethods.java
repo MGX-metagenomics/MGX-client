@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,6 +48,7 @@ public abstract class RESTMethods {
      */
     protected final <U> U put(String path, Object obj, Class<U> c) throws MGXServerException {
         // System.err.println("PUT uri: " +wr.path(path).getURI().toASCIIString());
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).put(ClientResponse.class, obj);
         catchException(res);
         return res.<U>getEntity(c);
@@ -54,17 +56,20 @@ public abstract class RESTMethods {
 
     protected <U> U get(String path, Class<U> c) throws MGXServerException {
         //System.err.println("GET uri: " +master.getResource().path(path).getURI().toASCIIString());
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
         catchException(res);
         return res.<U>getEntity(c);
     }
 
     protected final void delete(String path) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).delete(ClientResponse.class);
         catchException(res);
     }
 
     protected final <U> void post(String path, U obj) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).post(ClientResponse.class, obj);
         catchException(res);
     }
