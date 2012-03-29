@@ -22,17 +22,16 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //    public Collection<MGXString> listTypesByJob(Long jobId) throws MGXServerException {
 //        return get("/Attribute/listTypesByJob/" + jobId, MGXStringList.class).getStringList();
 //    }
-
     public List<AttributeDTO> BySeqRun(Long seqrunId) throws MGXServerException {
         return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
     }
 
     public List<AttributeCount> getDistribution(Long attrType_id, Long job_id) throws MGXServerException {
-        return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributecountList();
+        return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributeCountList();
     }
-    
+
     public List<AttributeCount> getHierarchy(Long attrType_id, Long job_id) throws MGXServerException {
-        return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributecountList();
+        return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class).getAttributeCountList();
     }
 
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
@@ -42,7 +41,6 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //                .toString();
 //        return get(uri, AttributeDistribution.class).getAttributecountList();
 //    }
-
     @Override
     public AttributeDTO fetch(Long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -50,7 +48,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
     @Override
     public Collection<AttributeDTO> fetchall() throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
