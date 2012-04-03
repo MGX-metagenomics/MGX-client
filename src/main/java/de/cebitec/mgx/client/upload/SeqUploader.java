@@ -11,7 +11,6 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -56,6 +55,11 @@ public class SeqUploader extends UploadBase {
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         while (reader.hasMoreElements()) {
             DNASequenceI nextElement = reader.nextElement();
+            
+            // ignore empty sequences
+            if (nextElement.getSequence().length > 0) {
+                continue;
+            }
             SequenceDTO seq = SequenceDTO.newBuilder().setName(new String(nextElement.getName())).setSequence(new String(nextElement.getSequence())).build();
             seqListBuilder.addSeq(seq);
             current_num_elements++;
