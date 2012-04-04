@@ -5,24 +5,26 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
-import de.cebitec.mgx.dto.dto.JobDTO.JobState;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
-import de.cebitec.mgx.sequence.SeqReaderFactory;
-import de.cebitec.mgx.sequence.SeqReaderI;
 import java.io.Console;
 import java.util.*;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
+
+        String pName = args[0];
+        //String seqFile = args[1];
+
         Console con = System.console();
+
+        System.err.println("using project " + pName);
         String username = con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
@@ -35,78 +37,60 @@ public class App {
             System.exit(1);
         }
         for (MembershipI m : gpms.getMemberships()) {
-            if ("MGX".equals(m.getProject().getProjectClass().getName())) {
+            if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
                 master = new MGXDTOMaster(gpms, m);
                 break; // just use the first project we find
             }
         }
 
         assert master != null;
-        System.err.println("using "+master.getProject().getName());
+        System.err.println("using " + master.getProject().getName());
 
-        // create habitat
-        HabitatDTO h1 = HabitatDTO.newBuilder()
-                .setName("Wurstwasser")
-                .setGpsLatitude(12.1)
-                .setGpsLongitude(23.1)
-                .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
-                .setAltitude(100)
-                .setBiome("fermenter")
-                .build();
-        Long hab_id = master.Habitat().create(h1);
-
-        System.err.println("  created habitat " + h1.getName() + " with id " + hab_id);
-
-        // create habitat
-        HabitatDTO h2 = HabitatDTO.newBuilder()
-                .setName("Biogas Stadtwerke 2")
-                .setGpsLatitude(12.1)
-                .setGpsLongitude(23.1)
-                .setDescription("Metagenome Biogasfermenter Stadtwerke Bielefeld")
-                .setAltitude(100)
-                .setBiome("fermenter")
-                .build();
-        hab_id = master.Habitat().create(h2);
-        //HabitatDTO fetch = master.Habitat().fetch(hab_id);
-        //master.Habitat().update(fetch);
-        //master.Habitat().delete(hab_id);
-        //System.exit(0);
-
-
-        // create sample
-        SampleDTO s = SampleDTO.newBuilder()
-                .setHabitatId(hab_id)
-                .setMaterial("substrate")
-                .setTemperature(42)
-                .setVolume(100)
-                .setVolumeUnit("ml")
-                .setCollectiondate(Calendar.getInstance().getTime().getTime() / 1000L)
-                .build();
-        Long sample_id = master.Sample().create(s);
-        System.err.println("  created sample " + s.getMaterial() + " with id " + sample_id);
-
-        // create dnaextract
-        DNAExtractDTO d = DNAExtractDTO.newBuilder()
-                .setSampleId(sample_id)
-                .setMethod("My extraction method")
-                .build();
-        Long extract_id = master.DNAExtract().create(d);
-        System.err.println("  created extract " + d.getMethod() + " with id " + extract_id);
-
-        // create new seqrun
-        SeqRunDTO sr = SeqRunDTO.newBuilder()
-                .setExtractId(extract_id)
-                .setAccession("myAccession")
-                .setSubmittedToInsdc(true)
-                .setSequencingMethod("WGS")
-                .setSequencingTechnology("454")
-                .build();
-        Long seqrun_id = master.SeqRun().create(sr);
-        System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
-
-        // upload sequence data
-        SeqReaderI reader = SeqReaderFactory.getReader("/homes/sjaenick/xxx.fas");
-        master.Sequence().sendSequences(seqrun_id, reader);
+//        // create habitat
+//        HabitatDTO h2 = HabitatDTO.newBuilder()
+//                .setName("Biogas Upmeier")
+//                .setGpsLatitude(12.1)
+//                .setGpsLongitude(23.1)
+//                .setDescription("Metagenome Biogasfermenter Upmeier Bielefeld")
+//                .setAltitude(100)
+//                .setBiome("fermenter")
+//                .build();
+//        Long hab_id = master.Habitat().create(h2);
+//
+//        // create sample
+//        SampleDTO s = SampleDTO.newBuilder()
+//                .setHabitatId(hab_id)
+//                .setMaterial("substrate")
+//                .setTemperature(42)
+//                .setVolume(100)
+//                .setVolumeUnit("ml")
+//                .setCollectiondate(Calendar.getInstance().getTime().getTime() / 1000L)
+//                .build();
+//        Long sample_id = master.Sample().create(s);
+//        System.err.println("  created sample " + s.getMaterial() + " with id " + sample_id);
+//
+//        // create dnaextract
+//        DNAExtractDTO d = DNAExtractDTO.newBuilder()
+//                .setSampleId(sample_id)
+//                .setMethod("My extraction method")
+//                .build();
+//        Long extract_id = master.DNAExtract().create(d);
+//        System.err.println("  created extract " + d.getMethod() + " with id " + extract_id);
+//
+//        // create new seqrun
+//        SeqRunDTO sr = SeqRunDTO.newBuilder()
+//                .setExtractId(extract_id)
+//                .setAccession("myAccession")
+//                .setSubmittedToInsdc(true)
+//                .setSequencingMethod("WGS")
+//                .setSequencingTechnology("454")
+//                .build();
+//        Long seqrun_id = master.SeqRun().create(sr);
+//        System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+//
+//        // upload sequence data
+//        SeqReaderI reader = SeqReaderFactory.getReader(args[1]);
+//        master.Sequence().sendSequences(seqrun_id, reader);
 
         //System.exit(0);
 
@@ -116,8 +100,7 @@ public class App {
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
         for (ToolDTO t : globalTools) {
             System.err.println("Tool: " + t.getName());
-            //if (t.getName().contains("LCA"))
-                globalToolIDs.add(t.getId());
+            globalToolIDs.add(t.getId());
         }
 
         // copy tools to project
@@ -128,66 +111,38 @@ public class App {
             localToolIDs.add(installedTool);
         }
 
-        // create and verify the jobs
-        ArrayList<Long> jobIDs = new ArrayList<Long>();
-        for (Long toolId : localToolIDs) {
-            System.err.println("creating job..");
-            JobDTO dto = JobDTO.newBuilder().setToolId(toolId).setSeqrunId(seqrun_id).build();
-            Long job_id = master.Job().create(dto);
+        for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
+            // create and verify the jobs
+            ArrayList<Long> jobIDs = new ArrayList<Long>();
+            for (Long toolId : localToolIDs) {
+                System.err.println("creating job..");
+                JobDTO dto = JobDTO.newBuilder().setToolId(toolId).setSeqrunId(seqrun.getId()).build();
+                Long job_id = master.Job().create(dto);
 
-            boolean job_ok = master.Job().verify(job_id);
-            System.err.println("job verification: " + job_ok);
-            jobIDs.add(job_id);
-        }
-
-        for (Long job_id : jobIDs) {
-            System.err.println("submitting job " + job_id + "..");
-            boolean submitted = master.Job().execute(job_id);
-            System.err.println("job execution: " + submitted);
-        }
-
-        // wait for jobs to finish execution
-        for (Long job_id : jobIDs) {
-            JobDTO job = master.Job().fetch(job_id);
-            while (!((job.getState() == JobState.FINISHED) || (job.getState() == JobState.FAILED))) {
-                System.out.println("state of job " + job.getId() + " is " + job.getState().name());
-                Thread.sleep(5000);
-                job = master.Job().fetch(job_id); //refresh
+                boolean job_ok = master.Job().verify(job_id);
+                System.err.println("job verification: " + job_ok);
+                jobIDs.add(job_id);
             }
-            System.out.println("state of job " + job.getId() + " is " + job.getState().name());
+
+            for (Long job_id : jobIDs) {
+                System.err.println("submitting job " + job_id + "..");
+                boolean submitted = master.Job().execute(job_id);
+                System.err.println("job execution: " + submitted);
+            }
         }
 
-        // list generated attributes
-        System.out.println("All attributes:");
-        for (AttributeTypeDTO atype : master.AttributeType().BySeqRun(seqrun_id)) {
-            System.out.print(" " + atype.getName());
-        }
-        System.out.println();
-
+//        // wait for jobs to finish execution
 //        for (Long job_id : jobIDs) {
-//            System.out.println("Attributes for job " + job_id + ": ");
-//            for (MGXString a : master.Attribute().listTypesByJob(job_id)) {
-//                System.out.print(" " + a.getValue());
-//                String attr = a.getValue();
-//
-//                // fetch attribute distribution and write to file
-//                List<Long> l = new ArrayList<Long>();
-//                l.add(seqrun_id);
-//
-//                FileWriter w = new FileWriter("dist_" + attr);
-//                for (AttributeCount ac : master.Attribute().getDistribution(attr, job_id, l)) {
-//                    AttributeDTO attribute = ac.getAttribute();
-//                    Long count = ac.getCount();
-//                    w.write(attribute.getType().getName());
-//                    w.write("\t");
-//                    w.write(count.toString());
-//                    w.write("\n");
-//                }
-//                w.close();
-//
+//            JobDTO job = master.Job().fetch(job_id);
+//            while (!((job.getState() == JobState.FINISHED) || (job.getState() == JobState.FAILED))) {
+//                System.out.println("state of job " + job.getId() + " is " + job.getState().name());
+//                Thread.sleep(5000);
+//                job = master.Job().fetch(job_id); //refresh
 //            }
-//            System.out.println();
+//            System.out.println("state of job " + job.getId() + " is " + job.getState().name());
 //        }
+
+
 
         //System.out.println("sending cancel()");
         //master.Job().cancel(lastjob);
