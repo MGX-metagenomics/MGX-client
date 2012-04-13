@@ -95,26 +95,30 @@ public class App {
         //System.exit(0);
 
         // fetch global tool Ids
-        ArrayList<Long> globalToolIDs = new ArrayList<Long>();
-        System.err.println("global tools:");
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
-        for (ToolDTO t : globalTools) {
-            System.err.println("Tool: " + t.getName());
-            globalToolIDs.add(t.getId());
-        }
+        Collection<ToolDTO> local = master.Tool().fetchall();
+        
+        List<Long> toolIds = new ArrayList<Long>();
 
         // copy tools to project
-        ArrayList<Long> localToolIDs = new ArrayList<Long>();
-        for (Long global_tool_id : globalToolIDs) {
-            System.err.println("copy global tool " + global_tool_id + " to local db");
-            Long installedTool = master.Tool().installTool(global_tool_id);
-            localToolIDs.add(installedTool);
+        for (ToolDTO globaltool : globalTools) {
+            boolean isPresent = false;
+            for (ToolDTO localtool : local) {
+                if (globaltool.getName().equals(localtool.getName())) {
+                    isPresent = true;
+                }
+            }
+            
+            if (!isPresent) {
+                Long installedToolId = master.Tool().installTool(globaltool.getId());
+                toolIds.add(installedToolId);
+            }
         }
 
         for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
             // create and verify the jobs
             ArrayList<Long> jobIDs = new ArrayList<Long>();
-            for (Long toolId : localToolIDs) {
+            for (Long toolId : toolIds) {
                 System.err.println("creating job..");
                 JobDTO dto = JobDTO.newBuilder().setToolId(toolId).setSeqrunId(seqrun.getId()).build();
                 Long job_id = master.Job().create(dto);

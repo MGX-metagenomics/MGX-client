@@ -2,7 +2,6 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
@@ -15,13 +14,6 @@ import java.util.List;
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
-//    public Collection<MGXString> listTypes() throws MGXServerException {
-//        return get("/Attribute/listTypes/", MGXStringList.class).getStringList();
-//    }
-//
-//    public Collection<MGXString> listTypesByJob(Long jobId) throws MGXServerException {
-//        return get("/Attribute/listTypesByJob/" + jobId, MGXStringList.class).getStringList();
-//    }
     public List<AttributeDTO> BySeqRun(Long seqrunId) throws MGXServerException {
         return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
     }
@@ -43,7 +35,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //    }
     @Override
     public AttributeDTO fetch(Long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override

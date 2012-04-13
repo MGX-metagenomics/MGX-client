@@ -29,6 +29,7 @@ public class RESTPathResolver {
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
         objmappings.put(SampleDTOList.class, "Sample");
+        objmappings.put(ToolDTOList.class, "Tool");
         objmappings.put(DNAExtractDTOList.class, "DNAExtract");
         objmappings.put(SeqRunDTOList.class, "SeqRun");
         objmappings.put(FoDList.class, "File");
