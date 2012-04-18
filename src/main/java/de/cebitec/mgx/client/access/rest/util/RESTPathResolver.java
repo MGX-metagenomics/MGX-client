@@ -1,7 +1,21 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.dto.dto.*;
+import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.DNAExtractDTO;
+import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
+import de.cebitec.mgx.dto.dto.FileOrDirectory;
+import de.cebitec.mgx.dto.dto.FoDList;
+import de.cebitec.mgx.dto.dto.HabitatDTO;
+import de.cebitec.mgx.dto.dto.HabitatDTOList;
+import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.SampleDTO;
+import de.cebitec.mgx.dto.dto.SampleDTOList;
+import de.cebitec.mgx.dto.dto.SeqRunDTO;
+import de.cebitec.mgx.dto.dto.SeqRunDTOList;
+import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.ToolDTO;
+import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +58,7 @@ public class RESTPathResolver {
         methodmappings.put("byHabitat", "byHabitat");
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
+        methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
     }
 
     private RESTPathResolver() {

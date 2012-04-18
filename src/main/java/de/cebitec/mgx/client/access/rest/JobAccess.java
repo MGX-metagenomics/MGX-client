@@ -31,12 +31,12 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     @Override
-    public Long create(JobDTO dto) throws MGXServerException, MGXClientException {
+    public long create(JobDTO dto) throws MGXServerException, MGXClientException {
         return super.create(dto, JobDTO.class);
     }
 
     @Override
-    public JobDTO fetch(Long job_id) throws MGXServerException, MGXClientException {
+    public JobDTO fetch(long job_id) throws MGXServerException, MGXClientException {
         return super.fetch(job_id, JobDTO.class);
     }
 
@@ -46,7 +46,7 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, JobDTO.class);
     }
 

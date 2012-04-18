@@ -1,8 +1,8 @@
 package de.cebitec.mgx.client.access.rest;
 
-import de.cebitec.mgx.client.upload.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.upload.SeqUploader;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.SeqReaderI;
@@ -59,7 +59,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 //    }
 
     @Override
-    public SequenceDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public SequenceDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -69,7 +69,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public Long create(SequenceDTO t) throws MGXServerException, MGXClientException {
+    public long create(SequenceDTO t) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -79,7 +79,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

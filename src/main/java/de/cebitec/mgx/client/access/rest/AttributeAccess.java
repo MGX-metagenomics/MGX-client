@@ -14,15 +14,15 @@ import java.util.List;
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
-    public List<AttributeDTO> BySeqRun(Long seqrunId) throws MGXServerException {
+    public List<AttributeDTO> BySeqRun(long seqrunId) throws MGXServerException {
         return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
     }
 
-    public AttributeDistribution getDistribution(Long attrType_id, Long job_id) throws MGXServerException {
+    public AttributeDistribution getDistribution(long attrType_id, long job_id) throws MGXServerException {
         return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class);
     }
 
-    public AttributeDistribution getHierarchy(Long attrType_id, Long job_id) throws MGXServerException {
+    public AttributeDistribution getHierarchy(long attrType_id, long job_id) throws MGXServerException {
         return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class);
     }
 
@@ -34,7 +34,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //        return get(uri, AttributeDistribution.class).getAttributecountList();
 //    }
     @Override
-    public AttributeDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public AttributeDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
@@ -44,7 +44,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public Long create(AttributeDTO t) throws MGXServerException, MGXClientException {
+    public long create(AttributeDTO t) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
@@ -54,7 +54,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 }

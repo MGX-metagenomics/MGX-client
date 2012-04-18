@@ -18,7 +18,7 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public AttributeTypeDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public AttributeTypeDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -28,7 +28,7 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public Long create(AttributeTypeDTO t) throws MGXServerException, MGXClientException {
+    public long create(AttributeTypeDTO t) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -38,11 +38,11 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Iterable<AttributeTypeDTO> ByJob(Long seqrun_id) throws MGXServerException {
+    public List<AttributeTypeDTO> ByJob(long seqrun_id) throws MGXServerException {
         return get("/AttributeType/ByJob/" + seqrun_id, AttributeTypeDTOList.class).getAttributeTypeList();
     }
 }

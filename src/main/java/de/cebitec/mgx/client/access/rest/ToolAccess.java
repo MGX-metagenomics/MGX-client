@@ -23,7 +23,7 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         return get("/Tool/listGlobalTools", ToolDTOList.class).getToolList();
     }
 
-    public Long installTool(Long global_id) throws MGXServerException {
+    public long installTool(long global_id) throws MGXServerException {
         MGXLong g_id = de.cebitec.mgx.dto.dto.MGXLong.newBuilder().setValue(global_id).build();
         ClientResponse res = getWebResource().path("/Tool/installTool/").type("application/x-protobuf").put(ClientResponse.class, g_id);
         catchException(res);
@@ -32,17 +32,17 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
         
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, ToolDTO.class);
     }
 
     @Override
-    public ToolDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public ToolDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, ToolDTO.class);
     }
 
     @Override
-    public Long create(ToolDTO t) throws MGXServerException, MGXClientException {
+    public long create(ToolDTO t) throws MGXServerException, MGXClientException {
         return super.create(t, ToolDTO.class);
     }
 

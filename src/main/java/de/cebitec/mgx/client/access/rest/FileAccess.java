@@ -18,17 +18,17 @@ public class FileAccess extends AccessBase<FileOrDirectory, FoDList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public FileOrDirectory fetch(Long id) throws MGXServerException, MGXClientException {
+    public FileOrDirectory fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Long create(FileOrDirectory t) throws MGXServerException, MGXClientException {
+    public long create(FileOrDirectory t) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

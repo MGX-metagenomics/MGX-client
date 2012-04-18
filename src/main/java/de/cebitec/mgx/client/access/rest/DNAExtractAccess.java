@@ -22,12 +22,12 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
     
     @Override
-    public DNAExtractDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public DNAExtractDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, DNAExtractDTO.class);
     }
 
     @Override
-    public Long create(DNAExtractDTO d) throws MGXServerException, MGXClientException {
+    public long create(DNAExtractDTO d) throws MGXServerException, MGXClientException {
         return super.create(d, DNAExtractDTO.class);
     }
     
@@ -37,7 +37,7 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
     
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, DNAExtractDTO.class);
     }
 }

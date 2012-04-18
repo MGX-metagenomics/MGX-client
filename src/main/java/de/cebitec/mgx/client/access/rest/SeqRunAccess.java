@@ -2,9 +2,12 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
+import de.cebitec.mgx.dto.dto.JobsAndAttributeTypesDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTOList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -18,7 +21,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
     
     @Override
-    public SeqRunDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public SeqRunDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, SeqRunDTO.class);
     }
 
@@ -27,7 +30,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
 
     @Override
-    public Long create(SeqRunDTO sr) throws MGXServerException, MGXClientException {
+    public long create(SeqRunDTO sr) throws MGXServerException, MGXClientException {
         return super.create(sr, SeqRunDTO.class);
     }
 
@@ -37,7 +40,11 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, SeqRunDTO.class);
+    }
+
+    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes") + seqrun_id, JobsAndAttributeTypesDTO.class).getEntryList();
     }
 }

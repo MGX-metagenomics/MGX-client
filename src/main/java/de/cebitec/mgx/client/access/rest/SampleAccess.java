@@ -18,7 +18,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     @Override
-    public SampleDTO fetch(Long id) throws MGXServerException, MGXClientException {
+    public SampleDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, SampleDTO.class);
     }
 
@@ -27,7 +27,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     @Override
-    public Long create(SampleDTO s) throws MGXServerException, MGXClientException {
+    public long create(SampleDTO s) throws MGXServerException, MGXClientException {
         return super.create(s, SampleDTO.class);
     }
 
@@ -37,7 +37,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, SampleDTO.class);
     }
 }

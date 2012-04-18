@@ -18,12 +18,12 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public Long create(HabitatDTO h1) throws MGXServerException, MGXClientException {
+    public long create(HabitatDTO h1) throws MGXServerException, MGXClientException {
         return super.create(h1, HabitatDTO.class);
     }
     
     @Override
-    public HabitatDTO fetch (Long id) throws MGXServerException, MGXClientException {
+    public HabitatDTO fetch (long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, HabitatDTO.class);
     }
 
@@ -33,7 +33,7 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public void delete(Long id) throws MGXServerException, MGXClientException {
+    public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, HabitatDTO.class);
     }
 }
