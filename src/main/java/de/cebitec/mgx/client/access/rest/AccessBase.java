@@ -24,7 +24,8 @@ public abstract class AccessBase<T, U> extends RESTMethods {
 
     protected final long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "create");
-        return put(resolve, dto, MGXLong.class).getValue();
+        long id = put(resolve, dto, MGXLong.class).getValue();
+        return id;
     }
 
     protected final void update(T dto, Class<T> c) throws MGXServerException, MGXClientException {

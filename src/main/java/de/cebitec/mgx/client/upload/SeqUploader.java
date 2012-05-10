@@ -24,7 +24,7 @@ public class SeqUploader extends UploadBase {
     private SeqReaderI reader = null;
     private static int DEFAULT_CHUNK_SIZE = 500;
     private int chunk_size = DEFAULT_CHUNK_SIZE;
-    private int total_elements = 0;
+    private long total_elements = 0;
     private final PropertyChangeSupport pcs;
 
     public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI reader) {
@@ -55,9 +55,9 @@ public class SeqUploader extends UploadBase {
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         while (reader.hasMoreElements()) {
             DNASequenceI nextElement = reader.nextElement();
-            
+
             // ignore empty sequences
-            if (nextElement.getSequence().length > 0) {
+            if (nextElement.getSequence().length == 0) {
                 continue;
             }
             SequenceDTO seq = SequenceDTO.newBuilder().setName(new String(nextElement.getName())).setSequence(new String(nextElement.getSequence())).build();
@@ -96,7 +96,7 @@ public class SeqUploader extends UploadBase {
         return true;
     }
 
-    public int getNumSequencesSent() {
+    public long getNumSequencesSent() {
         return total_elements;
     }
 

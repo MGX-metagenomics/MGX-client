@@ -40,7 +40,7 @@ public abstract class UploadBase {
     private final static class NullCallBack implements CallbackI {
 
         @Override
-        public void callback(int i) {
+        public void callback(long i) {
         }
     }
 

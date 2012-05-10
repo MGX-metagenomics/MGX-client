@@ -98,7 +98,7 @@ public class App {
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
         Collection<ToolDTO> local = master.Tool().fetchall();
         
-        List<Long> toolIds = new ArrayList<Long>();
+        List<Long> toolIds = new ArrayList<>();
 
         // copy tools to project
         for (ToolDTO globaltool : globalTools) {
@@ -117,7 +117,7 @@ public class App {
 
         for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
             // create and verify the jobs
-            ArrayList<Long> jobIDs = new ArrayList<Long>();
+            ArrayList<Long> jobIDs = new ArrayList<>();
             for (Long toolId : toolIds) {
                 System.err.println("creating job..");
                 JobDTO dto = JobDTO.newBuilder().setToolId(toolId).setSeqrunId(seqrun.getId()).build();

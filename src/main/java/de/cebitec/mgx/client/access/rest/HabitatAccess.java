@@ -18,8 +18,8 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public long create(HabitatDTO h1) throws MGXServerException, MGXClientException {
-        return super.create(h1, HabitatDTO.class);
+    public long create(HabitatDTO dto) throws MGXServerException, MGXClientException {
+        return super.create(dto, HabitatDTO.class);
     }
     
     @Override
@@ -28,8 +28,8 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public void update(HabitatDTO d) throws MGXServerException, MGXClientException {
-        super.update(d, HabitatDTO.class);
+    public void update(HabitatDTO dto) throws MGXServerException, MGXClientException {
+        super.update(dto, HabitatDTO.class);
     }
 
     @Override

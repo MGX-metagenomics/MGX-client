@@ -6,5 +6,5 @@ package de.cebitec.mgx.client.upload;
  */
 public interface CallbackI {
 
-    public void callback(int i);
+    public void callback(long i);
 }
