@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.AttributeCorrelation;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
@@ -24,6 +25,19 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
     public AttributeDistribution getHierarchy(long attrType_id, long job_id) throws MGXServerException {
         return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class);
+    }
+    
+    public AttributeCorrelation getCorrelation(long attrtypeId1, long jobid1, long attrtypeid2, long jobid2) throws MGXServerException {
+        String path = new StringBuilder("/Attribute/getCorrelation/")
+                .append(attrtypeId1)
+                .append('/')
+                .append(jobid1)
+                .append('/')
+                .append(attrtypeid2)
+                .append('/')
+                .append(jobid2)
+                .toString();
+        return get(path, AttributeCorrelation.class);
     }
 
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
