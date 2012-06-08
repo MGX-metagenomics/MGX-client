@@ -1,10 +1,10 @@
 package de.cebitec.mgx.client.access.rest;
 
 import com.sun.jersey.api.client.Client;
-import de.cebitec.mgx.client.exception.MGXServerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
+import de.cebitec.mgx.client.exception.MGXServerException;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public abstract class RESTMethods {
         return res.<U>getEntity(c);
     }
 
-    protected <U> U get(String path, Class<U> c) throws MGXServerException {
+    protected final <U> U get(String path, Class<U> c) throws MGXServerException {
         //System.err.println("GET uri: " +master.getResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
@@ -87,6 +87,7 @@ public abstract class RESTMethods {
                 r.close();
                 isr.close();
             } catch (IOException ex) {
+                Logger.getLogger(RESTMethods.class.getName()).log(Level.SEVERE, null, ex);
             }
             throw new MGXServerException(msg.toString());
         }

@@ -58,6 +58,7 @@ public class RESTPathResolver {
         methodmappings.put("byHabitat", "byHabitat");
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
+        methodmappings.put("byJob", "byJob");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
     }
 

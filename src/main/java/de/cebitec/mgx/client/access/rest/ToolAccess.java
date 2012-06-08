@@ -50,4 +50,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     public void update(ToolDTO t) throws MGXServerException, MGXClientException {
         super.update(t, ToolDTO.class);
     }
+
+    public ToolDTO ByJob(long job_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(ToolDTO.class, "byJob") + job_id, ToolDTO.class);
+    }
 }

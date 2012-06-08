@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeTypeDTOList> {
 
-    public List<AttributeTypeDTO> BySeqRun(Long seqrunId) throws MGXServerException, MGXClientException {
+    public List<AttributeTypeDTO> BySeqRun(long seqrunId) throws MGXServerException, MGXClientException {
         return get("/AttributeType/BySeqRun/" + seqrunId, AttributeTypeDTOList.class).getAttributeTypeList();
     }
 

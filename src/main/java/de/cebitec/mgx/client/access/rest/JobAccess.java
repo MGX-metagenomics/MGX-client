@@ -20,16 +20,16 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
         return fetchlist(JobDTOList.class).getJobList();
     }
     
-    public boolean verify(Long jobId) throws MGXServerException {
-        return get("/Job/verify/" + jobId.toString(), MGXBoolean.class).getValue();
+    public boolean verify(long jobId) throws MGXServerException {
+        return get("/Job/verify/" + jobId, MGXBoolean.class).getValue();
     }
     
-    public boolean execute(Long jobId) throws MGXServerException {
-        return get("/Job/execute/" + jobId.toString(), MGXBoolean.class).getValue();
+    public boolean execute(long jobId) throws MGXServerException {
+        return get("/Job/execute/" + jobId, MGXBoolean.class).getValue();
     }
     
-    public boolean cancel(Long jobId) throws MGXServerException {
-        return get("/Job/cancel/" + jobId.toString(), MGXBoolean.class).getValue();
+    public boolean cancel(long jobId) throws MGXServerException {
+        return get("/Job/cancel/" + jobId, MGXBoolean.class).getValue();
     }
     
     @Override
@@ -52,19 +52,19 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
         super.delete(id, JobDTO.class);
     }
     
-    public Iterable<JobDTO> ByAttributeTypeAndSeqRun(Long atype_id, Long seqrun_id) throws MGXServerException {
+    public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXServerException {
         return get("/Job/ByAttributeTypeAndSeqRun/" + atype_id + "/" + seqrun_id, JobDTOList.class).getJobList();
     }
     
-    public Iterable<JobDTO> BySeqRun(Long seqrun_id) throws MGXServerException {
+    public Iterable<JobDTO> BySeqRun(long seqrun_id) throws MGXServerException {
         return get("/Job/BySeqRun/" + seqrun_id, JobDTOList.class).getJobList();
     }
     
-    public Iterable<JobParameterDTO> getParameters(Long job_id) throws MGXServerException {
+    public Iterable<JobParameterDTO> getParameters(long job_id) throws MGXServerException {
         return get("/Job/getParameters/" + job_id, JobParameterListDTO.class).getParameterList();
     }
 
-    public void setParameters(Long job_id, JobParameterListDTO paramValues) throws MGXServerException {
+    public void setParameters(long job_id, JobParameterListDTO paramValues) throws MGXServerException {
         post("/Job/setParameters/" + job_id, paramValues);
     }
 }

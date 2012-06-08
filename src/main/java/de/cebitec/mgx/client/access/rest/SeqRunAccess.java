@@ -25,7 +25,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return super.fetch(id, SeqRunDTO.class);
     }
 
-    public Collection<SeqRunDTO> ByExtract(Long extract_id) throws MGXServerException, MGXClientException {
+    public Collection<SeqRunDTO> ByExtract(long extract_id) throws MGXServerException, MGXClientException {
         return get(r.resolve(SeqRunDTO.class, "byExtract") + extract_id, SeqRunDTOList.class).getSeqrunList();
     }
 

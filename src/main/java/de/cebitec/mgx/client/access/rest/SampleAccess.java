@@ -22,7 +22,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         return super.fetch(id, SampleDTO.class);
     }
 
-    public Collection<SampleDTO> ByHabitat(Long habitat_id) throws MGXServerException, MGXClientException {
+    public Collection<SampleDTO> ByHabitat(long habitat_id) throws MGXServerException, MGXClientException {
         return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList();
     }
 
