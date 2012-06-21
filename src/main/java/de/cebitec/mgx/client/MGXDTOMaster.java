@@ -25,7 +25,7 @@ public class MGXDTOMaster {
 
     public MGXDTOMaster(GPMSClientI gpms, MembershipI m) {
         restmaster = gpms.createMaster(m);
-        accessors = new HashMap<Class, AccessBase>();
+        accessors = new HashMap<>();
 
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBReader.class);
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBWriter.class);
@@ -48,7 +48,7 @@ public class MGXDTOMaster {
     public AttributeAccess Attribute() {
         return getAccessor(AttributeAccess.class);
     }
-    
+
     public AttributeTypeAccess AttributeType() {
         return getAccessor(AttributeTypeAccess.class);
     }
@@ -79,6 +79,10 @@ public class MGXDTOMaster {
 
     public FileAccess File() {
         return getAccessor(FileAccess.class);
+    }
+
+    public TermAccess Term() {
+        return getAccessor(TermAccess.class);
     }
 
     void log(Level lvl, String msg) {
