@@ -14,6 +14,7 @@ import de.cebitec.mgx.dto.dto.SampleDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.TermDTOList;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.util.HashMap;
@@ -25,8 +26,8 @@ import java.util.Map;
  */
 public class RESTPathResolver {
 
-    protected final static Map<Class, String> objmappings = new HashMap<Class, String>();
-    protected final static Map<String, String> methodmappings = new HashMap<String, String>();
+    protected final static Map<Class, String> objmappings = new HashMap<>();
+    protected final static Map<String, String> methodmappings = new HashMap<>();
     protected final static RESTPathResolver instance = new RESTPathResolver();
 
     static {
@@ -47,6 +48,7 @@ public class RESTPathResolver {
         objmappings.put(DNAExtractDTOList.class, "DNAExtract");
         objmappings.put(SeqRunDTOList.class, "SeqRun");
         objmappings.put(FoDList.class, "File");
+        objmappings.put(TermDTOList.class, "Term");
 
         // methods
         methodmappings.put("create", "create");
@@ -59,6 +61,7 @@ public class RESTPathResolver {
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
         methodmappings.put("byJob", "byJob");
+        methodmappings.put("byCategory", "byCategory");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
     }
 
