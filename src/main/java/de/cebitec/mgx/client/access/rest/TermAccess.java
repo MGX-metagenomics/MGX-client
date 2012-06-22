@@ -12,10 +12,14 @@ import java.util.Collection;
  */
 public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
 
+    // ontology lookup categories
+    public static final String SEQ_METHODS = "seq_methods";
+    public static final String SEQ_PLATFORMS = "seq_platforms";
+
     public Collection<TermDTO> byCategory(String cat) throws MGXServerException, MGXClientException {
         return get("/Term/byCategory/" + cat, TermDTOList.class).getTermList();
     }
-    
+
     @Override
     public TermDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
@@ -40,5 +44,4 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
     public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
-    
 }

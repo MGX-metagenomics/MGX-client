@@ -109,7 +109,7 @@ public class App {
                 }
             }
             
-            if ((!isPresent) && (globaltool.getName().equals("MetaPhyler"))) {
+            if ((!isPresent) && (globaltool.getName().equals("MetaPhlAn"))) {
                 Long installedToolId = master.Tool().installTool(globaltool.getId());
                 toolIds.add(installedToolId);
             }
