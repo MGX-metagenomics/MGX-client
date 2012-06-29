@@ -97,7 +97,7 @@ public class App {
         // fetch global tool Ids
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
         Collection<ToolDTO> local = master.Tool().fetchall();
-        
+
         List<Long> toolIds = new ArrayList<>();
 
         // copy tools to project
@@ -108,10 +108,13 @@ public class App {
                     isPresent = true;
                 }
             }
-            
-            if ((!isPresent) && (globaltool.getName().equals("MetaPhlAn"))) {
-                Long installedToolId = master.Tool().installTool(globaltool.getId());
-                toolIds.add(installedToolId);
+
+            if (!isPresent) {
+                //if ((!isPresent) && (globaltool.getName().equals("MetaPhlAn"))) {
+                if (globaltool.getAuthor().equals("Sebastian Jaenicke")) {
+                    Long installedToolId = master.Tool().installTool(globaltool.getId());
+                    toolIds.add(installedToolId);
+                }
             }
         }
 

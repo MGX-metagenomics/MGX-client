@@ -1,8 +1,9 @@
 package de.cebitec.mgx.client.access.rest;
 
+import com.sun.jersey.api.client.ClientResponse;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import com.sun.jersey.api.client.ClientResponse;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
@@ -13,6 +14,10 @@ import java.util.Collection;
  * @author sjaenick
  */
 public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
+
+    public Iterable<dto.JobParameterDTO> getAvailableParameters(long tool_id, boolean isGlobal) throws MGXServerException {
+        return get("/Tool/getAvailableParameters/" + tool_id + "/" + isGlobal, dto.JobParameterListDTO.class).getParameterList();
+    }
 
     @Override
     public Collection<ToolDTO> fetchall() throws MGXServerException, MGXClientException {
@@ -30,7 +35,7 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         MGXLong local_id = res.getEntity(MGXLong.class);
         return local_id.getValue();
     }
-        
+
     @Override
     public void delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, ToolDTO.class);
