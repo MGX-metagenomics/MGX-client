@@ -112,7 +112,7 @@ public class App {
             if (!isPresent) {
                 //if ((!isPresent) && (globaltool.getName().equals("MetaPhlAn"))) {
                 if (globaltool.getAuthor().equals("Sebastian Jaenicke")) {
-                    Long installedToolId = master.Tool().installTool(globaltool.getId());
+                    Long installedToolId = master.Tool().installGlobalTool(globaltool.getId());
                     toolIds.add(installedToolId);
                 }
             }
