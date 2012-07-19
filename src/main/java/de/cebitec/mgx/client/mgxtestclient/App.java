@@ -5,9 +5,11 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
@@ -123,7 +125,13 @@ public class App {
             ArrayList<Long> jobIDs = new ArrayList<>();
             for (Long toolId : toolIds) {
                 System.err.println("creating job..");
-                JobDTO dto = JobDTO.newBuilder().setToolId(toolId).setSeqrunId(seqrun.getId()).build();
+                JobParameterListDTO paramDTO = dto.JobParameterListDTO.newBuilder().build();
+                JobDTO dto = JobDTO.newBuilder()
+                        .setToolId(toolId)
+                        .setSeqrunId(seqrun.getId())
+                        .setState(JobDTO.JobState.CREATED)
+                        .setParameters(paramDTO)
+                        .build();
                 Long job_id = master.Job().create(dto);
 
                 boolean job_ok = master.Job().verify(job_id);
