@@ -6,8 +6,12 @@ import de.cebitec.mgx.dto.dto.AttributeCorrelation;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
+import de.cebitec.mgx.dto.dto.SearchRequestDTO;
+import de.cebitec.mgx.dto.dto.SearchResultDTO;
+import de.cebitec.mgx.dto.dto.SearchResultDTOList;
 import java.util.Collection;
 import java.util.List;
+import javax.naming.directory.SearchResult;
 
 /**
  *
@@ -70,5 +74,9 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     @Override
     public void delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public List<SearchResultDTO> search(SearchRequestDTO req) throws MGXServerException {
+        return put("/Attribute/search/", req, SearchResultDTOList.class).getResultList();
     }
 }
