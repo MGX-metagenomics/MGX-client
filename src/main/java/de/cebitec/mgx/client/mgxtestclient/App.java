@@ -111,8 +111,8 @@ public class App {
                 }
             }
 
-            if (!isPresent) {
-                //if ((!isPresent) && (globaltool.getName().equals("MetaPhlAn"))) {
+            //if (!isPresent) {
+            if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
                 if (globaltool.getAuthor().equals("Sebastian Jaenicke")) {
                     Long installedToolId = master.Tool().installGlobalTool(globaltool.getId());
                     toolIds.add(installedToolId);

@@ -9,9 +9,10 @@ import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.SearchRequestDTO;
 import de.cebitec.mgx.dto.dto.SearchResultDTO;
 import de.cebitec.mgx.dto.dto.SearchResultDTOList;
+import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import java.util.Collection;
 import java.util.List;
-import javax.naming.directory.SearchResult;
 
 /**
  *
@@ -76,7 +77,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public List<SearchResultDTO> search(SearchRequestDTO req) throws MGXServerException {
-        return put("/Attribute/search/", req, SearchResultDTOList.class).getResultList();
+    public List<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
+        return put("/Attribute/search/", req, SequenceDTOList.class).getSeqList();
     }
 }
