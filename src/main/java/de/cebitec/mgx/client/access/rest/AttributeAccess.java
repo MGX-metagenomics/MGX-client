@@ -7,8 +7,6 @@ import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.SearchRequestDTO;
-import de.cebitec.mgx.dto.dto.SearchResultDTO;
-import de.cebitec.mgx.dto.dto.SearchResultDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import java.util.Collection;

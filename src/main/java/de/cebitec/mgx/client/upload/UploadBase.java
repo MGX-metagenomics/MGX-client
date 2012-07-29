@@ -3,6 +3,8 @@ package de.cebitec.mgx.client.upload;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +19,27 @@ public abstract class UploadBase {
 
     private CallbackI cb = null;
     private String error_message = "";
+    private final PropertyChangeSupport pcs;
+    protected static int DEFAULT_CHUNK_SIZE = 2048;
+    protected int chunk_size = DEFAULT_CHUNK_SIZE;
+    public static final String NUM_ELEMENTS_SENT = "numElementsSent";
+
+    public UploadBase() {
+        pcs = new PropertyChangeSupport(this);
+    }
+
+    public void setChunkSize(int i) {
+        chunk_size = i;
+    }
+
+//    protected PropertyChangeSupport getPropertyChangeSupport() {
+//        return pcs;
+//    }
+
+    protected void abortTransfer(String reason, long total) {
+        setErrorMessage(reason);
+        fireTaskChange(total);
+    }
 
     public String getErrorMessage() {
         return error_message;
@@ -36,6 +59,10 @@ public abstract class UploadBase {
     }
 
     public abstract boolean upload();
+
+    protected void fireTaskChange(long total_elements) {
+        pcs.firePropertyChange(NUM_ELEMENTS_SENT, 0, total_elements);
+    }
 
     private final static class NullCallBack implements CallbackI {
 
@@ -65,5 +92,13 @@ public abstract class UploadBase {
             }
             throw new MGXServerException(msg.toString());
         }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener p) {
+        pcs.addPropertyChangeListener(p);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener p) {
+        pcs.removePropertyChangeListener(p);
     }
 }

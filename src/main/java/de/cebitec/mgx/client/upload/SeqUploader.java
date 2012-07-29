@@ -9,8 +9,6 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 /**
  *
@@ -18,24 +16,17 @@ import java.beans.PropertyChangeSupport;
  */
 public class SeqUploader extends UploadBase {
 
-    public static final String NUM_SEQUENCES = "numSequences";
     private WebResource wr;
     private long seqrun_id;
     private SeqReaderI reader = null;
-    private static int DEFAULT_CHUNK_SIZE = 500;
-    private int chunk_size = DEFAULT_CHUNK_SIZE;
     private long total_elements = 0;
-    private final PropertyChangeSupport pcs;
 
     public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI reader) {
+        super();
         this.wr = wr;
         this.seqrun_id = seqrun_id;
         this.reader = reader;
-        pcs = new PropertyChangeSupport(this);
-    }
-
-    public void setChunkSize(int i) {
-        chunk_size = i;
+        setChunkSize(500);
     }
 
     @Override
@@ -47,7 +38,7 @@ public class SeqUploader extends UploadBase {
         try {
             session_uuid = initTransfer(seqrun_id);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage());
+            abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
 
@@ -70,7 +61,7 @@ public class SeqUploader extends UploadBase {
                 try {
                     sendChunk(seqListBuilder.build(), session_uuid);
                 } catch (MGXServerException ex) {
-                    abortTransfer(ex.getMessage());
+                    abortTransfer(ex.getMessage(), total_elements);
                     return false;
                 }
                 current_num_elements = 0;
@@ -82,7 +73,7 @@ public class SeqUploader extends UploadBase {
             try {
                 sendChunk(seqListBuilder.build(), session_uuid);
             } catch (MGXServerException ex) {
-                abortTransfer(ex.getMessage());
+                abortTransfer(ex.getMessage(), total_elements);
                 return false;
             }
             cb.callback(total_elements);
@@ -90,20 +81,20 @@ public class SeqUploader extends UploadBase {
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage());
+            abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
         return true;
     }
 
-    public long getNumSequencesSent() {
-        return total_elements;
-    }
+//    public long getNumElementsSent() {
+//        return total_elements;
+//    }
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/init/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
-        fireTaskChange();
+        fireTaskChange(total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
@@ -111,30 +102,12 @@ public class SeqUploader extends UploadBase {
     private void finishTransfer(String uuid) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/close/" + uuid).get(ClientResponse.class);
         catchException(res);
-        fireTaskChange();
-    }
-
-    private void abortTransfer(String reason) {
-        setErrorMessage(reason);
-        fireTaskChange();
-        // FIXME
+        fireTaskChange(total_elements);
     }
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
         catchException(res);
-        fireTaskChange();
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener p) {
-        pcs.addPropertyChangeListener(p);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener p) {
-        pcs.removePropertyChangeListener(p);
-    }
-
-    private void fireTaskChange() {
-        pcs.firePropertyChange(NUM_SEQUENCES, 0, total_elements);
+        fireTaskChange(total_elements);
     }
 }

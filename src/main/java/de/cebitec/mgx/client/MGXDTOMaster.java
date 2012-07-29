@@ -5,6 +5,9 @@ import de.cebitec.gpms.core.ProjectI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ public class MGXDTOMaster {
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private Map<Class, AccessBase> accessors;
     private String resource;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public MGXDTOMaster(GPMSClientI gpms, MembershipI m) {
         restmaster = gpms.createMaster(m);
@@ -77,6 +81,10 @@ public class MGXDTOMaster {
         return getAccessor(JobAccess.class);
     }
 
+    public ObservationAccess Observation() {
+        return getAccessor(ObservationAccess.class);
+    }
+
     public FileAccess File() {
         return getAccessor(FileAccess.class);
     }
@@ -117,5 +125,29 @@ public class MGXDTOMaster {
             logger.log(Level.SEVERE, null, ex);
         }
         throw new UnsupportedOperationException("Could not create accessor for " + clazz);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        pcs.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    private void firePropertyChange(String propertyName, int oldValue, int newValue) {
+        pcs.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    private void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
+        pcs.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    private void firePropertyChange(PropertyChangeEvent event) {
+        pcs.firePropertyChange(event);
     }
 }

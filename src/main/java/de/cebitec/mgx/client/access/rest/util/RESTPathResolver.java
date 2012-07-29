@@ -9,6 +9,7 @@ import de.cebitec.mgx.dto.dto.FoDList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
@@ -39,6 +40,7 @@ public class RESTPathResolver {
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
+        objmappings.put(ObservationDTO.class, "Observation");
         objmappings.put(FileOrDirectory.class, "File");
 
         // list types
@@ -62,6 +64,7 @@ public class RESTPathResolver {
         methodmappings.put("bySample", "bySample");
         methodmappings.put("byJob", "byJob");
         methodmappings.put("byCategory", "byCategory");
+        methodmappings.put("byRead", "byRead");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
     }
 
