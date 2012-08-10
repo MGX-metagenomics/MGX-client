@@ -48,37 +48,6 @@ public class App {
         assert master != null;
         System.err.println("using " + master.getProject().getName());
 
-//        // create habitat
-//        HabitatDTO h2 = HabitatDTO.newBuilder()
-//                .setName("Biogas Upmeier")
-//                .setGpsLatitude(12.1)
-//                .setGpsLongitude(23.1)
-//                .setDescription("Metagenome Biogasfermenter Upmeier Bielefeld")
-//                .setAltitude(100)
-//                .setBiome("fermenter")
-//                .build();
-//        Long hab_id = master.Habitat().create(h2);
-//
-//        // create sample
-//        SampleDTO s = SampleDTO.newBuilder()
-//                .setHabitatId(hab_id)
-//                .setMaterial("substrate")
-//                .setTemperature(42)
-//                .setVolume(100)
-//                .setVolumeUnit("ml")
-//                .setCollectiondate(Calendar.getInstance().getTime().getTime() / 1000L)
-//                .build();
-//        Long sample_id = master.Sample().create(s);
-//        System.err.println("  created sample " + s.getMaterial() + " with id " + sample_id);
-//
-//        // create dnaextract
-//        DNAExtractDTO d = DNAExtractDTO.newBuilder()
-//                .setSampleId(sample_id)
-//                .setMethod("My extraction method")
-//                .build();
-//        Long extract_id = master.DNAExtract().create(d);
-//        System.err.println("  created extract " + d.getMethod() + " with id " + extract_id);
-//
 //        // create new seqrun
 //        SeqRunDTO sr = SeqRunDTO.newBuilder()
 //                .setExtractId(extract_id)
@@ -100,8 +69,6 @@ public class App {
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
         Collection<ToolDTO> local = master.Tool().fetchall();
 
-        List<Long> toolIds = new ArrayList<>();
-
         // copy tools to project
         for (ToolDTO globaltool : globalTools) {
             boolean isPresent = false;
@@ -114,20 +81,22 @@ public class App {
             if (!isPresent) {
             //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
                 if (globaltool.getAuthor().equals("Sebastian Jaenicke")) {
-                    Long installedToolId = master.Tool().installGlobalTool(globaltool.getId());
-                    toolIds.add(installedToolId);
+                    master.Tool().installGlobalTool(globaltool.getId());
                 }
             }
         }
+        
+        // fetch all tools
+        local = master.Tool().fetchall();
 
         for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
             // create and verify the jobs
             ArrayList<Long> jobIDs = new ArrayList<>();
-            for (Long toolId : toolIds) {
-                System.err.println("creating job..");
+            for (ToolDTO tool : local) {
+                System.err.println("creating job: "+ seqrun.getName() + "/" + tool.getName());
                 JobParameterListDTO paramDTO = dto.JobParameterListDTO.newBuilder().build();
                 JobDTO dto = JobDTO.newBuilder()
-                        .setToolId(toolId)
+                        .setToolId(tool.getId())
                         .setSeqrunId(seqrun.getId())
                         .setState(JobDTO.JobState.CREATED)
                         .setParameters(paramDTO)
@@ -136,7 +105,9 @@ public class App {
 
                 boolean job_ok = master.Job().verify(job_id);
                 System.err.println("job verification: " + job_ok);
-                jobIDs.add(job_id);
+                if (job_ok) {
+                    jobIDs.add(job_id);
+                }
             }
 
             for (Long job_id : jobIDs) {
