@@ -55,7 +55,7 @@ public abstract class RESTMethods {
     }
 
     protected final <U> U get(String path, Class<U> c) throws MGXServerException {
-        //System.err.println("GET uri: " +master.getResource().path(path).getURI().toASCIIString());
+        //System.err.println("GET uri: " +getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
         catchException(res);
