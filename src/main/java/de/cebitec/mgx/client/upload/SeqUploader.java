@@ -16,9 +16,9 @@ import de.cebitec.mgx.sequence.SeqReaderI;
  */
 public class SeqUploader extends UploadBase {
 
-    private WebResource wr;
-    private long seqrun_id;
-    private SeqReaderI<? extends ReadSequenceI> reader = null;
+    private final WebResource wr;
+    private final long seqrun_id;
+    private final SeqReaderI<? extends ReadSequenceI> reader;
     private long total_elements = 0;
 
     public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI<? extends ReadSequenceI> reader) {
@@ -26,7 +26,9 @@ public class SeqUploader extends UploadBase {
         this.wr = wr;
         this.seqrun_id = seqrun_id;
         this.reader = reader;
-        setChunkSize(500);
+        // add in some randomness to make the numbers appear "nicer"
+        int randomNess = (int) Math.round(Math.random()*20);
+        setChunkSize(700 + randomNess);
     }
 
     @Override
