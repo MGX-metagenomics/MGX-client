@@ -22,7 +22,7 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
 
     @Override
     public TermDTO fetch(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported.");
+        return get("/Term/fetch/" + id, TermDTO.class);
     }
 
     @Override
