@@ -21,20 +21,26 @@ import java.util.logging.Logger;
  */
 public class MGXDTOMaster {
 
-    private RESTMasterI restmaster;
+    private final RESTMasterI restmaster;
+    private final MembershipI membership;
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
-    private Map<Class, AccessBase> accessors;
-    private String resource;
-    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private final Map<Class, AccessBase> accessors;
+    private final String resource;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public MGXDTOMaster(GPMSClientI gpms, MembershipI m) {
-        restmaster = gpms.createMaster(m);
+    public MGXDTOMaster(GPMSClientI gpms, MembershipI mbr) {
+        restmaster = gpms.createMaster(mbr);
+        membership = mbr;
         accessors = new HashMap<>();
 
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBReader.class);
         restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBWriter.class);
 
-        resource = new StringBuilder(gpms.getBaseURI()).append(m.getProject().getName()).toString();
+        resource = new StringBuilder(gpms.getBaseURI()).append(mbr.getProject().getName()).toString();
+    }
+    
+    public MembershipI getMembership() {
+        return membership;
     }
 
     public ProjectI getProject() {
