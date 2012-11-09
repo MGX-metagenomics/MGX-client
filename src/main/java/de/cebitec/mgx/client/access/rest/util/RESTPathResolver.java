@@ -4,8 +4,8 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
-import de.cebitec.mgx.dto.dto.FileOrDirectory;
-import de.cebitec.mgx.dto.dto.FoDList;
+import de.cebitec.mgx.dto.dto.FileDTO;
+import de.cebitec.mgx.dto.dto.FileDTOList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -41,7 +41,7 @@ public class RESTPathResolver {
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
         objmappings.put(ObservationDTO.class, "Observation");
-        objmappings.put(FileOrDirectory.class, "File");
+        objmappings.put(FileDTO.class, "File");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
@@ -49,7 +49,7 @@ public class RESTPathResolver {
         objmappings.put(ToolDTOList.class, "Tool");
         objmappings.put(DNAExtractDTOList.class, "DNAExtract");
         objmappings.put(SeqRunDTOList.class, "SeqRun");
-        objmappings.put(FoDList.class, "File");
+        objmappings.put(FileDTOList.class, "File");
         objmappings.put(TermDTOList.class, "Term");
 
         // methods
