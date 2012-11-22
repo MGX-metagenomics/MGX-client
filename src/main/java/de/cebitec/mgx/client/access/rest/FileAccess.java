@@ -11,15 +11,9 @@ import java.util.Collection;
  * @author sjaenick
  */
 public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
-    
-    public Collection<FileDTO> fetchall(String rootDir) throws MGXServerException, MGXClientException {
-//        try {
-//            rootDir = URLEncoder.encode(rootDir, "UTF-8");
-//        } catch (UnsupportedEncodingException ex) {
-//            throw new MGXClientException(ex.getMessage());
-//        }
 
-        System.err.println("request dir listing for "+rootDir);
+    public Collection<FileDTO> fetchall(String rootDir) throws MGXServerException, MGXClientException {
+        //System.err.println("request dir listing for " + rootDir);
         rootDir = rootDir.replace("/", "|");
         String resolve = r.resolve(FileDTOList.class, "fetchall");
         return this.get(resolve + rootDir, FileDTOList.class).getFileList();
@@ -27,7 +21,13 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
     @Override
     public void delete(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public void delete(FileDTO dto) throws MGXServerException, MGXClientException {
+        String path = dto.getName().replace("/", "|");
+        String resolve = r.resolve(FileDTO.class, "delete");
+        this.delete(resolve + path);
     }
 
     @Override
@@ -37,7 +37,11 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
     @Override
     public long create(FileDTO t) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // this method is only used to create directories; files
+        // are created using the upload mechanism
+        assert t.getIsDirectory();
+        System.err.println(t.getName());
+        return super.create(t, FileDTO.class);
     }
 
     @Override
