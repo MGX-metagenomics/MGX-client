@@ -16,12 +16,12 @@ import java.util.logging.Logger;
  */
 public class FileUploader extends UploadBase {
 
-    private WebResource wr;
-    private BufferedReader reader;
-    private String remoteName;
+    private final WebResource wr;
+    private final BufferedReader reader;
+    private final String remoteName;
     private long total_elements_sent = 0;
 
-    public FileUploader(WebResource wr, FileReader reader, String remoteName) {
+    public FileUploader(final WebResource wr, final FileReader reader, final String remoteName) {
         super();
         this.wr = wr;
         this.reader = new BufferedReader(reader);
@@ -77,7 +77,7 @@ public class FileUploader extends UploadBase {
         return session_uuid.getValue();
     }
 
-    private void sendChunk(char[] data, String session_uuid) throws MGXServerException {
+    private void sendChunk(final char[] data, String session_uuid) throws MGXServerException {
         ClientResponse res = wr.path("/File/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, data);
         catchException(res);
         fireTaskChange(total_elements_sent);

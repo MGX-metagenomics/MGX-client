@@ -2,8 +2,10 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.upload.FileUploader;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
+import java.io.FileReader;
 import java.util.Collection;
 
 /**
@@ -40,7 +42,6 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         // this method is only used to create directories; files
         // are created using the upload mechanism
         assert t.getIsDirectory();
-        System.err.println(t.getName());
         return super.create(t, FileDTO.class);
     }
 
@@ -52,5 +53,9 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     @Override
     public Collection<FileDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchall(".");
+    }
+
+    public FileUploader createUploader(String fullPath, FileReader reader) {
+        return new FileUploader(getWebResource(), reader, fullPath);
     }
 }
