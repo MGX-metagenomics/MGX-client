@@ -28,7 +28,7 @@ public class SeqUploader extends UploadBase {
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
         int randomNess = (int) Math.round(Math.random()*20);
-        setChunkSize(700 + randomNess);
+        setChunkSize(600 + randomNess);
     }
 
     @Override
@@ -63,6 +63,7 @@ public class SeqUploader extends UploadBase {
                 cb.callback(total_elements);
                 try {
                     sendChunk(seqListBuilder.build(), session_uuid);
+                    cb.callback(total_elements);
                 } catch (MGXServerException ex) {
                     abortTransfer(ex.getMessage(), total_elements);
                     return false;

@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.upload.FileUploader;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Collection;
 
@@ -55,7 +56,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         return fetchall(".");
     }
 
-    public FileUploader createUploader(String fullPath, FileReader reader) {
-        return new FileUploader(getWebResource(), reader, fullPath);
+    public FileUploader createUploader(File localFile, String fullPath) {
+        return new FileUploader(getWebResource(), localFile, fullPath);
     }
 }
