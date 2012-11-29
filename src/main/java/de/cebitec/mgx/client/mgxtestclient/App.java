@@ -5,15 +5,17 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
+import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
+import de.cebitec.mgx.sequence.SeqReaderFactory;
+import de.cebitec.mgx.sequence.SeqReaderI;
 import java.io.Console;
 import java.util.*;
 
@@ -26,44 +28,71 @@ public class App {
 
         Console con = System.console();
 
-        System.err.println("using project " + pName);
-        String username = con.readLine("Username: ");
+        String username = "sjaenick"; //con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
-        MGXDTOMaster master = null;
+        MGXDTOMaster master = getMaster(username, password, pName);
+//        for (FileDTO f : master.File().fetchall(args[1])) {
+//            System.out.println(f.getName());
+//        }
+//        System.exit(0);
+        //        MGXDTOMaster master2 = getMaster(username, password, "MGX_Stadtwerke");
+        //
+        //        assert master != null;
+        //        System.err.println("using " + master.getProject().getName());
+        //
+        //        for (HabitatDTO h : master.Habitat().fetchall()) {
+        //                for (HabitatDTO h2 : master2.Habitat().fetchall()) {
+        //                    for (SampleDTO s2 : master2.Sample().ByHabitat(h2.getId())) {
+        //                        for (DNAExtractDTO d2 : master2.DNAExtract().BySample(s2.getId())) {
+        //                            for (SeqRunDTO sr2 : master2.SeqRun().ByExtract(d2.getId())) {
+        //                                System.err.println(master2.getProject().getName() + " " + sr2.getName());
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            for (SampleDTO s : master.Sample().ByHabitat(h.getId())) {
+        //                for (DNAExtractDTO d : master.DNAExtract().BySample(s.getId())) {
+        //                    for (SeqRunDTO sr : master.SeqRun().ByExtract(d.getId())) {
+        //                        System.err.println(master.getProject().getName() + " " + sr.getName());
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        System.exit(0);
 
-        // http://localhost:8080/MGX-maven-web/webresources/
-        GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
-        if (!gpms.login(username, new String(password))) {
-            System.err.println("login failed");
-            System.exit(1);
-        }
-        for (MembershipI m : gpms.getMemberships()) {
-            if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
-                master = new MGXDTOMaster(gpms, m);
-                break; // just use the first project we find
-            }
-        }
-
-        assert master != null;
-        System.err.println("using " + master.getProject().getName());
-
-//        // create new seqrun
-//        SeqRunDTO sr = SeqRunDTO.newBuilder()
-//                .setExtractId(extract_id)
-//                .setAccession("myAccession")
-//                .setSubmittedToInsdc(true)
-//                .setSequencingMethod("WGS")
-//                .setSequencingTechnology("454")
-//                .build();
-//        Long seqrun_id = master.SeqRun().create(sr);
-//        System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+//        long extract_id = 0;
+//        for (DNAExtractDTO extract : master.DNAExtract().fetchall()) {
+//            extract_id = extract.getId();
+//        }
+//        TermDTO flx = master.Term().fetch(3); // FLX tit
+//        TermDTO wgs = master.Term().fetch(12); // WGS
 //
-//        // upload sequence data
-//        SeqReaderI reader = SeqReaderFactory.getReader(args[1]);
-//        master.Sequence().sendSequences(seqrun_id, reader);
-
-        //System.exit(0);
+//        for (int argpos = 1; argpos < args.length; argpos++) {
+//            String fname = args[argpos];
+//            fname = fname.replaceAll("_ITv3.2.fas", "");
+//
+//            System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
+//            String answer = con.readLine();
+//            if ("y".equals(answer)) {
+//                // create new seqrun
+//                SeqRunDTO sr = SeqRunDTO.newBuilder()
+//                        .setName(fname)
+//                        .setExtractId(extract_id)
+//                        .setAccession("myAccession")
+//                        .setSubmittedToInsdc(false)
+//                        .setSequencingMethod(wgs)
+//                        .setSequencingTechnology(flx)
+//                        .build();
+//                Long seqrun_id = master.SeqRun().create(sr);
+//                System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+//
+//                // upload sequence data
+//                SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
+//                master.Sequence().sendSequences(seqrun_id, reader);
+//            }
+//        }
+//        System.exit(0);
 
         // fetch global tool Ids
         Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
@@ -79,42 +108,53 @@ public class App {
             }
 
             if (!isPresent) {
-            //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
-                if (globaltool.getAuthor().equals("Sebastian Jaenicke")) {
+                //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
+                if ((globaltool.getAuthor().equals("Sebastian Jaenicke") && (!globaltool.getName().equals("PKS Screen")))) {
                     master.Tool().installGlobalTool(globaltool.getId());
                 }
             }
         }
-        
-        // fetch all tools
+
+        // fetch all tools in project
         local = master.Tool().fetchall();
 
         for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
-            // create and verify the jobs
-            ArrayList<Long> jobIDs = new ArrayList<>();
-            for (ToolDTO tool : local) {
-                System.err.println("creating job: "+ seqrun.getName() + "/" + tool.getName());
-                JobParameterListDTO paramDTO = dto.JobParameterListDTO.newBuilder().build();
-                JobDTO dto = JobDTO.newBuilder()
-                        .setToolId(tool.getId())
-                        .setSeqrunId(seqrun.getId())
-                        .setState(JobDTO.JobState.CREATED)
-                        .setParameters(paramDTO)
-                        .build();
-                Long job_id = master.Job().create(dto);
+            Iterable<JobDTO> jobs = master.Job().BySeqRun(seqrun.getId());
 
-                boolean job_ok = master.Job().verify(job_id);
-                System.err.println("job verification: " + job_ok);
-                if (job_ok) {
-                    jobIDs.add(job_id);
+            // create and verify the jobs
+            for (ToolDTO tool : local) {
+
+                boolean isUsed = false;
+                for (JobDTO j : jobs) {
+                    if (j.getToolId() == tool.getId()) {
+                        isUsed = true;
+                    }
+                }
+
+                if (!isUsed) {
+                    System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + " (y/n)? ");
+                    String answer = con.readLine();
+                    //if (tool.getName().contains("16S")) {
+                    if ("y".equals(answer)) {
+                        JobDTO dto = JobDTO.newBuilder()
+                                .setToolId(tool.getId())
+                                .setSeqrunId(seqrun.getId())
+                                .setState(JobDTO.JobState.CREATED)
+                                .setParameters(JobParameterListDTO.newBuilder().build())
+                                .build();
+                        Long job_id = master.Job().create(dto);
+
+                        boolean job_ok = master.Job().verify(job_id);
+                        System.err.println("job verification: " + job_ok);
+                        if (job_ok) {
+                            System.err.println("submitting job " + job_id + "..");
+                            boolean submitted = master.Job().execute(job_id);
+                            System.err.println("job execution: " + submitted);
+                        }
+                    }
                 }
             }
 
-            for (Long job_id : jobIDs) {
-                System.err.println("submitting job " + job_id + "..");
-                boolean submitted = master.Job().execute(job_id);
-                System.err.println("job execution: " + submitted);
-            }
         }
 
 //        // wait for jobs to finish execution
@@ -134,6 +174,24 @@ public class App {
         //master.Job().cancel(lastjob);
         // deleting the toplevel obj  will also remove everything else
         //master.Habitat().delete(hab_id);
+    }
+
+    private static MGXDTOMaster getMaster(String username, char[] password, String pName) {
+
+        MGXDTOMaster master = null;
+        // http://localhost:8080/MGX-maven-web/webresources/
+        GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        if (!gpms.login(username, new String(password))) {
+            System.err.println("login failed");
+            System.exit(1);
+        }
+        for (MembershipI m : gpms.getMemberships()) {
+            if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
+                master = new MGXDTOMaster(gpms, m);
+                break; // just use the first project we find
+            }
+        }
+        return master;
     }
 
     public static void printObjTree(MGXDTOMaster m) throws MGXServerException, MGXClientException {
