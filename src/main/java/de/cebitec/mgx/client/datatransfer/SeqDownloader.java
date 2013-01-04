@@ -81,9 +81,8 @@ public class SeqDownloader extends DownloadBase {
         // finish the transfer
         
         try {
-            writer.close();
             finishTransfer(session_uuid);
-        } catch (IOException | MGXServerException ex) {
+        } catch (MGXServerException ex) {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
