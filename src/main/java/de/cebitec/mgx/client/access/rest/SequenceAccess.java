@@ -1,11 +1,14 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.mgx.client.datatransfer.SeqDownloader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.client.upload.SeqUploader;
+import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
+import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
+import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Collection;
 
 /**
@@ -21,11 +24,23 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
             throw new MGXServerException(seqUploader.getErrorMessage());
         }
     }
-    
+
+    public void downloadSequences(long seqrun_id, SeqWriterI<DNASequenceI> writer) throws MGXServerException {
+        SeqDownloader dl = new SeqDownloader(getWebResource(), seqrun_id, writer);
+        boolean success = dl.download();
+        if (!success) {
+            throw new MGXServerException(dl.getErrorMessage());
+        }
+    }
+
     public SeqUploader createUploader(long seqrun_id, SeqReaderI reader) {
         return new SeqUploader(getWebResource(), seqrun_id, reader);
     }
-        
+
+    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<DNASequenceI> writer) {
+        return new SeqDownloader(getWebResource(), seqrun_id, writer);
+    }
+
     @Override
     public SequenceDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
