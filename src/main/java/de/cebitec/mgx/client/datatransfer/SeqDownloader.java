@@ -110,4 +110,8 @@ public class SeqDownloader extends DownloadBase {
         fireTaskChange(total_elements);
         return entity;
     }
+
+    public int getProgress() {
+        return -1;
+    }
 }

@@ -20,7 +20,7 @@ public abstract class DownloadBase {
     private CallbackI cb = null;
     private String error_message = "";
     private final PropertyChangeSupport pcs;
-    public static final String NUM_ELEMENTS_SENT = "numElementsSent";
+    public static final String NUM_ELEMENTS_RECEIVED = "numElementsReceived";
 
     public DownloadBase() {
         pcs = new PropertyChangeSupport(this);
@@ -51,7 +51,7 @@ public abstract class DownloadBase {
     public abstract boolean download();
 
     protected void fireTaskChange(long total_elements) {
-        pcs.firePropertyChange(NUM_ELEMENTS_SENT, 0, total_elements);
+        pcs.firePropertyChange(NUM_ELEMENTS_RECEIVED, 0, total_elements);
     }
 
     protected final static class NullCallBack implements CallbackI {

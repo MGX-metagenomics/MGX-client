@@ -1,9 +1,9 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.datatransfer.SeqDownloader;
+import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
@@ -43,7 +43,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 
     @Override
     public SequenceDTO fetch(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return super.fetch(id, SequenceDTO.class);
     }
 
     @Override
