@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
+import java.awt.EventQueue;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,6 +98,7 @@ public class FileUploader extends UploadBase {
     }
 
     private String initTransfer() throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/init/" + remoteName).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(total_elements_sent);
@@ -105,6 +107,7 @@ public class FileUploader extends UploadBase {
     }
 
     private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
         ClientResponse res = wr.path("/File/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
         catchException(res);
@@ -112,6 +115,7 @@ public class FileUploader extends UploadBase {
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/close/" + uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(total_elements_sent);

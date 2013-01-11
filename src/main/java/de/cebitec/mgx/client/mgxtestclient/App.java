@@ -14,6 +14,7 @@ import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
+import de.cebitec.mgx.seqstorage.FastaWriter;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import java.io.Console;
@@ -32,6 +33,8 @@ public class App {
         char[] password = con.readPassword("Password: ");
 
         MGXDTOMaster master = getMaster(username, password, pName);
+        //FastaWriter writer = new FastaWriter("/tmp/foo.fas");
+        //master.Sequence().downloadSequences(2, writer);
 //        for (FileDTO f : master.File().fetchall(args[1])) {
 //            System.out.println(f.getName());
 //        }
@@ -132,7 +135,7 @@ public class App {
                 }
 
                 if (!isUsed) {
-                    System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + " (y/n)? ");
+                    System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + "/" + tool.getId() + " (y/n)? ");
                     String answer = con.readLine();
                     //if (tool.getName().contains("16S")) {
                     if ("y".equals(answer)) {
@@ -143,7 +146,7 @@ public class App {
                                 .setParameters(JobParameterListDTO.newBuilder().build())
                                 .build();
                         Long job_id = master.Job().create(dto);
-
+                        System.err.println("job created.");
                         boolean job_ok = master.Job().verify(job_id);
                         System.err.println("job verification: " + job_ok);
                         if (job_ok) {

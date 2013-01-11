@@ -9,6 +9,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.seqstorage.DNASequence;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
+import java.awt.EventQueue;
 import java.io.IOException;
 
 /**
@@ -17,15 +18,20 @@ import java.io.IOException;
  */
 public class SeqDownloader extends DownloadBase {
 
-    private final WebResource wr;
-    private final long seqrun_id;
+    protected final WebResource wr;
+    private long seqrun_id = -1;
     private final SeqWriterI<DNASequenceI> writer;
-    private long total_elements = 0;
+    protected long total_elements = 0;
 
     public SeqDownloader(WebResource wr, long seqrun_id, SeqWriterI<DNASequenceI> writer) {
+        this(wr, writer);
+        this.seqrun_id = seqrun_id;
+        
+    }
+
+    protected SeqDownloader(WebResource wr, SeqWriterI<DNASequenceI> writer) {
         super();
         this.wr = wr;
-        this.seqrun_id = seqrun_id;
         this.writer = writer;
     }
 
@@ -35,7 +41,7 @@ public class SeqDownloader extends DownloadBase {
 
         String session_uuid;
         try {
-            session_uuid = initTransfer(seqrun_id);
+            session_uuid = initTransfer();
         } catch (MGXServerException ex) {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
@@ -76,10 +82,10 @@ public class SeqDownloader extends DownloadBase {
             cb.callback(total_elements);
             fireTaskChange(total_elements);
         }
-        
-        
+
+
         // finish the transfer
-        
+
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
@@ -89,7 +95,8 @@ public class SeqDownloader extends DownloadBase {
         return true;
     }
 
-    private String initTransfer(long seqrun_id) throws MGXServerException {
+    protected String initTransfer() throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/Sequence/initDownload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(total_elements);
@@ -97,13 +104,15 @@ public class SeqDownloader extends DownloadBase {
         return session_uuid.getValue();
     }
 
-    private void finishTransfer(String uuid) throws MGXServerException {
+    protected void finishTransfer(String uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/Sequence/closeDownload/" + uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(total_elements);
     }
 
-    private SequenceDTOList fetchChunk(String session_uuid) throws MGXServerException {
+    protected SequenceDTOList fetchChunk(String session_uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/Sequence/fetchSequences/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         SequenceDTOList entity = res.<SequenceDTOList>getEntity(SequenceDTOList.class);

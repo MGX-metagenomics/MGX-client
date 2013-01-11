@@ -1,9 +1,11 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.mgx.client.datatransfer.SeqByAttributeDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
@@ -44,6 +46,18 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     @Override
     public SequenceDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, SequenceDTO.class);
+    }
+
+    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer) {
+        return new SeqByAttributeDownloader(getWebResource(), attrs, writer);
+    }
+
+    public void fetchAnnotatedReads(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer) throws MGXServerException {
+        SeqByAttributeDownloader dl = new SeqByAttributeDownloader(getWebResource(), attrs, writer);
+        boolean success = dl.download();
+        if (!success) {
+            throw new MGXServerException(dl.getErrorMessage());
+        }
     }
 
     @Override
