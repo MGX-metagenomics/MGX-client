@@ -52,7 +52,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //    }
     @Override
     public AttributeDTO fetch(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported.");
+        return super.fetch(id, AttributeDTO.class);
     }
 
     @Override
