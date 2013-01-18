@@ -29,6 +29,10 @@ public class SeqByAttributeDownloader extends SeqDownloader {
         catchException(res);
         fireTaskChange(total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
-        return session_uuid.getValue();
+        String uuid = session_uuid.getValue();
+        if (uuid == null || "".equals(uuid)) {
+            throw new MGXServerException("Could not initialize transfer");
+        }
+        return uuid;
     }
 }
