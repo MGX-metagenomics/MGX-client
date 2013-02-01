@@ -56,6 +56,10 @@ public class SeqDownloader extends DownloadBase {
             try {
                 chunk = fetchChunk(session_uuid);
             } catch (MGXServerException ex) {
+                try {
+                    writer.close();
+                } catch (Exception ex1) {
+                }
                 abortTransfer(ex.getMessage(), total_elements);
                 return false;
             }
@@ -120,7 +124,7 @@ public class SeqDownloader extends DownloadBase {
         return entity;
     }
 
-    public int getProgress() {
-        return -1;
+    public long getProgress() {
+        return total_elements;
     }
 }

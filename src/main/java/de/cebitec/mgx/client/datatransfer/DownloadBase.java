@@ -21,6 +21,7 @@ public abstract class DownloadBase {
     private String error_message = "";
     private final PropertyChangeSupport pcs;
     public static final String NUM_ELEMENTS_RECEIVED = "numElementsReceived";
+    public static final String TRANSFER_FAILED = "transferFailed";
 
     public DownloadBase() {
         pcs = new PropertyChangeSupport(this);
@@ -28,7 +29,7 @@ public abstract class DownloadBase {
 
     protected void abortTransfer(String reason, long total) {
         setErrorMessage(reason);
-        fireTaskChange(total);
+        pcs.firePropertyChange(TRANSFER_FAILED, 0, 1);
     }
 
     public String getErrorMessage() {
