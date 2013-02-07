@@ -63,8 +63,9 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, ToolDTO.class);
+        return true;
     }
 
     @Override

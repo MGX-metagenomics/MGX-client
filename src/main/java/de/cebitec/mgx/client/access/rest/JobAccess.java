@@ -48,8 +48,9 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
     
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, JobDTO.class);
+        return true;
     }
     
     public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXServerException {

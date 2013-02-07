@@ -37,7 +37,8 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
     
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, DNAExtractDTO.class);
+        return true;
     }
 }

@@ -37,7 +37,8 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, SampleDTO.class);
+        return true;
     }
 }

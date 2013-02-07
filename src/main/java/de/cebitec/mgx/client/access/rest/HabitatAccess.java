@@ -33,7 +33,8 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, HabitatDTO.class);
+        return true;
     }
 }

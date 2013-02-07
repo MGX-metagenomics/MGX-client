@@ -20,7 +20,7 @@ public abstract class AccessBase<T, U> extends RESTMethods {
     public abstract Collection<T> fetchall() throws MGXServerException, MGXClientException;
     public abstract long create(T t) throws MGXServerException, MGXClientException;
     public abstract void update(T t) throws MGXServerException, MGXClientException;
-    public abstract void delete(long id) throws MGXServerException, MGXClientException;
+    public abstract boolean delete(long id) throws MGXServerException, MGXClientException;
 
     protected final long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "create");

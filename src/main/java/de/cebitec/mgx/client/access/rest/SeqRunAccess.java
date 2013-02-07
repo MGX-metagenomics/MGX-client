@@ -40,8 +40,9 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         super.delete(id, SeqRunDTO.class);
+        return true;
     }
 
     public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id) throws MGXServerException, MGXClientException {

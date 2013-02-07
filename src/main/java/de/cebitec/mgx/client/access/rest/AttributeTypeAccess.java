@@ -38,8 +38,8 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     public List<AttributeTypeDTO> ByJob(long seqrun_id) throws MGXServerException {

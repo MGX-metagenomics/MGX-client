@@ -37,7 +37,7 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     }
 
     @Override
-    public void delete(long id) throws MGXServerException, MGXClientException {
+    public boolean delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 }
