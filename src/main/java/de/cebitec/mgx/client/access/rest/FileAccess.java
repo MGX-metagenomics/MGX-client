@@ -26,10 +26,11 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public void delete(FileDTO dto) throws MGXServerException, MGXClientException {
+    public boolean delete(FileDTO dto) throws MGXServerException, MGXClientException {
         String path = dto.getName().replace("/", "|");
         String resolve = r.resolve(FileDTO.class, "delete");
         this.delete(resolve + path);
+        return true;
     }
 
     @Override
