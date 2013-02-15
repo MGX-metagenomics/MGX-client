@@ -5,19 +5,22 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
-import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
+import de.cebitec.mgx.seqstorage.CSFReader;
+import de.cebitec.mgx.seqstorage.CSFWriter;
 import de.cebitec.mgx.seqstorage.FastaWriter;
-import de.cebitec.mgx.sequence.SeqReaderFactory;
-import de.cebitec.mgx.sequence.SeqReaderI;
+import de.cebitec.mgx.sequence.SeqStoreException;
 import java.io.Console;
+import java.io.IOException;
 import java.util.*;
 
 public class App {
@@ -25,15 +28,19 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         String pName = args[0];
-        //String seqFile = args[1];
 
         Console con = System.console();
-
         String username = "sjaenick"; //con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
         MGXDTOMaster master = getMaster(username, password, pName);
-        //FastaWriter writer = new FastaWriter("/tmp/foo.fas");
+//        AttributeDTO adto = master.Attribute().fetch(127400);
+//        assert adto != null;
+//        AttributeDTOList build = AttributeDTOList.newBuilder().addAttribute(adto).build();
+//        FastaWriter writer = new FastaWriter("/tmp/foo.fas");
+//        master.Sequence().fetchAnnotatedReads(build, writer);
+//        writer.close();
+//        System.exit(0);
         //master.Sequence().downloadSequences(2, writer);
 //        for (FileDTO f : master.File().fetchall(args[1])) {
 //            System.out.println(f.getName());
@@ -228,6 +235,16 @@ public class App {
     }
 
     protected static List<String> split(String message, String separator) {
-        return new ArrayList<String>(Arrays.asList(message.split(separator)));
+        return new ArrayList<>(Arrays.asList(message.split(separator)));
+    }
+
+    private void fixCSF(String fname) throws SeqStoreException, IOException {
+        CSFReader r = new CSFReader(fname);
+        CSFWriter w = new CSFWriter("/tmp/tmpcsf");
+        while (r.hasMoreElements()) {
+            w.addSequence(r.nextElement().getSequence());
+        }
+        w.close();
+        r.close();
     }
 }
