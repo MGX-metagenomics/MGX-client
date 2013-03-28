@@ -28,7 +28,7 @@ public class SeqUploader extends UploadBase {
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
         int randomNess = (int) Math.round(Math.random()*20);
-        setChunkSize(600 + randomNess);
+        setChunkSize(800 + randomNess);
     }
 
     @Override
@@ -91,9 +91,9 @@ public class SeqUploader extends UploadBase {
         return true;
     }
 
-//    public long getNumElementsSent() {
-//        return total_elements;
-//    }
+    public long getNumElementsSent() {
+        return total_elements;
+    }
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
