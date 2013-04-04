@@ -190,7 +190,8 @@ public class App {
 
         MGXDTOMaster master = null;
         // http://localhost:8080/MGX-maven-web/webresources/
-        GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        //GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
+        GPMSClientI gpms = new GPMS("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
         if (!gpms.login(username, new String(password))) {
             System.err.println("login failed");
             System.exit(1);
@@ -237,14 +238,13 @@ public class App {
     protected static List<String> split(String message, String separator) {
         return new ArrayList<>(Arrays.asList(message.split(separator)));
     }
-
-    private void fixCSF(String fname) throws SeqStoreException, IOException {
-        CSFReader r = new CSFReader(fname);
-        CSFWriter w = new CSFWriter("/tmp/tmpcsf");
-        while (r.hasMoreElements()) {
-            w.addSequence(r.nextElement().getSequence());
-        }
-        w.close();
-        r.close();
-    }
+//    private void fixCSF(String fname) throws SeqStoreException, IOException {
+//        CSFReader r = new CSFReader(fname);
+//        CSFWriter w = new CSFWriter("/tmp/tmpcsf");
+//        while (r.hasMoreElements()) {
+//            w.addSequence(r.nextElement().getSequence());
+//        }
+//        w.close();
+//        r.close();
+//    }
 }
