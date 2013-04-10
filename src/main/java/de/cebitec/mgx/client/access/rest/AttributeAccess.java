@@ -18,19 +18,19 @@ import java.util.List;
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
-    public List<AttributeDTO> BySeqRun(long seqrunId) throws MGXServerException {
+    public List<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
         return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
     }
 
-    public AttributeDistribution getDistribution(long attrType_id, long job_id) throws MGXServerException {
+    public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXServerException {
         return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class);
     }
 
-    public AttributeDistribution getHierarchy(long attrType_id, long job_id) throws MGXServerException {
+    public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXServerException {
         return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class);
     }
     
-    public AttributeCorrelation getCorrelation(long attrtypeId1, long jobid1, long attrtypeid2, long jobid2) throws MGXServerException {
+    public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXServerException {
         String path = new StringBuilder("/Attribute/getCorrelation/")
                 .append(attrtypeId1)
                 .append('/')
@@ -51,7 +51,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //        return get(uri, AttributeDistribution.class).getAttributecountList();
 //    }
     @Override
-    public AttributeDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public AttributeDTO fetch(final long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, AttributeDTO.class);
     }
 
