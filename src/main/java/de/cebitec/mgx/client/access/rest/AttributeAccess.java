@@ -9,6 +9,7 @@ import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.SearchRequestDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXServerException {
         return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class);
     }
-    
+
     public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXServerException {
         String path = new StringBuilder("/Attribute/getCorrelation/")
                 .append(attrtypeId1)
@@ -76,6 +77,17 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     public List<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
-        return put("/Attribute/search/", req, SequenceDTOList.class).getSeqList();
+        List<SequenceDTO> ret = new ArrayList<>();
+        SequenceDTOList reply = put("/Attribute/search/", req, SequenceDTOList.class);
+        ret.addAll(reply.getSeqList());
+        //Logger.getGlobal().log(Level.INFO, "got "+ret.size()+" seqs");
+
+        while (!reply.getComplete()) {
+            String uuid = reply.getUuid();
+            reply = get("/Attribute/continueSearch/" + uuid, SequenceDTOList.class);
+            //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
+            ret.addAll(reply.getSeqList());
+        }
+        return ret;
     }
 }
