@@ -46,6 +46,7 @@ public class SeqUploader extends UploadBase {
 
         cb.callback(total_elements);
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+        seqListBuilder.setComplete(true);
         while (reader.hasMoreElements()) {
             ReadSequenceI nextElement = reader.nextElement();
 
@@ -70,6 +71,7 @@ public class SeqUploader extends UploadBase {
                 }
                 current_num_elements = 0;
                 seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+                seqListBuilder.setComplete(true);
             }
         }
         if (current_num_elements > 0) {
