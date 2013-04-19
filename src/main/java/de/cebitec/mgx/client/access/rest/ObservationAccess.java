@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -12,8 +13,8 @@ import java.util.Collection;
  */
 public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTOList> {
 
-    public Collection<ObservationDTO> ByRead(long seqId) throws MGXServerException, MGXClientException {
-        return get(r.resolve(ObservationDTO.class, "byRead") + seqId, ObservationDTOList.class).getObservationList();
+    public Iterator<ObservationDTO> ByRead(long seqId) throws MGXServerException, MGXClientException {
+        return get(r.resolve(ObservationDTO.class, "byRead") + seqId, ObservationDTOList.class).getObservationList().iterator();
     }
 
     @Override
