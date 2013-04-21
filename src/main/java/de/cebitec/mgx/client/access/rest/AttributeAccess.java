@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
-    public List<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
-        return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList();
+    public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
+        return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList().iterator();
     }
 
     public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXServerException {
