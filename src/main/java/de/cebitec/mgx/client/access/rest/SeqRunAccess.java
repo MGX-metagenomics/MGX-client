@@ -6,7 +6,7 @@ import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobsAndAttributeTypesDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTOList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,8 +16,8 @@ import java.util.List;
 public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     @Override
-    public Collection<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchlist(SeqRunDTOList.class).getSeqrunList();
+    public Iterator<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(SeqRunDTOList.class).getSeqrunList().iterator();
     }
     
     @Override
@@ -25,8 +25,8 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return super.fetch(id, SeqRunDTO.class);
     }
 
-    public Collection<SeqRunDTO> ByExtract(long extract_id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(SeqRunDTO.class, "byExtract") + extract_id, SeqRunDTOList.class).getSeqrunList();
+    public Iterator<SeqRunDTO> ByExtract(long extract_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(SeqRunDTO.class, "byExtract") + extract_id, SeqRunDTOList.class).getSeqrunList().iterator();
     }
 
     @Override

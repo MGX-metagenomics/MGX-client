@@ -10,7 +10,7 @@ import de.cebitec.mgx.dto.dto.SearchRequestDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,7 +57,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public Collection<AttributeDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<AttributeDTO> fetchall() throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

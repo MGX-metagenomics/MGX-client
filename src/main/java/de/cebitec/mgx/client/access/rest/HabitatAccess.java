@@ -4,7 +4,7 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
-import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -13,8 +13,8 @@ import java.util.Collection;
 public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
 
     @Override
-    public Collection<HabitatDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchlist(HabitatDTOList.class).getHabitatList();
+    public Iterator<HabitatDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(HabitatDTOList.class).getHabitatList().iterator();
     }
 
     @Override

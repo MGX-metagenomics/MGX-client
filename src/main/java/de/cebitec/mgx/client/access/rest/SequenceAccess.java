@@ -76,7 +76,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public Collection<SequenceDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<SequenceDTO> fetchall() throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

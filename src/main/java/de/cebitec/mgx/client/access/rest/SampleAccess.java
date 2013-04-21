@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -13,8 +14,8 @@ import java.util.Collection;
 public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
 
     @Override
-    public Collection<SampleDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchlist(SampleDTOList.class).getSampleList();
+    public Iterator<SampleDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(SampleDTOList.class).getSampleList().iterator();
     }
 
     @Override
@@ -22,8 +23,8 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         return super.fetch(id, SampleDTO.class);
     }
 
-    public Collection<SampleDTO> ByHabitat(long habitat_id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList();
+    public Iterator<SampleDTO> ByHabitat(long habitat_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList().iterator();
     }
 
     @Override

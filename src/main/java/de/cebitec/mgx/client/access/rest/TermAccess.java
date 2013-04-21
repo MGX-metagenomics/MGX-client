@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.TermDTOList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -26,7 +27,7 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
     }
 
     @Override
-    public Collection<TermDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<TermDTO> fetchall() throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

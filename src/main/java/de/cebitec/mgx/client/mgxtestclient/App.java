@@ -105,11 +105,16 @@ public class App {
 //        System.exit(0);
 
         // fetch global tool Ids
-        Collection<ToolDTO> globalTools = master.Tool().listGlobalTools();
-        Collection<ToolDTO> local = master.Tool().fetchall();
+        Iterator<ToolDTO> globalTools = master.Tool().listGlobalTools();
+        Iterator<ToolDTO> localiter = master.Tool().fetchall();
+        Collection<ToolDTO> local = new ArrayList<>();
+        while (localiter.hasNext()) {
+            local.add(localiter.next());
+        }
 
         // copy tools to project
-        for (ToolDTO globaltool : globalTools) {
+        while (globalTools.hasNext()) {
+            ToolDTO globaltool = globalTools.next();
             boolean isPresent = false;
             for (ToolDTO localtool : local) {
                 if (globaltool.getName().equals(localtool.getName())) {
@@ -126,9 +131,14 @@ public class App {
         }
 
         // fetch all tools in project
-        local = master.Tool().fetchall();
-
-        for (SeqRunDTO seqrun : master.SeqRun().fetchall()) {
+        local.clear();
+        localiter = master.Tool().fetchall();
+        while (localiter.hasNext()) {
+            local.add(localiter.next());
+        }
+        Iterator<SeqRunDTO> iter = master.SeqRun().fetchall();
+        while (iter.hasNext()) {
+            SeqRunDTO seqrun = iter.next();
             Iterable<JobDTO> jobs = master.Job().BySeqRun(seqrun.getId());
 
             // create and verify the jobs
@@ -183,7 +193,7 @@ public class App {
         //System.out.println("sending cancel()");
         //master.Job().cancel(lastjob);
         // deleting the toplevel obj  will also remove everything else
-        //master.Habitat().delete(hab_id);
+//        //master.Habitat().delete(hab_id);
     }
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) {
@@ -205,23 +215,23 @@ public class App {
         return master;
     }
 
-    public static void printObjTree(MGXDTOMaster m) throws MGXServerException, MGXClientException {
-        System.out.println("\n.------------------------------------------------------------");
-        System.err.println("| DB Contents (" + m.getProject() + ")\n|");
-        for (HabitatDTO h : m.Habitat().fetchall()) {
-            System.out.println("| H: " + h.getName());
-            for (SampleDTO s : m.Sample().ByHabitat(h.getId())) {
-                System.out.println("| `--- S: " + s.getCollectiondate());
-                for (DNAExtractDTO d : m.DNAExtract().BySample(s.getId())) {
-                    System.out.println("|      `--- E: " + d.getId());
-                    for (SeqRunDTO sr : m.SeqRun().ByExtract(d.getId())) {
-                        System.out.println("|           `--- R: " + sr.getId() + " " + sr.getAccession());
-                    }
-                }
-            }
-        }
-        System.out.println("`------------------------------------------------------------");
-    }
+//    public static void printObjTree(MGXDTOMaster m) throws MGXServerException, MGXClientException {
+//        System.out.println("\n.------------------------------------------------------------");
+//        System.err.println("| DB Contents (" + m.getProject() + ")\n|");
+//        for (HabitatDTO h : m.Habitat().fetchall()) {
+//            System.out.println("| H: " + h.getName());
+//            for (SampleDTO s : m.Sample().ByHabitat(h.getId())) {
+//                System.out.println("| `--- S: " + s.getCollectiondate());
+//                for (DNAExtractDTO d : m.DNAExtract().BySample(s.getId())) {
+//                    System.out.println("|      `--- E: " + d.getId());
+//                    for (SeqRunDTO sr : m.SeqRun().ByExtract(d.getId())) {
+//                        System.out.println("|           `--- R: " + sr.getId() + " " + sr.getAccession());
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("`------------------------------------------------------------");
+//    }
 
     protected static String join(Iterable< ? extends Object> pColl, String separator) {
         Iterator< ? extends Object> oIter;

@@ -4,7 +4,6 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -23,7 +22,7 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     }
 
     @Override
-    public Collection<ObservationDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<ObservationDTO> fetchall() throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

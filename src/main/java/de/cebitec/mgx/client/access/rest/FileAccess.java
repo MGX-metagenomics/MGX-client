@@ -6,7 +6,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
 import java.io.File;
-import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -14,11 +14,11 @@ import java.util.Collection;
  */
 public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
-    public Collection<FileDTO> fetchall(String rootDir) throws MGXServerException, MGXClientException {
+    public Iterator<FileDTO> fetchall(String rootDir) throws MGXServerException, MGXClientException {
         //System.err.println("request dir listing for " + rootDir);
         rootDir = rootDir.replace("/", "|");
         String resolve = r.resolve(FileDTOList.class, "fetchall");
-        return this.get(resolve + rootDir, FileDTOList.class).getFileList();
+        return this.get(resolve + rootDir, FileDTOList.class).getFileList().iterator();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public Collection<FileDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<FileDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchall(".");
     }
 

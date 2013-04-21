@@ -11,6 +11,7 @@ import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.logging.Level;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -50,12 +51,12 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
 
     @Override
-    public Collection<ToolDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchlist(ToolDTOList.class).getToolList();
+    public Iterator<ToolDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(ToolDTOList.class).getToolList().iterator();
     }
 
-    public Collection<ToolDTO> listGlobalTools() throws MGXServerException {
-        return get("/Tool/listGlobalTools", ToolDTOList.class).getToolList();
+    public Iterator<ToolDTO> listGlobalTools() throws MGXServerException {
+        return get("/Tool/listGlobalTools", ToolDTOList.class).getToolList().iterator();
     }
 
     public long installGlobalTool(long global_id) throws MGXServerException {

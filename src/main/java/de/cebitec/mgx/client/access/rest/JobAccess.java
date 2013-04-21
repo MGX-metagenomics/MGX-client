@@ -7,7 +7,7 @@ import de.cebitec.mgx.dto.dto.JobDTOList;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.MGXBoolean;
-import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
@@ -16,8 +16,8 @@ import java.util.Collection;
 public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     
     @Override
-    public Collection<JobDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchlist(JobDTOList.class).getJobList();
+    public Iterator<JobDTO> fetchall() throws MGXServerException, MGXClientException {
+        return fetchlist(JobDTOList.class).getJobList().iterator();
     }
     
     public boolean verify(long jobId) throws MGXServerException {
