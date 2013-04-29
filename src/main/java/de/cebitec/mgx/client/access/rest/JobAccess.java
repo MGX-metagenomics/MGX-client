@@ -2,11 +2,13 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTOList;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.MGXBoolean;
+import de.cebitec.mgx.dto.dto.MGXString;
 import java.util.Iterator;
 
 /**
@@ -67,5 +69,9 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
 
     public void setParameters(long job_id, JobParameterListDTO paramValues) throws MGXServerException {
         post("/Job/setParameters/" + job_id, paramValues);
+    }
+
+    public MGXString getError(long job_id) throws MGXServerException {
+        return get("/Job/GetError/" + job_id, MGXString.class);
     }
 }
