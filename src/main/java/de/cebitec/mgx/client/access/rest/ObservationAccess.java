@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -37,7 +38,7 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 }

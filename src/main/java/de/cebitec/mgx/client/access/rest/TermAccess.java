@@ -6,6 +6,7 @@ import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.TermDTOList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -42,7 +43,7 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 }

@@ -38,7 +38,7 @@ public class TaskAccess extends AccessBase<TaskDTO, TaskDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

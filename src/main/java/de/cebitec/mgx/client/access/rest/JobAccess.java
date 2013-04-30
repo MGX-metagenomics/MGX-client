@@ -9,6 +9,7 @@ import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.MGXBoolean;
 import de.cebitec.mgx.dto.dto.MGXString;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -49,9 +50,8 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
     
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
-        super.delete(id, JobDTO.class);
-        return true;
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
+        return super.delete(id, JobDTO.class);
     }
     
     public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXServerException {

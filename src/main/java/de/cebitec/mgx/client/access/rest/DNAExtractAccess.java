@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -37,8 +38,7 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
     
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
-        super.delete(id, DNAExtractDTO.class);
-        return true;
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
+        return super.delete(id, DNAExtractDTO.class);
     }
 }

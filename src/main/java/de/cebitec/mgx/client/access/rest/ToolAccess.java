@@ -10,8 +10,8 @@ import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.logging.Level;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -64,9 +64,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
-        super.delete(id, ToolDTO.class);
-        return true;
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
+        return super.delete(id, ToolDTO.class);
     }
 
     @Override

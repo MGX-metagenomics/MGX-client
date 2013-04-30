@@ -15,9 +15,9 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqWriterI;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -91,7 +91,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

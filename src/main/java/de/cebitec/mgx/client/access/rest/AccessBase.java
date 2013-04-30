@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -20,7 +21,7 @@ public abstract class AccessBase<T, U> extends RESTMethods {
     public abstract Iterator<T> fetchall() throws MGXServerException, MGXClientException;
     public abstract long create(T t) throws MGXServerException, MGXClientException;
     public abstract void update(T t) throws MGXServerException, MGXClientException;
-    public abstract boolean delete(long id) throws MGXServerException, MGXClientException;
+    public abstract UUID delete(long id) throws MGXServerException, MGXClientException;
 
     protected final long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "create");
@@ -43,9 +44,9 @@ public abstract class AccessBase<T, U> extends RESTMethods {
         return this.<U>get(resolve, c);
     }
 
-    protected final void delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
+    protected final UUID delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
         String resolve = r.resolve(c, "delete");
-        delete(resolve + id);
+        return UUID.fromString(delete(resolve + id));
     }
 
 //    /*

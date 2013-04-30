@@ -5,6 +5,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.MGXString;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,11 +63,12 @@ public abstract class RESTMethods {
         return res.<U>getEntity(c);
     }
 
-    protected final void delete(final String path) throws MGXServerException {
+    protected final String delete(final String path) throws MGXServerException {
         //System.err.println("DELETE uri: " +getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
         ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).delete(ClientResponse.class);
         catchException(res);
+        return res.<MGXString>getEntity(MGXString.class).getValue();
     }
 
     protected final <U> void post(final String path, U obj) throws MGXServerException {

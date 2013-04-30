@@ -7,6 +7,7 @@ import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
 import java.io.File;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -22,7 +23,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

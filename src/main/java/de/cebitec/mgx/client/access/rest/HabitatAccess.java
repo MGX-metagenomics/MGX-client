@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -33,8 +34,7 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
-        super.delete(id, HabitatDTO.class);
-        return true;
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
+        return super.delete(id, HabitatDTO.class);
     }
 }

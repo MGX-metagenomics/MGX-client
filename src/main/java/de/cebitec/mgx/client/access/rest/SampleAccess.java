@@ -4,8 +4,8 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  *
@@ -38,8 +38,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     @Override
-    public boolean delete(long id) throws MGXServerException, MGXClientException {
-        super.delete(id, SampleDTO.class);
-        return true;
+    public UUID delete(long id) throws MGXServerException, MGXClientException {
+        return super.delete(id, SampleDTO.class);
     }
 }
