@@ -86,6 +86,7 @@ public abstract class RESTMethods {
             try {
                 while ((buf = r.readLine()) != null) {
                     msg.append(buf);
+                    msg.append(System.lineSeparator());
                 }
                 r.close();
                 isr.close();
