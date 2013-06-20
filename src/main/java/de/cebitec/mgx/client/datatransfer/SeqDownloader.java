@@ -11,6 +11,8 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -84,7 +86,7 @@ public class SeqDownloader extends DownloadBase {
             }
             total_elements += current_num_elements;
             cb.callback(total_elements);
-            fireTaskChange(total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
         }
 
 
@@ -96,6 +98,11 @@ public class SeqDownloader extends DownloadBase {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
+        try {
+            writer.close();
+        } catch (Exception ex) {
+            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return true;
     }
 
@@ -103,7 +110,7 @@ public class SeqDownloader extends DownloadBase {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/Sequence/initDownload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
@@ -112,7 +119,7 @@ public class SeqDownloader extends DownloadBase {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/Sequence/closeDownload/" + uuid).get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
     }
 
     protected SequenceDTOList fetchChunk(String session_uuid) throws MGXServerException {
@@ -120,7 +127,7 @@ public class SeqDownloader extends DownloadBase {
         ClientResponse res = wr.path("/Sequence/fetchSequences/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         SequenceDTOList entity = res.<SequenceDTOList>getEntity(SequenceDTOList.class);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
         return entity;
     }
 

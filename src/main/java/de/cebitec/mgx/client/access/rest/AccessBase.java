@@ -16,7 +16,7 @@ public abstract class AccessBase<T, U> extends RESTMethods {
     public final static long INVALID_IDENTIFIER = -1;
 
     protected final static RESTPathResolver r = RESTPathResolver.getInstance();
-    
+
     public abstract T fetch(long id) throws MGXServerException, MGXClientException;
     public abstract Iterator<T> fetchall() throws MGXServerException, MGXClientException;
     public abstract long create(T t) throws MGXServerException, MGXClientException;

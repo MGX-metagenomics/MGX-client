@@ -15,7 +15,7 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
-
+    
     @Override
     public Iterator<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(SeqRunDTOList.class).getSeqrunList().iterator();

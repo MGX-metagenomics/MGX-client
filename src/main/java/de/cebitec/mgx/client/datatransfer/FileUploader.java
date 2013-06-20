@@ -101,7 +101,7 @@ public class FileUploader extends UploadBase {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/init/" + remoteName).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements_sent);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
@@ -111,13 +111,13 @@ public class FileUploader extends UploadBase {
         BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
         ClientResponse res = wr.path("/File/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
         catchException(res);
-        fireTaskChange(total_elements_sent);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/close/" + uuid).get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements_sent);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
     }
 }

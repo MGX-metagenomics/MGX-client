@@ -22,31 +22,20 @@ import org.xml.sax.SAXException;
  */
 public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
 
-    private static final Logger LOGGER = Logger.getAnonymousLogger();
-
     public Iterable<JobParameterDTO> getAvailableParameters(long tool_id, boolean isGlobal) throws MGXServerException {
         return get("/Tool/getAvailableParameters/" + tool_id + "/" + isGlobal, JobParameterListDTO.class).getParameterList();
     }
 
-    public Iterable<JobParameterDTO> getAvailableParameters(ToolDTO dto) throws MGXServerException {
-        //TODO: Abfragen, ob xml valide..
-
+    public Iterable<JobParameterDTO> getAvailableParameters(ToolDTO dto) throws MGXServerException, MGXClientException {
         XMLValidator validator = new XMLValidator();
         try {
             if (!validator.isValid(dto.getXml())) {
-                throw new MGXServerException("XML is not Valid");
+                throw new MGXClientException("Invalid tool file");
             }
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
             Logger.getLogger(ToolAccess.class.getName()).log(Level.SEVERE, null, ex);
-            throw new MGXServerException("XML is not valid: " + ex.getMessage());
-        } catch (IOException ex) {
-            Logger.getLogger(ToolAccess.class.getName()).log(Level.SEVERE, null, ex);
-            throw new MGXServerException("XML is not valid: " + ex.getMessage());
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ToolAccess.class.getName()).log(Level.SEVERE, null, ex);
-            throw new MGXServerException("XML is not valid: " + ex.getMessage());
+            throw new MGXClientException("XML is not valid: " + ex.getMessage());
         }
-
         return put("/Tool/getAvailableParameters/", dto, JobParameterListDTO.class).getParameterList();
     }
 

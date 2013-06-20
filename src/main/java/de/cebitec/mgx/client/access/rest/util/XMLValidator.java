@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.cebitec.mgx.client.access.rest.util;
 
 import java.io.IOException;
@@ -29,12 +25,10 @@ public class XMLValidator {
      * ToolDocumentHandler fuer das melden von einzelnen Bestandteilen.
      */
     private ToolDocumentHandler handler;
-    
     /**
      * Sobald der "nodes" startet, wird dieses Flag auf true gesetzt.
      */
     private boolean nodesStart;
-    
     /**
      * Falls die Bedingung eintritt, dass XML wohlgeformt ist und der erste
      * Knoten den String "Conveyor.MGX.GetMGXJob" bei dem Attribut type
@@ -66,8 +60,6 @@ public class XMLValidator {
      * @throws ParserConfigurationException Fehler beim Parsen.
      */
     public boolean isValid(String lXml) throws SAXException, IOException, ParserConfigurationException {
-
-//        System.out.print(lXml);
         SAXParser parser = null;
         parser = SAXParserFactory.newInstance().newSAXParser();
         Reader stringReader = new StringReader(lXml);

@@ -100,7 +100,7 @@ public class SeqUploader extends UploadBase {
     private String initTransfer(long seqrun_id) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
@@ -108,12 +108,12 @@ public class SeqUploader extends UploadBase {
     private void finishTransfer(String uuid) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/closeUpload/" + uuid).get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
     }
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
         ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
         catchException(res);
-        fireTaskChange(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
     }
 }
