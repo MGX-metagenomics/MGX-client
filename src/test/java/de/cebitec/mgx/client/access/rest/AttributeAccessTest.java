@@ -74,6 +74,7 @@ public class AttributeAccessTest {
             }
         }
         assertEquals(2, cryptoCnt);
+        assertEquals(367, dist.getAttributeCountsCount());
     }
 
     @Test
@@ -88,8 +89,8 @@ public class AttributeAccessTest {
             fail();
         }
         assertNotNull(ad);
-        assertEquals(ad.getAttributeTypeCount(), 8);
-        assertEquals(ad.getAttributeCountsCount(), 1378);
+        assertEquals(8, ad.getAttributeTypeCount());
+        assertEquals(1378, ad.getAttributeCountsCount());
 
         List<AttributeTypeDTO> attributeTypeList = ad.getAttributeTypeList();
         assertNotNull(attributeTypeList);
@@ -102,7 +103,7 @@ public class AttributeAccessTest {
             AttributeDTO attr = ac.getAttribute();
             if (attr.getValue().equals("root")) {
                 assertFalse(attr.hasParentId());
-                roots ++;
+                roots++;
             } else {
                 assertTrue(attr.hasParentId());
             }
