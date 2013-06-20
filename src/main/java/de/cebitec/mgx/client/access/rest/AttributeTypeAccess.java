@@ -20,7 +20,7 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
 
     @Override
     public AttributeTypeDTO fetch(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return super.fetch(id, AttributeTypeDTO.class);
     }
 
     @Override
