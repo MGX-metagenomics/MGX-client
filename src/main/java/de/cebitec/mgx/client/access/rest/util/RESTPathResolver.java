@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
 import de.cebitec.mgx.dto.dto.FileDTO;
@@ -40,6 +41,7 @@ public class RESTPathResolver {
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
+        objmappings.put(AttributeTypeDTO.class, "AttributeType");
         objmappings.put(ObservationDTO.class, "Observation");
         objmappings.put(FileDTO.class, "File");
 
