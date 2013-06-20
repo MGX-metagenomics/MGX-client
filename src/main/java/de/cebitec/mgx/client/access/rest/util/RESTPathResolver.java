@@ -10,6 +10,7 @@ import de.cebitec.mgx.dto.dto.FileDTOList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.JobDTOList;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
@@ -40,6 +41,7 @@ public class RESTPathResolver {
         objmappings.put(SequenceDTO.class, "Sequence");
         objmappings.put(ToolDTO.class, "Tool");
         objmappings.put(JobDTO.class, "Job");
+        objmappings.put(JobDTOList.class, "Job");
         objmappings.put(AttributeDTO.class, "Attribute");
         objmappings.put(AttributeTypeDTO.class, "AttributeType");
         objmappings.put(ObservationDTO.class, "Observation");
