@@ -1,4 +1,3 @@
-
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
@@ -45,7 +44,7 @@ public class ToolAccessTest {
         System.out.println("getAvailableParameters");
         Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(3, false);
         assertNotNull(it);
-        int cnt =0;
+        int cnt = 0;
         for (JobParameterDTO jp : it) {
             assertNotNull(jp.getDisplayName());
             cnt++;
@@ -92,6 +91,20 @@ public class ToolAccessTest {
     }
 
     @Test
+    public void testDeleteInvalidId() {
+        System.out.println("deleteInvalidId");
+        boolean failed = false;
+        try {
+            master.Tool().delete(-1);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            failed = true;
+        }
+        assertTrue(failed);
+    }
+
+    @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
         ToolDTO t = master.Tool().fetch(1);
@@ -119,5 +132,6 @@ public class ToolAccessTest {
         System.out.println("ByJob");
         ToolDTO t = master.Tool().ByJob(1);
         assertNotNull(t);
+        assertNotNull(t.getName());
     }
 }
