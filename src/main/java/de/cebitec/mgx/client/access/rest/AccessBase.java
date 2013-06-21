@@ -12,29 +12,41 @@ import java.util.UUID;
  * @author sjaenick
  */
 public abstract class AccessBase<T, U> extends RESTMethods {
-    
-    public final static long INVALID_IDENTIFIER = -1;
 
+    public final static long INVALID_IDENTIFIER = -1;
     protected final static RESTPathResolver r = RESTPathResolver.getInstance();
 
     public abstract T fetch(long id) throws MGXServerException, MGXClientException;
+
     public abstract Iterator<T> fetchall() throws MGXServerException, MGXClientException;
+
     public abstract long create(T t) throws MGXServerException, MGXClientException;
+
     public abstract void update(T t) throws MGXServerException, MGXClientException;
+
     public abstract UUID delete(long id) throws MGXServerException, MGXClientException;
 
     protected final long create(T dto, Class<T> c) throws MGXServerException, MGXClientException {
+        if (dto == null) {
+            throw new MGXClientException("Cannot create null object.");
+        }
         String resolve = r.resolve(c, "create");
         long id = put(resolve, dto, MGXLong.class).getValue();
         return id;
     }
 
     protected final void update(T dto, Class<T> c) throws MGXServerException, MGXClientException {
+        if (dto == null) {
+            throw new MGXClientException("Cannot update with null object.");
+        }
         String resolve = r.resolve(c, "update");
         post(resolve, dto);
     }
 
     protected final T fetch(long id, Class<T> c) throws MGXServerException, MGXClientException {
+        if (id == -1) {
+            throw new MGXClientException("Cannot fetch object with invalid identifier.");
+        }
         String resolve = r.resolve(c, "fetch");
         return get(resolve + id, c);
     }
@@ -45,10 +57,12 @@ public abstract class AccessBase<T, U> extends RESTMethods {
     }
 
     protected final UUID delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
+        if (id == -1) {
+            throw new MGXClientException("Cannot delete object with invalid identifier.");
+        }
         String resolve = r.resolve(c, "delete");
         return UUID.fromString(delete(resolve + id));
     }
-
 //    /*
 //     * from http://snippets.dzone.com/posts/show/91
 //     */

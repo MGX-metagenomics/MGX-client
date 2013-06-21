@@ -28,14 +28,15 @@ public class XMLValidator {
     /**
      * Sobald der "nodes" startet, wird dieses Flag auf true gesetzt.
      */
-    private boolean nodesStart;
+    private boolean nodesStart = false;
     /**
      * Falls die Bedingung eintritt, dass XML wohlgeformt ist und der erste
      * Knoten den String "Conveyor.MGX.GetMGXJob" bei dem Attribut type
      * enthaelt.
      *
      */
-    private boolean valid;
+    private boolean valid = false;
+    private int getmgxjobCnt = 0;
 
     /**
      *
@@ -43,7 +44,6 @@ public class XMLValidator {
      *
      */
     public XMLValidator() {
-        nodesStart = false;
         valid = false;
         handler = new ToolDocumentHandler();
     }
@@ -55,17 +55,15 @@ public class XMLValidator {
      *
      * @param lXml
      * @return isValid
-     * @throws SAXException Fehler beim Parsen.
-     * @throws IOException String nicht vorhanden.
-     * @throws ParserConfigurationException Fehler beim Parsen.
      */
-    public boolean isValid(String lXml) throws SAXException, IOException, ParserConfigurationException {
-        SAXParser parser = null;
-        parser = SAXParserFactory.newInstance().newSAXParser();
-        Reader stringReader = new StringReader(lXml);
-        parser.parse(new InputSource(stringReader), handler);
-
-        return valid;
+    public boolean isValid(String lXml) {
+        try {
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            parser.parse(new InputSource(new StringReader(lXml)), handler);
+            return valid;
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            return false;
+        }
     }
 
     /**
@@ -113,11 +111,12 @@ public class XMLValidator {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             super.startElement(uri, localName, qName, attributes);
 
-            if (nodesStart) {
+            if (nodesStart && qName.equals("node")) {
 
                 if (qName.equals("node")) {
 
                     if (attributes.getValue("type").equals("Conveyor.MGX.GetMGXJob")) {
+                        getmgxjobCnt++;
                         valid = true;
                         nodesStart = false;
                     } else {
@@ -128,13 +127,9 @@ public class XMLValidator {
                     valid = false;
                     nodesStart = false;
                 }
+            }
 
-            }
-            if (qName.equals("nodes")) {
-                nodesStart = true;
-            } else {
-                nodesStart = false;
-            }
+            nodesStart = qName.equals("nodes");
         }
     }
 }

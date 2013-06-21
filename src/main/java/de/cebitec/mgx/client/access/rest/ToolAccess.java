@@ -28,13 +28,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
 
     public Iterable<JobParameterDTO> getAvailableParameters(ToolDTO dto) throws MGXServerException, MGXClientException {
         XMLValidator validator = new XMLValidator();
-        try {
-            if (!validator.isValid(dto.getXml())) {
-                throw new MGXClientException("Invalid tool file");
-            }
-        } catch (SAXException | IOException | ParserConfigurationException ex) {
-            Logger.getLogger(ToolAccess.class.getName()).log(Level.SEVERE, null, ex);
-            throw new MGXClientException("XML is not valid: " + ex.getMessage());
+        if (!validator.isValid(dto.getXml())) {
+            throw new MGXClientException("Invalid tool file");
         }
         return put("/Tool/getAvailableParameters/", dto, JobParameterListDTO.class).getParameterList();
     }
