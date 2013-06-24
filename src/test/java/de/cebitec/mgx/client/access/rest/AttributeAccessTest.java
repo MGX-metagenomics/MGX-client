@@ -91,9 +91,11 @@ public class AttributeAccessTest {
         assertNotNull(attributeTypeList);
 
         int roots = 0;
+        long total = 0;
         for (AttributeCount ac : ad.getAttributeCountsList()) {
             assertNotNull(ac);
             assertNotEquals(0, ac.getCount());
+            total += ac.getCount();
             assertNotNull(ac.getAttribute());
             AttributeDTO attr = ac.getAttribute();
             if (attr.getValue().equals("Root")) {
@@ -104,6 +106,7 @@ public class AttributeAccessTest {
             }
         }
         assertEquals(1, roots);
+        assertEquals(339, total);
 
     }
 }
