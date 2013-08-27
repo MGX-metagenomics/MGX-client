@@ -75,6 +75,10 @@ public class MGXDTOMaster {
         return getAccessor(SeqRunAccess.class);
     }
 
+    public ReferenceAccess Reference(){
+        return getAccessor(ReferenceAccess.class);
+    }
+    
     public SequenceAccess Sequence() {
         return getAccessor(SequenceAccess.class);
     }
