@@ -50,7 +50,7 @@ public class JobAccessTest {
         while (it.hasNext()) {
             jobs.add(it.next());
         }
-        assertEquals(6, jobs.size());
+        assertEquals(9, jobs.size());
     }
 
     @Test
