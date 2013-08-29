@@ -13,6 +13,8 @@ import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTOList;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
+import de.cebitec.mgx.dto.dto.ReferenceDTO;
+import de.cebitec.mgx.dto.dto.ReferenceDTOList;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
@@ -48,6 +50,7 @@ public class RESTPathResolver {
         objmappings.put(AttributeTypeDTOList.class, "AttributeType");
         objmappings.put(ObservationDTO.class, "Observation");
         objmappings.put(FileDTO.class, "File");
+        objmappings.put(ReferenceDTO.class, "Reference");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
@@ -57,6 +60,7 @@ public class RESTPathResolver {
         objmappings.put(SeqRunDTOList.class, "SeqRun");
         objmappings.put(FileDTOList.class, "File");
         objmappings.put(TermDTOList.class, "Term");
+        objmappings.put(ReferenceDTOList.class, "Reference");
 
         // methods
         methodmappings.put("create", "create");
