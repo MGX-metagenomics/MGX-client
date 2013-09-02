@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.access.rest;
 
-import static de.cebitec.mgx.client.access.rest.AccessBase.r;
 import de.cebitec.mgx.client.datatransfer.SeqByAttributeDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
