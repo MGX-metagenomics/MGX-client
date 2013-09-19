@@ -45,7 +45,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
         return super.fetch(id, ReferenceDTO.class);
     }
 
-    public Iterator<ReferenceDTO> listGlobalTools() throws MGXServerException {
+    public Iterator<ReferenceDTO> listGlobalReferences() throws MGXServerException {
         return get("/Reference/listGlobalReferences", ReferenceDTOList.class).getReferenceList().iterator();
     }
     
