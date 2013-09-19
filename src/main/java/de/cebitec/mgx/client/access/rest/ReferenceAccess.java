@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
 import de.cebitec.mgx.dto.dto.RegionDTO;
@@ -30,6 +31,10 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
         super.update(d, ReferenceDTO.class);
     }
 
+    public long installGlobalReference(long id) throws MGXServerException {
+        return get("/reference/" + id, dto.MGXLong.class).getValue();
+    }
+    
     @Override
     public UUID delete(long id) throws MGXServerException, MGXClientException {
         return super.delete(id, ReferenceDTO.class);
