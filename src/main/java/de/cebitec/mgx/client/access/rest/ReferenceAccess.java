@@ -32,7 +32,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public long installGlobalReference(long id) throws MGXServerException {
-        return get("/reference/" + id, dto.MGXLong.class).getValue();
+        return get("/Reference/installGlobalTool" + id, dto.MGXLong.class).getValue();
     }
     
     @Override
@@ -45,6 +45,11 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
         return super.fetch(id, ReferenceDTO.class);
     }
 
+    public Iterator<ReferenceDTO> listGlobalTools() throws MGXServerException {
+        return get("/Reference/listGlobalReferences", ReferenceDTOList.class).getReferenceList().iterator();
+    }
+    
+    
     public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXClientException, MGXServerException {
         return get(r.resolve(RegionDTO.class, "byReferenceInterval") + id, RegionDTOList.class).getRegionList().iterator();
     }
