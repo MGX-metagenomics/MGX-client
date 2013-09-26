@@ -1,15 +1,12 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
 import de.cebitec.gpms.core.MembershipI;
-import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.restgpms.GPMS;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.fail;
 
 /**
@@ -21,7 +18,7 @@ public class TestMaster {
     public static MGXDTOMaster get() {
         MGXDTOMaster master = null;
         
-        String serverURI = "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/";
+        String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
         
         String config = System.getProperty("user.home") + "/.m2/mgx.junit";
         File f = new File(config);

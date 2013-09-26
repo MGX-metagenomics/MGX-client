@@ -13,11 +13,14 @@ import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
+import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
 import de.cebitec.mgx.seqstorage.CSFReader;
 import de.cebitec.mgx.seqstorage.CSFWriter;
 import de.cebitec.mgx.seqstorage.FastaWriter;
+import de.cebitec.mgx.sequence.SeqReaderFactory;
+import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import java.io.Console;
 import java.io.IOException;
@@ -71,38 +74,38 @@ public class App {
         //        }
         //        System.exit(0);
 
-//        long extract_id = 0;
+//        long extract_id = 1;
 //        for (DNAExtractDTO extract : master.DNAExtract().fetchall()) {
 //            extract_id = extract.getId();
 //        }
-//        TermDTO flx = master.Term().fetch(3); // FLX tit
-//        TermDTO wgs = master.Term().fetch(12); // WGS
-//
-//        for (int argpos = 1; argpos < args.length; argpos++) {
-//            String fname = args[argpos];
-//            fname = fname.replaceAll("_ITv3.2.fas", "");
-//
-//            System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
-//            String answer = con.readLine();
-//            if ("y".equals(answer)) {
-//                // create new seqrun
-//                SeqRunDTO sr = SeqRunDTO.newBuilder()
-//                        .setName(fname)
-//                        .setExtractId(extract_id)
-//                        .setAccession("myAccession")
-//                        .setSubmittedToInsdc(false)
-//                        .setSequencingMethod(wgs)
-//                        .setSequencingTechnology(flx)
-//                        .build();
-//                Long seqrun_id = master.SeqRun().create(sr);
-//                System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
-//
-//                // upload sequence data
-//                SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
-//                master.Sequence().sendSequences(seqrun_id, reader);
-//            }
-//        }
-//        System.exit(0);
+ //       TermDTO flx = master.Term().fetch(5); // miseq
+  //      TermDTO wgs = master.Term().fetch(13); // pe
+
+    //    for (int argpos = 1; argpos < args.length; argpos++) {
+     //       String fname = args[argpos];
+      //      fname = fname.replaceAll(".fastq", "");
+
+       //     System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
+        //    String answer = con.readLine();
+        //    if ("y".equals(answer)) {
+                // create new seqrun
+       //         SeqRunDTO sr = SeqRunDTO.newBuilder()
+        //                .setName(fname)
+       //                 .setExtractId(extract_id)
+        //                .setAccession("")
+         //               .setSubmittedToInsdc(false)
+          //              .setSequencingMethod(wgs)
+           //             .setSequencingTechnology(flx)
+       //                 .build();
+       //         Long seqrun_id = master.SeqRun().create(sr);
+       //         System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+
+       //         // upload sequence data
+       //         SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
+       //         master.Sequence().sendSequences(seqrun_id, reader);
+      //      }
+   //     }
+   //     System.exit(0);
 
         // fetch global tool Ids
         Iterator<ToolDTO> globalTools = master.Tool().listGlobalTools();
