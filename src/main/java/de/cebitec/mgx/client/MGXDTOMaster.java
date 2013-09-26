@@ -38,7 +38,7 @@ public class MGXDTOMaster {
 
         resource = new StringBuilder(gpms.getBaseURI()).append(mbr.getProject().getName()).toString();
     }
-    
+
     public MembershipI getMembership() {
         return membership;
     }
@@ -75,10 +75,14 @@ public class MGXDTOMaster {
         return getAccessor(SeqRunAccess.class);
     }
 
-    public ReferenceAccess Reference(){
+    public ReferenceAccess Reference() {
         return getAccessor(ReferenceAccess.class);
     }
-    
+
+    public MappingAccess Mapping() {
+        return getAccessor(MappingAccess.class);
+    }
+
     public SequenceAccess Sequence() {
         return getAccessor(SequenceAccess.class);
     }
@@ -102,7 +106,7 @@ public class MGXDTOMaster {
     public TermAccess Term() {
         return getAccessor(TermAccess.class);
     }
-    
+
     public TaskAccess Task() {
         return getAccessor(TaskAccess.class);
     }
