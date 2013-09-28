@@ -16,52 +16,56 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
-    
+
     @Override
     public Iterator<JobDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(JobDTOList.class).getJobList().iterator();
     }
-    
+
     public boolean verify(long jobId) throws MGXServerException {
         return get("/Job/verify/" + jobId, MGXBoolean.class).getValue();
     }
-    
+
     public boolean execute(long jobId) throws MGXServerException {
         return get("/Job/execute/" + jobId, MGXBoolean.class).getValue();
     }
-    
+
     public boolean cancel(long jobId) throws MGXServerException {
         return get("/Job/cancel/" + jobId, MGXBoolean.class).getValue();
     }
-    
+
+    public UUID restart(long job_id) throws MGXServerException, MGXClientException {
+        return UUID.fromString(get("/Job/restart/" + job_id, MGXString.class).getValue());
+    }
+
     @Override
     public long create(JobDTO dto) throws MGXServerException, MGXClientException {
         return super.create(dto, JobDTO.class);
     }
-    
+
     @Override
     public JobDTO fetch(long job_id) throws MGXServerException, MGXClientException {
         return super.fetch(job_id, JobDTO.class);
     }
-    
+
     @Override
     public void update(JobDTO t) throws MGXServerException, MGXClientException {
         super.update(t, JobDTO.class);
     }
-    
+
     @Override
     public UUID delete(long id) throws MGXServerException, MGXClientException {
         return super.delete(id, JobDTO.class);
     }
-    
+
     public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXServerException {
         return get("/Job/ByAttributeTypeAndSeqRun/" + atype_id + "/" + seqrun_id, JobDTOList.class).getJobList();
     }
-    
+
     public Iterable<JobDTO> BySeqRun(long seqrun_id) throws MGXServerException {
         return get("/Job/BySeqRun/" + seqrun_id, JobDTOList.class).getJobList();
     }
-    
+
     public Iterable<JobParameterDTO> getParameters(long job_id) throws MGXServerException {
         return get("/Job/getParameters/" + job_id, JobParameterListDTO.class).getParameterList();
     }
