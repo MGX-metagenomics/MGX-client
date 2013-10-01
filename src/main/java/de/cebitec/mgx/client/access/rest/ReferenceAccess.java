@@ -2,7 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto;
+import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
 import de.cebitec.mgx.dto.dto.RegionDTO;
@@ -32,7 +32,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public long installGlobalReference(long id) throws MGXServerException {
-        return get("/Reference/installGlobalTool" + id, dto.MGXLong.class).getValue();
+        return get("/Reference/installGlobalReference/" + id, MGXLong.class).getValue();
     }
     
     @Override
