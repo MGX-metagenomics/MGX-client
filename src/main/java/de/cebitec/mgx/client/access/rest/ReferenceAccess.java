@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
@@ -7,6 +8,7 @@ import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
 import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.RegionDTOList;
+import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -52,5 +54,9 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     
     public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXClientException, MGXServerException {
         return get(r.resolve(RegionDTO.class, "byReferenceInterval") + id, RegionDTOList.class).getRegionList().iterator();
+    }
+    
+    public ReferenceUploader createUploader(File localFile) {
+        return new ReferenceUploader(getWebResource(), localFile);
     }
 }
