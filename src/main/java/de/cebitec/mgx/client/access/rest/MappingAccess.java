@@ -33,7 +33,7 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
     @Override
     public void update(MappingDTO d) throws MGXServerException, MGXClientException {
-        return;
+        throw new UnsupportedOperationException("Not supported.");
         //super.update(d, MappingDTO.class);
     }
 
