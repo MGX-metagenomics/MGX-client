@@ -143,6 +143,8 @@ public class ReferenceUploader extends UploadBase {
                     regions.add(region.build());
                     if (regions.size() >= getChunkSize()) {
                         sendRegions(regions, session_uuid);
+                        total_elements_sent += regions.size();
+                        cb.callback(total_elements_sent);
                         regions.clear();
                     }
                 }
