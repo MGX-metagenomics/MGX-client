@@ -156,6 +156,11 @@ public class ReferenceUploader extends UploadBase {
             }
             cb.callback(total_elements_sent);
         }
+        try {
+            br.close();
+        } catch (IOException ex) {
+        }
+        
         return true;
     }
 
