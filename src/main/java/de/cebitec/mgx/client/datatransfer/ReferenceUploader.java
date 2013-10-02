@@ -219,13 +219,13 @@ public class ReferenceUploader extends UploadBase {
         }
     }
 
-    private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
-        ClientResponse res = wr.path("/Reference/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
-    }
+//    private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
+//        assert !EventQueue.isDispatchThread();
+//        BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
+//        ClientResponse res = wr.path("/Reference/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
+//        catchException(res);
+//        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+//    }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
