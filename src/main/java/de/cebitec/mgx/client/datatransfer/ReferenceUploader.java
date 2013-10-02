@@ -41,7 +41,6 @@ public class ReferenceUploader extends UploadBase {
 
     private final WebResource wr;
     private final File localFile;
-    private InputStream in = null;
     private long total_elements_sent = 0;
 
     public ReferenceUploader(final WebResource wr, final File file) {
