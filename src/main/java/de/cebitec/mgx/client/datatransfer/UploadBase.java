@@ -1,11 +1,5 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientResponse;
-import de.cebitec.mgx.client.access.rest.RESTMethods;
-import de.cebitec.mgx.client.exception.MGXServerException;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 /**
  *
  * @author sj
@@ -20,6 +14,10 @@ public abstract class UploadBase extends TransferBase {
 
     public void setChunkSize(int i) {
         chunk_size = i;
+    }
+    
+    public int getChunkSize() {
+        return chunk_size;
     }
 
 //    protected PropertyChangeSupport getPropertyChangeSupport() {
