@@ -8,6 +8,7 @@ import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
+import de.cebitec.mgx.dto.dto.RegionDTOList;
 import java.awt.EventQueue;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -111,10 +112,15 @@ public class ReferenceUploader extends UploadBase {
 
                 if (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA")) {
                     if (!sequenceSent) {
-                        //String genomeSeq = elem.getSequence().seqString();
-                        sendNameAndLength(seqname, elem.getSequence().length(), session_uuid);
-                        sendSequence(elem.getSequence(), session_uuid);
-                        sequenceSent = true;
+                        try {
+                            //String genomeSeq = elem.getSequence().seqString();
+                            sendNameAndLength(seqname, elem.getSequence().length(), session_uuid);
+                            sendSequence(elem.getSequence(), session_uuid);
+                            sequenceSent = true;
+                        } catch (MGXServerException ex) {
+                            abortTransfer(ex.getMessage(), total_elements_sent);
+                            return false;
+                        }
                     }
 
                     Annotation annot = elem.getAnnotation();
@@ -141,7 +147,12 @@ public class ReferenceUploader extends UploadBase {
 
                     regions.add(region.build());
                     if (regions.size() >= getChunkSize()) {
-                        sendRegions(regions, session_uuid);
+                        try {
+                            sendRegions(regions, session_uuid);
+                        } catch (MGXServerException ex) {
+                            abortTransfer(ex.getMessage(), total_elements_sent);
+                            return false;
+                        }
                         total_elements_sent += regions.size();
                         cb.callback(total_elements_sent);
                         regions.clear();
@@ -161,7 +172,7 @@ public class ReferenceUploader extends UploadBase {
             br.close();
         } catch (IOException ex) {
         }
-        
+
         return true;
     }
 
@@ -174,13 +185,38 @@ public class ReferenceUploader extends UploadBase {
         return session_uuid.getValue();
     }
 
-    private void sendNameAndLength(String name, int length, String session_uuid) {
+    private void sendNameAndLength(String name, int length, String session_uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
+        ReferenceDTO ref = ReferenceDTO.newBuilder()
+                .setName(name)
+                .setLength(length)
+                .build();
+        ClientResponse res = wr.path("/Reference/create/" + session_uuid).accept("application/x-protobuf")
+                .put(ClientResponse.class, ref);
+        catchException(res);
     }
 
-    private void sendRegions(List<RegionDTO> regions, String session_uuid) {
+    private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
+        RegionDTOList.Builder data = RegionDTOList.newBuilder();
+        for (RegionDTO r : regions) {
+            data.addRegion(r);
+        }
+        ClientResponse res = wr.path("/Reference/addRegions/" + session_uuid).accept("application/x-protobuf")
+                .put(ClientResponse.class, data.build());
+        catchException(res);
     }
 
-    private void sendSequence(Sequence seq, String session_uuid) {
+    private void sendSequence(Sequence seq, String session_uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
+        String dna = seq.seqString();
+        int length = dna.length();
+        for (int i = 0; i < length; i += 2000) {
+            String chunk = dna.substring(i, Math.min(length, i + 2000));
+            ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
+                    .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
+            catchException(res);
+        }
     }
 
     private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
