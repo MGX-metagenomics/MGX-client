@@ -1,31 +1,23 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.google.protobuf.ByteString;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto;
-import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.RegionDTOList;
 import java.awt.EventQueue;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.biojava.bio.Annotation;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Feature;
@@ -45,6 +37,7 @@ public class ReferenceUploader extends UploadBase {
     private final WebResource wr;
     private final File localFile;
     private long total_elements_sent = 0;
+    private final List<Long> generatedRefIDs = new ArrayList<>();
 
     public ReferenceUploader(final WebResource wr, final File file) {
         super();
@@ -78,14 +71,6 @@ public class ReferenceUploader extends UploadBase {
 
 
         while (seqs.hasNext()) {
-//            // obtain session for upload
-//            String session_uuid;
-//            try {
-//                session_uuid = initTransfer();
-//            } catch (MGXServerException ex) {
-//                abortTransfer(ex.getMessage(), total_elements_sent);
-//                return false;
-//            }
 
             RichSequence rs;
             try {
@@ -106,8 +91,9 @@ public class ReferenceUploader extends UploadBase {
             }
 
             boolean sequenceSent = false;
+            int regionCount = 0;
             List<RegionDTO> regions = new LinkedList<>();
-            
+
             long reference_id;
             String session_uuid = null;
 
@@ -120,6 +106,7 @@ public class ReferenceUploader extends UploadBase {
                         try {
                             //String genomeSeq = elem.getSequence().seqString();
                             reference_id = createReference(seqname, elem.getSequence().length());
+                            generatedRefIDs.add(reference_id);
                             session_uuid = initTransfer(reference_id);
                             sendSequence(elem.getSequence(), session_uuid);
                             sequenceSent = true;
@@ -152,6 +139,7 @@ public class ReferenceUploader extends UploadBase {
                     region.setStop(abs_stop);
 
                     regions.add(region.build());
+                    regionCount++;
                     if (regions.size() >= getChunkSize()) {
                         try {
                             sendRegions(regions, session_uuid);
@@ -164,6 +152,19 @@ public class ReferenceUploader extends UploadBase {
                         regions.clear();
                     }
                 }
+            }
+            
+            // flush remaining regions
+            if (!regions.isEmpty()) {
+                try {
+                    sendRegions(regions, session_uuid);
+                } catch (MGXServerException ex) {
+                    abortTransfer(ex.getMessage(), total_elements_sent);
+                    return false;
+                }
+                total_elements_sent += regions.size();
+                cb.callback(total_elements_sent);
+                regions.clear();
             }
 
             try {
@@ -182,9 +183,13 @@ public class ReferenceUploader extends UploadBase {
         return true;
     }
 
+    public List<Long> getReferenceIDs() {
+        return generatedRefIDs;
+    }
+
     private String initTransfer(long ref_id) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Reference/init/").accept("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("/Reference/init/" + ref_id).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -218,21 +223,13 @@ public class ReferenceUploader extends UploadBase {
         assert !EventQueue.isDispatchThread();
         String dna = seq.seqString();
         int length = dna.length();
-        for (int i = 0; i < length; i += 2000) {
-            String chunk = dna.substring(i, Math.min(length, i + 2000));
+        for (int i = 0; i < length; i += 10000) {
+            String chunk = dna.substring(i, Math.min(length, i + 10000));
             ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
                     .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
             catchException(res);
         }
     }
-
-//    private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
-//        assert !EventQueue.isDispatchThread();
-//        BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
-//        ClientResponse res = wr.path("/Reference/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
-//        catchException(res);
-//        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
-//    }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
