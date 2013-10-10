@@ -53,7 +53,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     
     
     public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXClientException, MGXServerException {
-        return get(r.resolve(RegionDTO.class, "byReferenceInterval") + id, RegionDTOList.class).getRegionList().iterator();
+        return get("/Reference/byReferenceInterval/" + id + "/" + from + "/" + to, RegionDTOList.class).getRegionList().iterator();
     }
     
     public ReferenceUploader createUploader(File localFile) {
