@@ -57,7 +57,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public String getSequence(long id, int from, int to) throws MGXClientException, MGXServerException {
-        return get("/Reference/getSequence/" + id + "/" + from + "/" + to, MGXString.class).getValue();
+        return get("/Reference/getSequence/" + id + "/" + from + "/" + to, MGXString.class).getValue().toLowerCase();
     }
 
     public ReferenceUploader createUploader(File localFile) {
