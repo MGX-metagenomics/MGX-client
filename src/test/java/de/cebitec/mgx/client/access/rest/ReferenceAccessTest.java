@@ -5,7 +5,6 @@ import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
-import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
