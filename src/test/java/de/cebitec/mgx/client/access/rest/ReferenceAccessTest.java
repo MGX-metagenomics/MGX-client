@@ -171,4 +171,17 @@ public class ReferenceAccessTest {
         }
         assertEquals(0, refCnt);
     }
+
+    @Test
+    public void testGetSequence() {
+        System.out.println("testGetSequence");
+        String seq = null;
+        try {
+            seq = master.Reference().getSequence(4, 0, 9);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(seq);
+        assertEquals("ttgtgcacac", seq);
+    }
 }
