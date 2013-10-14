@@ -51,6 +51,21 @@ public class ToolAccessTest {
         }
         assertEquals(2, cnt);
     }
+
+    @Test
+    public void testGetAvailableParameters_frhit() throws Exception {
+        System.out.println("testGetAvailableParameters_frhit");
+        Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(17, false);
+        assertNotNull(it);
+        int cnt = 0;
+        for (JobParameterDTO jp : it) {
+            assertNotNull(jp.getDisplayName());
+            assertEquals("ConfigMGXReference", jp.getType());
+            assertFalse(jp.getIsOptional());
+            cnt++;
+        }
+        assertEquals(1, cnt);
+    }
 //
 //    @Test
 //    public void testGetAvailableParameters_dtoToolDTO() throws Exception {
