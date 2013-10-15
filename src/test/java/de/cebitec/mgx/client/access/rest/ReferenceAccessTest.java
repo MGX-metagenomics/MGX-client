@@ -47,6 +47,24 @@ public class ReferenceAccessTest {
     }
 
     @Test
+    public void testListGlobal() {
+        System.out.println("testListGlobal");
+        Iterator<ReferenceDTO> iter = null;
+        try {
+            iter = master.Reference().listGlobalReferences();
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        int refCnt = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            refCnt++;
+        }
+        assertEquals(2, refCnt);
+    }
+
+    @Test
     public void testFetchall() {
         System.out.println("testFetchall");
         Iterator<ReferenceDTO> iter = null;
@@ -61,7 +79,7 @@ public class ReferenceAccessTest {
             iter.next();
             refCnt++;
         }
-        assertEquals(1, refCnt);
+        assertEquals(2, refCnt);
     }
 
     @Test
