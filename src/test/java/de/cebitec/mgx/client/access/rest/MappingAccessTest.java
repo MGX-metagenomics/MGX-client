@@ -54,7 +54,7 @@ public class MappingAccessTest {
         while (it.hasNext()) {
             data.add(it.next());
         }
-        assertEquals(0, data.size());
+        assertEquals(1, data.size());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class MappingAccessTest {
         while (it.hasNext()) {
             data.add(it.next());
         }
-        assertEquals(0, data.size());
+        assertEquals(1, data.size());
     }
 //
 //    @Test
