@@ -83,15 +83,30 @@ public abstract class RESTMethods {
     protected final String delete(final String path) throws MGXServerException {
         //System.err.println("DELETE uri: " +getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).delete(ClientResponse.class);
-        catchException(res);
-        return res.<MGXString>getEntity(MGXString.class).getValue();
+        try {
+            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).delete(ClientResponse.class);
+            catchException(res);
+            return res.<MGXString>getEntity(MGXString.class).getValue();
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return delete(path); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     protected final <U> void post(final String path, U obj) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).post(ClientResponse.class, obj);
-        catchException(res);
+        try {
+            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).post(ClientResponse.class, obj);
+            catchException(res);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     public static void catchException(final ClientResponse res) throws MGXServerException {
