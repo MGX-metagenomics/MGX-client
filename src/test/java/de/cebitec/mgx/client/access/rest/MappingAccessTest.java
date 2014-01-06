@@ -10,6 +10,7 @@ import de.cebitec.mgx.dto.dto.MappingDTO;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -52,7 +53,9 @@ public class MappingAccessTest {
         assertNotNull(it);
         Set<MappingDTO> data = new HashSet<>();
         while (it.hasNext()) {
-            data.add(it.next());
+            MappingDTO m = it.next();
+            System.err.println(m.getId());
+            data.add(m);
         }
         assertEquals(1, data.size());
     }
@@ -67,6 +70,13 @@ public class MappingAccessTest {
             data.add(it.next());
         }
         assertEquals(1, data.size());
+    }
+
+    @Test
+    public void testOpenMapping() throws Exception {
+        System.out.println("openMapping");
+        UUID uuid = master.Mapping().openMapping(29);
+        assertNotNull(uuid);
     }
 //
 //    @Test
