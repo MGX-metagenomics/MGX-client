@@ -1,13 +1,19 @@
 package de.cebitec.mgx.client.access.rest;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import static de.cebitec.mgx.client.access.rest.RESTMethods.PROTOBUF_TYPE;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTOList;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.dto.dto.MappingDTOList;
+import java.awt.EventQueue;
 import java.util.Iterator;
 import java.util.UUID;
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  *
@@ -49,7 +55,25 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
         return super.fetch(id, MappingDTO.class);
     }
 
+    public UUID openMapping(long id) throws MGXServerException {
+        return UUID.fromString(super.get("Mapping/openMapping/" + id, MGXString.class).getValue());
+    }
+
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXServerException, MGXClientException {
         return super.get("Mapping/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
+    }
+
+    public void closeMapping(UUID uuid) throws MGXServerException {
+        assert !EventQueue.isDispatchThread();
+        try {
+            ClientResponse res = getWebResource().path("Mapping/closeMapping/" + uuid).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
+            catchException(res);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                closeMapping(uuid); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 }
