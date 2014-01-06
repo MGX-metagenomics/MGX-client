@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  *
@@ -48,19 +50,34 @@ public abstract class RESTMethods {
      * @throws MGXServerException
      */
     protected final <U> U put(final String path, Object obj, Class<U> c) throws MGXServerException {
-        //System.err.println("PUT uri: " + getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).put(ClientResponse.class, obj);
-        catchException(res);
-        return res.<U>getEntity(c);
+        try {
+            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).put(ClientResponse.class, obj);
+            catchException(res);
+            return res.<U>getEntity(c);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return put(path, obj, c); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     protected final <U> U get(final String path, Class<U> c) throws MGXServerException {
         //System.err.println("GET uri: " +getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
-        catchException(res);
-        return res.<U>getEntity(c);
+        try {
+            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
+            catchException(res);
+            return res.<U>getEntity(c);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return get(path, c); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     protected final String delete(final String path) throws MGXServerException {

@@ -2,6 +2,8 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
+import de.cebitec.mgx.dto.dto.MappedSequenceDTOList;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.dto.dto.MappingDTOList;
 import java.util.Iterator;
@@ -45,5 +47,9 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     @Override
     public MappingDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, MappingDTO.class);
+    }
+
+    public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXServerException, MGXClientException {
+        return super.get("Mapping/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
     }
 }
