@@ -87,7 +87,7 @@ public class ReferenceAccessTest {
         System.out.println("testInterval");
         Iterator<RegionDTO> iter = null;
         try {
-            iter = master.Reference().byReferenceInterval(4, 0, 999999999);
+            iter = master.Reference().byReferenceInterval(4, 0, 99999);
         } catch (MGXClientException | MGXServerException ex) {
             Logger.getLogger(ReferenceAccessTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,7 +97,7 @@ public class ReferenceAccessTest {
             iter.next();
             cnt++;
         }
-        assertEquals(8563, cnt);
+        assertEquals(87, cnt);
     }
 
     @Test
