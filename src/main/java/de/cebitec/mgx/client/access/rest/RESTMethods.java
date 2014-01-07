@@ -66,7 +66,7 @@ public abstract class RESTMethods {
 
     protected final <U> U get(final String path, Class<U> c) throws MGXServerException {
         //System.err.println("GET uri: " +getWebResource().path(path).getURI().toASCIIString());
-        assert !EventQueue.isDispatchThread();
+        assert !EventQueue.isDispatchThread(); 
         try {
             ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
             catchException(res);
@@ -103,6 +103,7 @@ public abstract class RESTMethods {
             catchException(res);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                post(path, obj);
             } else {
                 throw ex; // rethrow
             }

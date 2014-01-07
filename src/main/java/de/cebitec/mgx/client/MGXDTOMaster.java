@@ -110,6 +110,10 @@ public class MGXDTOMaster {
     public TaskAccess Task() {
         return getAccessor(TaskAccess.class);
     }
+    
+    public StatisticsAccess Statistics() {
+        return getAccessor(StatisticsAccess.class);
+    }
 
     void log(Level lvl, String msg) {
         logger.log(lvl, msg);
