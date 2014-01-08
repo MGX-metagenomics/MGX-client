@@ -54,7 +54,7 @@ public class MappingAccessTest {
         Set<MappingDTO> data = new HashSet<>();
         while (it.hasNext()) {
             MappingDTO m = it.next();
-            System.err.println(m.getId());
+            //System.err.println(m.getId());
             data.add(m);
         }
         assertEquals(1, data.size());
@@ -77,6 +77,7 @@ public class MappingAccessTest {
         System.out.println("openMapping");
         UUID uuid = master.Mapping().openMapping(29);
         assertNotNull(uuid);
+        master.Mapping().closeMapping(uuid);
     }
 //
 //    @Test
