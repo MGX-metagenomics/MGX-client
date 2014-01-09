@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -9,6 +10,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
 import de.cebitec.mgx.seqholder.ReadSequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  *
@@ -27,7 +29,7 @@ public class SeqUploader extends UploadBase {
         this.seqrun_id = seqrun_id;
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
-        int randomNess = (int) Math.round(Math.random()*20);
+        int randomNess = (int) Math.round(Math.random() * 20);
         setChunkSize(800 + randomNess);
     }
 
@@ -54,7 +56,7 @@ public class SeqUploader extends UploadBase {
             if (nextElement.getSequence().getSequence().length == 0) {
                 continue;
             }
-            
+
             SequenceDTO seq = nextElement.toDTO();
             seqListBuilder.addSeq(seq);
             current_num_elements++;
@@ -98,22 +100,46 @@ public class SeqUploader extends UploadBase {
     }
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
-        ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
-        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
-        return session_uuid.getValue();
+        try {
+            ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+            MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
+            return session_uuid.getValue();
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return initTransfer(seqrun_id); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
-        ClientResponse res = wr.path("/Sequence/closeUpload/" + uuid).get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        try {
+            ClientResponse res = wr.path("/Sequence/closeUpload/" + uuid).get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                finishTransfer(uuid); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
-        ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        try {
+            ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                sendChunk(seqList, session_uuid); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 }

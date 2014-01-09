@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javax.net.ssl.SSLHandshakeException;
 import org.biojava.bio.Annotation;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Feature;
@@ -68,7 +70,6 @@ public class ReferenceUploader extends UploadBase {
             abortTransfer(ex.getMessage(), total_elements_sent);
             return false;
         }
-
 
         while (seqs.hasNext()) {
 
@@ -153,7 +154,7 @@ public class ReferenceUploader extends UploadBase {
                     }
                 }
             }
-            
+
             // flush remaining regions
             if (!regions.isEmpty()) {
                 try {
@@ -189,11 +190,19 @@ public class ReferenceUploader extends UploadBase {
 
     private String initTransfer(long ref_id) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Reference/init/" + ref_id).accept("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
-        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
-        return session_uuid.getValue();
+        try {
+            ClientResponse res = wr.path("/Reference/init/" + ref_id).accept("application/x-protobuf").get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+            MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
+            return session_uuid.getValue();
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return initTransfer(ref_id); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     private long createReference(String name, int length) throws MGXServerException {
@@ -202,10 +211,18 @@ public class ReferenceUploader extends UploadBase {
                 .setName(name)
                 .setLength(length)
                 .build();
-        ClientResponse res = wr.path("/Reference/create/").accept("application/x-protobuf")
-                .put(ClientResponse.class, ref);
-        catchException(res);
-        return res.<MGXLong>getEntity(MGXLong.class).getValue();
+        try {
+            ClientResponse res = wr.path("/Reference/create/").accept("application/x-protobuf")
+                    .put(ClientResponse.class, ref);
+            catchException(res);
+            return res.<MGXLong>getEntity(MGXLong.class).getValue();
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                return createReference(name, length); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {
@@ -214,9 +231,17 @@ public class ReferenceUploader extends UploadBase {
         for (RegionDTO r : regions) {
             data.addRegion(r);
         }
-        ClientResponse res = wr.path("/Reference/addRegions/" + session_uuid).accept("application/x-protobuf")
-                .put(ClientResponse.class, data.build());
-        catchException(res);
+        try {
+            ClientResponse res = wr.path("/Reference/addRegions/" + session_uuid).accept("application/x-protobuf")
+                    .put(ClientResponse.class, data.build());
+            catchException(res);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                sendRegions(regions, session_uuid); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 
     private void sendSequence(Sequence seq, String session_uuid) throws MGXServerException {
@@ -225,16 +250,35 @@ public class ReferenceUploader extends UploadBase {
         int length = dna.length();
         for (int i = 0; i < length; i += 10000) {
             String chunk = dna.substring(i, Math.min(length, i + 10000));
-            ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
-                    .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
-            catchException(res);
+            try {
+                ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
+                        .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
+                catchException(res);
+            } catch (ClientHandlerException ex) {
+                if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                    // retry
+                    ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
+                            .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
+                    catchException(res);
+                } else {
+                    throw ex; // rethrow
+                }
+            }
         }
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Reference/close/" + uuid).get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+        try {
+            ClientResponse res = wr.path("/Reference/close/" + uuid).get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                finishTransfer(uuid); // retry
+            } else {
+                throw ex; // rethrow
+            }
+        }
     }
 }
