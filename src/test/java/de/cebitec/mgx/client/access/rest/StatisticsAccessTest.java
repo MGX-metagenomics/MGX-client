@@ -6,15 +6,12 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -51,6 +48,7 @@ public class StatisticsAccessTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testRarefaction() throws Exception {
         System.out.println("testRarefaction");
         Collection<Number> data = new LinkedList<>();
@@ -63,11 +61,31 @@ public class StatisticsAccessTest {
         Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
         assertNotNull(iter);
 
-        int cnt = 0;
+        List<PointDTO> ret = new LinkedList<>();
         while (iter.hasNext()) {
             PointDTO p = iter.next();
-            cnt++;
+            ret.add(p);
         }
-        assertEquals(5, cnt);
+        assertEquals(5, ret.size());
+
+        PointDTO p1 = ret.get(0);
+        PointDTO p2 = ret.get(1);
+        PointDTO p3 = ret.get(2);
+        PointDTO p4 = ret.get(3);
+        PointDTO p5 = ret.get(4);
+
+        // check sample sizes
+        assertEquals(0, p1.getX(), 0.0001);
+        assertEquals(5, p2.getX(), 0.0001);
+        assertEquals(10, p3.getX(), 0.0001);
+        assertEquals(15, p4.getX(), 0.0001);
+        assertEquals(18, p5.getX(), 0.0001);
+
+        // check richness estimaes
+        assertEquals(0, p1.getY(), 0.0001);  // always zero
+        assertEquals(3.683123, p2.getY(), 0.0001);
+        assertEquals(5.205882, p3.getY(), 0.0001);
+        assertEquals(5.811275, p4.getY(), 0.0001);
+        assertEquals(data.size(), p5.getY(), 0.0001);  // always number of categories
     }
 }
