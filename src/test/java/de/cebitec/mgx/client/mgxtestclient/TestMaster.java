@@ -51,6 +51,8 @@ public class TestMaster {
 
     public static MGXDTOMaster get2() {
         String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
+        String username = null;
+        String password = null;
 
         Properties p = new Properties();
         String config = System.getProperty("user.home") + "/.m2/mgx.private";
@@ -59,16 +61,18 @@ public class TestMaster {
             try {
                 p.load(new FileInputStream(f));
                 serverURI = p.getProperty("testserver");
+                password = p.getProperty("password");
+                username = p.getProperty("username");
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }
         }
         GPMSClientI gpms = new GPMS("MyServer", serverURI);
-        if (!gpms.login("sjaenick", "XXX")) {
+        if (!gpms.login("sjaenick", password)) {
             return null;
         }
         for (MembershipI m : gpms.getMemberships()) {
-            if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_devel".equals(m.getProject().getName()))) {
+            if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 MGXDTOMaster dtomaster = new MGXDTOMaster(gpms, m);
                 return dtomaster;
             }

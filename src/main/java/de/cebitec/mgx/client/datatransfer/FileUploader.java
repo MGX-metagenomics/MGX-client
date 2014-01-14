@@ -29,18 +29,23 @@ public class FileUploader extends UploadBase {
     private long total_elements_sent = 0;
     private final long totalFileSize;
 
-    public FileUploader(final WebResource wr, final File file, final String remoteName) {
+    public FileUploader(final WebResource wr, final File file, final String targetName) {
         super();
         this.localFile = file;
         totalFileSize = file.length();
         this.wr = wr;
-        this.remoteName = remoteName.replace("/", "|");
+
+        String tmp = targetName;
+        if (!tmp.startsWith("./")) {
+            tmp = "./" + tmp;
+        }
+        this.remoteName = tmp.replace("/", "|");
         int randomNess = (int) Math.round(Math.random() * 20);
         setChunkSize(4096 + randomNess);
     }
-    
+
     public int getProgress() {
-        float complete = 1.0f * total_elements_sent/totalFileSize;
+        float complete = 1.0f * total_elements_sent / totalFileSize;
         return Math.round(100 * complete);
     }
 

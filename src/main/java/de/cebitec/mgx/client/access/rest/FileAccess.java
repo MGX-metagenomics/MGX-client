@@ -15,11 +15,16 @@ import java.util.UUID;
  */
 public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
-    public Iterator<FileDTO> fetchall(String rootDir) throws MGXServerException, MGXClientException {
+    public final static String ROOT = ".|";
+
+    public Iterator<FileDTO> fetchall(String baseDir) throws MGXServerException, MGXClientException {
         //System.err.println("request dir listing for " + rootDir);
-        rootDir = rootDir.replace("/", "|");
+        if (!baseDir.startsWith(ROOT)) {
+            throw new MGXClientException("Invalid path: " + baseDir);
+        }
+        baseDir = baseDir.replace("/", "|");
         String resolve = r.resolve(FileDTOList.class, "fetchall");
-        return this.get(resolve + rootDir, FileDTOList.class).getFileList().iterator();
+        return this.get(resolve + baseDir, FileDTOList.class).getFileList().iterator();
     }
 
     @Override
@@ -28,6 +33,9 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     public UUID delete(FileDTO dto) throws MGXServerException, MGXClientException {
+        if (!dto.getName().startsWith(ROOT)) {
+            throw new MGXClientException("Invalid path: " + dto.getName());
+        }
         String path = dto.getName().replace("/", "|");
         String resolve = r.resolve(FileDTO.class, "delete");
         return UUID.fromString(this.delete(resolve + path));
@@ -35,28 +43,36 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
     @Override
     public FileDTO fetch(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
     public long create(FileDTO t) throws MGXServerException, MGXClientException {
+        if (!t.getName().startsWith(ROOT)) {
+            throw new MGXClientException("Invalid target path: " + t.getName());
+        }
         // this method is only used to create directories; files
         // are created using the upload mechanism
-        assert t.getIsDirectory();
+        if (!t.getIsDirectory()) {
+            throw new MGXClientException(t.getName() + " is not a directory.");
+        }
         return super.create(t, FileDTO.class);
     }
 
     @Override
     public void update(FileDTO t) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
     public Iterator<FileDTO> fetchall() throws MGXServerException, MGXClientException {
-        return fetchall(".");
+        return fetchall(".|");
     }
 
-    public FileUploader createUploader(File localFile, String fullPath) {
-        return new FileUploader(getWebResource(), localFile, fullPath);
+    public FileUploader createUploader(File localFile, String remotePath) throws MGXClientException {
+        if (!remotePath.startsWith(ROOT)) {
+            throw new MGXClientException("Invalid target path: " + remotePath);
+        }
+        return new FileUploader(getWebResource(), localFile, remotePath);
     }
 }
