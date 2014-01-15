@@ -83,11 +83,12 @@ public class FileAccessTest {
         int numDirectories = 0;
         while (iter.hasNext()) {
             FileDTO f = iter.next();
+            System.err.println(f.getName());
             if (f.getIsDirectory()) {
                 Iterator<FileDTO> iter2 = master.File().fetchall(f.getName());
                 while (iter2.hasNext()) {
                     FileDTO ff = iter2.next();
-                    //System.err.println(ff.getName());
+                    System.err.println(" `-- " +ff.getName());
                     if (ff.getIsDirectory()) {
                         numDirectories++;
                     } else {
