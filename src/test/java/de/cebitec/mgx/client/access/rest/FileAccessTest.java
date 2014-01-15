@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -88,7 +86,7 @@ public class FileAccessTest {
                 Iterator<FileDTO> iter2 = master.File().fetchall(f.getName());
                 while (iter2.hasNext()) {
                     FileDTO ff = iter2.next();
-                    System.err.println(" `-- " +ff.getName());
+                    System.err.println(" `-- " + ff.getName());
                     if (ff.getIsDirectory()) {
                         numDirectories++;
                     } else {
@@ -124,6 +122,10 @@ public class FileAccessTest {
     public void testCreateDirUser() {
         System.out.println("createDirUser");
         MGXDTOMaster m = TestMaster.get2();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
         FileDTO newDir = FileDTO.newBuilder()
                 .setName(FileAccess.ROOT + "testDir")
                 .setIsDirectory(true)
@@ -168,6 +170,10 @@ public class FileAccessTest {
     public void testDeleteInvalid() {
         System.out.println("deleteInvalid");
         MGXDTOMaster m = TestMaster.get2();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
 
         FileDTO invalid = FileDTO.newBuilder()
                 .setName(FileAccess.ROOT + "DOES_NOT_EXIST")
@@ -191,6 +197,11 @@ public class FileAccessTest {
     @Test
     public void testUploadSuccess() {
         System.out.println("upload_Success");
+        MGXDTOMaster m = TestMaster.get2();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
 
         File f = new File("/tmp/testUpload");
         try (FileWriter fw = new FileWriter(f)) {
@@ -199,7 +210,6 @@ public class FileAccessTest {
             fail(ex.getMessage());
         }
 
-        MGXDTOMaster m = TestMaster.get2();
         String targetName = FileAccess.ROOT + "Uploadtest.txt";
 
         FileUploader up = null;
