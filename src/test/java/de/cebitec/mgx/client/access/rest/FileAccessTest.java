@@ -150,6 +150,39 @@ public class FileAccessTest {
     }
 
     @Test
+    public void testCreateExistingDir() {
+        System.out.println("createExistingDir");
+        MGXDTOMaster m = TestMaster.get2();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
+        FileDTO newDir = FileDTO.newBuilder()
+                .setName(FileAccess.ROOT + FileAccess.separator + "dir1")
+                .setIsDirectory(true)
+                .setSize(0)
+                .build();
+        long create = 0;
+        try {
+            create = m.File().create(newDir);
+        } catch (MGXServerException | MGXClientException ex) {
+            if (ex.getMessage().trim().endsWith("dir1 already exists.")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+
+        //cleanup
+        if (1 == create) {
+            try {
+                m.File().delete(newDir);
+            } catch (MGXServerException | MGXClientException ex) {
+                fail(ex.getMessage());
+            }
+        }
+    }
+
+    @Test
     public void testUploadFail() throws Exception {
         System.out.println("upload_Guest");
 
