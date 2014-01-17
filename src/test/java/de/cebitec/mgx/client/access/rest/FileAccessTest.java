@@ -127,7 +127,7 @@ public class FileAccessTest {
             return;
         }
         FileDTO newDir = FileDTO.newBuilder()
-                .setName(FileAccess.ROOT + "testDir")
+                .setName(FileAccess.ROOT + FileAccess.separator + "testDir")
                 .setIsDirectory(true)
                 .setSize(0)
                 .build();
@@ -176,7 +176,7 @@ public class FileAccessTest {
         }
 
         FileDTO invalid = FileDTO.newBuilder()
-                .setName(FileAccess.ROOT + "DOES_NOT_EXIST")
+                .setName(FileAccess.ROOT + FileAccess.separator + "DOES_NOT_EXIST")
                 .setIsDirectory(true)
                 .setSize(0)
                 .build();
@@ -184,7 +184,7 @@ public class FileAccessTest {
         try {
             taskId = m.File().delete(invalid);
         } catch (MGXServerException ex) {
-            if (ex.getMessage().trim().equals("Nonexisting path: ./DOES_NOT_EXIST")) {
+            if (ex.getMessage().trim().equals("Nonexisting path: DOES_NOT_EXIST")) {
                 return;
             }
             fail(ex.getMessage());

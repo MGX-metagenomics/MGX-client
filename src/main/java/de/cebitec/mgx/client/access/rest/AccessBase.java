@@ -10,6 +10,8 @@ import java.util.UUID;
 /**
  *
  * @author sjaenick
+ * @param <T>
+ * @param <U>
  */
 public abstract class AccessBase<T, U> extends RESTMethods {
 

@@ -122,7 +122,7 @@ public abstract class RESTMethods {
             } catch (IOException ex) {
                 Logger.getLogger(RESTMethods.class.getName()).log(Level.SEVERE, null, ex);
             }
-            throw new MGXServerException(msg.toString());
+            throw new MGXServerException(msg.toString().trim());
         }
     }
 }

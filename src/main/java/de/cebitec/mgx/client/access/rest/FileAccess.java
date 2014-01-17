@@ -15,7 +15,8 @@ import java.util.UUID;
  */
 public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
-    public final static String ROOT = ".|";
+    public static final String ROOT = ".";
+    public static final String separator = "|";
 
     public Iterator<FileDTO> fetchall(String baseDir) throws MGXServerException, MGXClientException {
         //System.err.println("request dir listing for " + rootDir);
