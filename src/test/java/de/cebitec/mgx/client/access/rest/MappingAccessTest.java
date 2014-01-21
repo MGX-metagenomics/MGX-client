@@ -39,7 +39,7 @@ public class MappingAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.get();
+        master = TestMaster.getRO();
     }
 
     @After

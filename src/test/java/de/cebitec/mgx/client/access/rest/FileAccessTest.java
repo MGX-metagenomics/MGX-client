@@ -43,7 +43,7 @@ public class FileAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.get();
+        master = TestMaster.getRO();
     }
 
     @After
