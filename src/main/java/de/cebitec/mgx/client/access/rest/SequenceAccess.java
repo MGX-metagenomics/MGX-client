@@ -57,7 +57,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         String resolve = r.resolve(SequenceDTOList.class, "fetchall");
         Builder b = MGXLongList.newBuilder();
         for (Long id : ids) {
-            b.addLong(MGXLong.newBuilder().setValue(id).build());
+            b.addLong(id);
         }
         return super.<SequenceDTOList>put(resolve, b.build(), SequenceDTOList.class);
     }

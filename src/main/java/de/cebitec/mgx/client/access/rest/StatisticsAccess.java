@@ -4,6 +4,8 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXLongList;
+import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import java.util.Collection;
@@ -18,10 +20,14 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
 
     public Iterator<PointDTO> Rarefaction(Collection<Number> data) throws MGXServerException, MGXClientException {
         MGXLongList.Builder b = MGXLongList.newBuilder();
-        for (Number n: data) {
-            b.addLong(MGXLong.newBuilder().setValue(n.longValue()).build());
+        for (Number n : data) {
+            b.addLong(n.longValue());
         }
         return put("Statistics/Rarefaction", b.build(), PointDTOList.class).getPointList().iterator();
+    }
+
+    public String Clustering(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
+        return put("Statistics/Clustering", dto, MGXString.class).getValue();
     }
 
     @Override
