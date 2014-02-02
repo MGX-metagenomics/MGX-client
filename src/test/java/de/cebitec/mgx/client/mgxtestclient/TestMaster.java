@@ -48,11 +48,22 @@ public class TestMaster {
         assert master.getProject().getName().equals("MGX_Unittest");
         return master;
     }
-    
-        public static MGXDTOMaster getRW() {
+
+    public static MGXDTOMaster getRW() {
         MGXDTOMaster master = null;
 
         String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
+        String config = System.getProperty("user.home") + "/.m2/mgx.junit";
+        File f = new File(config);
+        if (f.exists() && f.canRead()) {
+            Properties p = new Properties();
+            try {
+                p.load(new FileInputStream(f));
+                serverURI = p.getProperty("testserver");
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         GPMS gpms = new GPMS("MyServer", serverURI);
         if (!gpms.login("mgx_unittestRW", "hL0amo3oLae")) {
             fail(gpms.getError());
