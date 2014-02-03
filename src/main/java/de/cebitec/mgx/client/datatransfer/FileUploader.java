@@ -104,7 +104,7 @@ public class FileUploader extends UploadBase {
 
     private String initTransfer() throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/init/" + remoteName).accept("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("/File/initUpload/" + remoteName).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -121,7 +121,7 @@ public class FileUploader extends UploadBase {
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/close/" + uuid).get(ClientResponse.class);
+        ClientResponse res = wr.path("/File/closeUpload/" + uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
     }

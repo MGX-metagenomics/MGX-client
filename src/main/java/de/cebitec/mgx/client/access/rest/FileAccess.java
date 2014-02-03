@@ -1,11 +1,13 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
 import java.io.File;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -75,5 +77,12 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
             throw new MGXClientException("Invalid target path: " + remotePath);
         }
         return new FileUploader(getWebResource(), localFile, remotePath);
+    }
+
+    public FileDownloader createDownloader(String serverFname, OutputStream writer) throws MGXClientException {
+        if (!serverFname.startsWith(ROOT)) {
+            throw new MGXClientException("Invalid target path: " + serverFname);
+        }
+        return new FileDownloader(getWebResource(), serverFname, writer);
     }
 }

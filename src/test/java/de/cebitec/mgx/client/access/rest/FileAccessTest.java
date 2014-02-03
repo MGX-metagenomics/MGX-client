@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -9,12 +10,23 @@ import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -282,6 +294,125 @@ public class FileAccessTest {
         if (!success) {
             fail(up.getErrorMessage());
         }
+    }
 
+    @Test
+    public void testDownloadMissingFile() {
+        System.out.println("DownloadMissingFile");
+        MGXDTOMaster m = TestMaster.getRO();
+
+        OutputStream os = null;
+        File f = new File("/tmp/testDownload");
+        try {
+            os = new FileOutputStream(f);
+        } catch (FileNotFoundException ex) {
+            fail(ex.getMessage());
+        }
+
+        String serverFile = ".|doesnotexist";
+
+        FileDownloader down = null;
+        try {
+            down = m.File().createDownloader(serverFile, os);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(down);
+
+        boolean success = down.download();
+
+        assertFalse(success);
+
+        try {
+            os.close();
+        } catch (IOException ex) {
+            fail(ex.getMessage());
+        }
+
+        assertEquals("File does not exist: doesnotexist", down.getErrorMessage());
+
+        // cleanup
+        if (f.exists()) {
+            f.delete();
+        }
+    }
+
+    @Test
+    public void testDownloadFile() {
+        System.out.println("DownloadFile");
+        MGXDTOMaster m = TestMaster.getRO();
+
+        OutputStream os = null;
+        File f = new File("/tmp/testDownload");
+        try {
+            os = new FileOutputStream(f);
+        } catch (FileNotFoundException ex) {
+            fail(ex.getMessage());
+        }
+
+        String serverFile = ".|test1";
+
+        FileDownloader down = null;
+        try {
+            down = m.File().createDownloader(serverFile, os);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(down);
+
+        boolean success = down.download();
+
+        assertTrue(success);
+
+        try {
+            os.close();
+        } catch (IOException ex) {
+            fail(ex.getMessage());
+        }
+
+        if (!success) {
+            fail(down.getErrorMessage());
+        }
+
+        try {
+            String md5 = getMD5Checksum(f.getAbsolutePath());
+            assertEquals("037db883cd8236c30242da3468cf8a19", md5);
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // cleanup
+        if (f.exists()) {
+            f.delete();
+        }
+
+    }
+
+    private static byte[] createChecksum(String filename) throws Exception {
+        InputStream fis = new FileInputStream(filename);
+
+        byte[] buffer = new byte[1024];
+        MessageDigest complete = MessageDigest.getInstance("MD5");
+        int numRead;
+
+        do {
+            numRead = fis.read(buffer);
+            if (numRead > 0) {
+                complete.update(buffer, 0, numRead);
+            }
+        } while (numRead != -1);
+
+        fis.close();
+        return complete.digest();
+    }
+
+    private static String getMD5Checksum(String filename) throws Exception {
+        byte[] b = createChecksum(filename);
+        String result = "";
+
+        for (int i = 0; i < b.length; i++) {
+            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+        }
+        return result;
     }
 }
