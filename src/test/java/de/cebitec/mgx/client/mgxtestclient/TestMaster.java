@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
 import de.cebitec.gpms.core.MembershipI;
-import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.restgpms.GPMS;
 import java.io.File;
@@ -16,8 +15,13 @@ import static org.junit.Assert.fail;
  */
 public class TestMaster {
 
+    private static MGXDTOMaster masterRO;
+    private static MGXDTOMaster masterRW;
+
     public static MGXDTOMaster getRO() {
-        MGXDTOMaster master = null;
+        if (masterRO != null) {
+           return masterRO;
+        }
 
         String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
 
@@ -39,18 +43,20 @@ public class TestMaster {
         }
         for (MembershipI m : gpms.getMemberships()) {
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
-                master = new MGXDTOMaster(gpms, m);
+                masterRO = new MGXDTOMaster(gpms, m);
                 break;
             }
         }
 
-        assert master != null;
-        assert master.getProject().getName().equals("MGX_Unittest");
-        return master;
+        assert masterRO != null;
+        assert masterRO.getProject().getName().equals("MGX_Unittest");
+        return masterRO;
     }
 
     public static MGXDTOMaster getRW() {
-        MGXDTOMaster master = null;
+        if (masterRW != null) {
+            return masterRW;
+        }
 
         String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
         String config = System.getProperty("user.home") + "/.m2/mgx.junit";
@@ -70,45 +76,13 @@ public class TestMaster {
         }
         for (MembershipI m : gpms.getMemberships()) {
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
-                master = new MGXDTOMaster(gpms, m);
+                masterRW = new MGXDTOMaster(gpms, m);
                 break;
             }
         }
 
-        assert master != null;
-        assert master.getProject().getName().equals("MGX_Unittest");
-        return master;
-    }
-
-    public static MGXDTOMaster get2() {
-        String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
-        String username = null;
-        String password = null;
-
-        Properties p = new Properties();
-        String config = System.getProperty("user.home") + "/.m2/mgx.private";
-        File f = new File(config);
-        if (f.exists() && f.canRead()) {
-            try {
-                p.load(new FileInputStream(f));
-                serverURI = p.getProperty("testserver");
-                password = p.getProperty("password");
-                username = p.getProperty("username");
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-        GPMSClientI gpms = new GPMS("MyServer", serverURI);
-        if (!gpms.login(username, password)) {
-            return null;
-        }
-        for (MembershipI m : gpms.getMemberships()) {
-            if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
-                MGXDTOMaster dtomaster = new MGXDTOMaster(gpms, m);
-                return dtomaster;
-            }
-        }
-
-        return null;
+        assert masterRW != null;
+        assert masterRW.getProject().getName().equals("MGX_Unittest");
+        return masterRW;
     }
 }

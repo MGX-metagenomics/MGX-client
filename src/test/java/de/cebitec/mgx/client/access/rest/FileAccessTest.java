@@ -133,7 +133,7 @@ public class FileAccessTest {
     @Test
     public void testCreateDirUser() {
         System.out.println("createDirUser");
-        MGXDTOMaster m = TestMaster.get2();
+        MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
             System.err.println("  private test, skipped");
             return;
@@ -164,7 +164,7 @@ public class FileAccessTest {
     @Test
     public void testCreateExistingDir() {
         System.out.println("createExistingDir");
-        MGXDTOMaster m = TestMaster.get2();
+        MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
             System.err.println("  private test, skipped");
             return;
@@ -214,7 +214,7 @@ public class FileAccessTest {
     @Test
     public void testDeleteInvalid() {
         System.out.println("deleteInvalid");
-        MGXDTOMaster m = TestMaster.get2();
+        MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
             System.err.println("  private test, skipped");
             return;
@@ -242,7 +242,7 @@ public class FileAccessTest {
     @Test
     public void testUploadSuccess() {
         System.out.println("upload_Success");
-        MGXDTOMaster m = TestMaster.get2();
+        MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
             System.err.println("  private test, skipped");
             return;

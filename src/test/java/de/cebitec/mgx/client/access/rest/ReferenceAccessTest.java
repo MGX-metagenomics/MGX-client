@@ -42,7 +42,6 @@ public class ReferenceAccessTest {
 
     @After
     public void tearDown() {
-        master = null;
     }
 
     @Test
@@ -103,11 +102,7 @@ public class ReferenceAccessTest {
     public void testCreate() {
         try {
             System.out.println("testCreate");
-            MGXDTOMaster m = TestMaster.get2();
-            if (m == null) {
-                System.err.println("  private test, skipped");
-                return;
-            }
+            MGXDTOMaster m = TestMaster.getRW();
             ReferenceDTO ref = ReferenceDTO.newBuilder()
                     .setName("testref")
                     .setLength(42)
@@ -125,11 +120,7 @@ public class ReferenceAccessTest {
     @Test
     public void testUploadGBK() {
         System.out.println("testUpload");
-        MGXDTOMaster m = TestMaster.get2();
-        if (m == null) {
-            System.err.println("  private test, skipped");
-            return;
-        }
+        MGXDTOMaster m = TestMaster.getRW();
 
         try {
             Iterator<ReferenceDTO> it = m.Reference().fetchall();
