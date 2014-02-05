@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -24,7 +23,7 @@ public class XMLValidator {
     /**
      * ToolDocumentHandler fuer das melden von einzelnen Bestandteilen.
      */
-    private ToolDocumentHandler handler;
+    private final ToolDocumentHandler handler;
     /**
      * Sobald der "nodes" startet, wird dieses Flag auf true gesetzt.
      */
