@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
+import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
@@ -17,16 +18,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -380,6 +376,47 @@ public class FileAccessTest {
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
+
+        // cleanup
+        if (f.exists()) {
+            f.delete();
+        }
+
+    }
+
+    @Test
+    public void testDownloadPluginDump() {
+        System.out.println("DownloadPluginDump");
+        MGXDTOMaster m = TestMaster.getRO();
+
+        OutputStream os = null;
+        File f = new File("/tmp/testDownload");
+        try {
+            os = new FileOutputStream(f);
+        } catch (FileNotFoundException ex) {
+            fail(ex.getMessage());
+        }
+
+        PluginDumpDownloader down = null;
+        down = m.File().createPluginDumpDownloader(os);
+
+        assertNotNull(down);
+
+        boolean success = down.download();
+
+        assertTrue(success);
+
+        try {
+            os.close();
+        } catch (IOException ex) {
+            fail(ex.getMessage());
+        }
+
+        if (!success) {
+            fail(down.getErrorMessage());
+        }
+        
+        assertTrue(f.length() > 5000);
 
         // cleanup
         if (f.exists()) {

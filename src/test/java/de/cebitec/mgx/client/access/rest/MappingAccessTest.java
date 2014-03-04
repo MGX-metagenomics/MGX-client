@@ -75,7 +75,7 @@ public class MappingAccessTest {
     @Test
     public void testOpenMapping() throws Exception {
         System.out.println("openMapping");
-        UUID uuid = master.Mapping().openMapping(29);
+        UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
     }

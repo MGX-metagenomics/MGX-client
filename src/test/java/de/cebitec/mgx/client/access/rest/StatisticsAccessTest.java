@@ -1,12 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.AttributeCount;
+import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import java.util.Collection;
 import java.util.Iterator;
@@ -48,7 +47,6 @@ public class StatisticsAccessTest {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
     public void testRarefaction() throws Exception {
         System.out.println("testRarefaction");
         Collection<Number> data = new LinkedList<>();
@@ -81,11 +79,30 @@ public class StatisticsAccessTest {
         assertEquals(15, p4.getX(), 0.0001);
         assertEquals(18, p5.getX(), 0.0001);
 
-        // check richness estimaes
+        // check richness estimates
         assertEquals(0, p1.getY(), 0.0001);  // always zero
         assertEquals(3.683123, p2.getY(), 0.0001);
         assertEquals(5.205882, p3.getY(), 0.0001);
         assertEquals(5.811275, p4.getY(), 0.0001);
         assertEquals(data.size(), p5.getY(), 0.0001);  // always number of categories
     }
+
+//    @Test public void repeat() throws Exception {
+//        for (int i = 0; i< 25; i++) {
+//            testRarefaction();
+//        }
+//    }
+//    @Test
+//    public void testRarefactionLarge() throws Exception {
+//        System.out.println("testRarefactionLarge");
+//        MGXDTOMaster m = TestMaster.getRO();
+//        AttributeDistribution dist = m.Attribute().getDistribution(1, 1);
+//        assertNotNull(dist);
+//        Collection<Number> data = new LinkedList<>();
+//        for (AttributeCount ac : dist.getAttributeCountsList()) {
+//            data.add(ac.getCount());
+//        }
+//        Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
+//        assertNotNull(iter);
+//    }
 }

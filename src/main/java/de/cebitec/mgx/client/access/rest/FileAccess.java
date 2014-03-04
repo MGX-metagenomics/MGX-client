@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
+import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.FileDTO;
@@ -84,5 +85,9 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
             throw new MGXClientException("Invalid target path: " + serverFname);
         }
         return new FileDownloader(getWebResource(), serverFname, writer);
+    }
+
+    public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) {
+        return new PluginDumpDownloader(getWebResource(), writer);
     }
 }
