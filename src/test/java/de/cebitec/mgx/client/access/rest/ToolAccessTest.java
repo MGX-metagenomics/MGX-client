@@ -84,6 +84,12 @@ public class ToolAccessTest {
         System.out.println("fetchall");
         Iterator<ToolDTO> it = master.Tool().fetchall();
         assertNotNull(it);
+        int cnt = 0;
+        while (it.hasNext()) {
+            cnt++;
+            it.next();
+        }
+        assertEquals(17, cnt);
     }
 
     @Test
@@ -91,6 +97,12 @@ public class ToolAccessTest {
         System.out.println("listGlobalTools");
         Iterator<ToolDTO> it = master.Tool().listGlobalTools();
         assertNotNull(it);
+        int cnt = 0;
+        while (it.hasNext()) {
+            cnt++;
+            it.next();
+        }
+        assertEquals(22, cnt);
     }
 
     @Test
