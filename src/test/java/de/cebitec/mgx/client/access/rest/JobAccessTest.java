@@ -56,7 +56,7 @@ public class JobAccessTest {
         while (it.hasNext()) {
             jobs.add(it.next());
         }
-        assertEquals(12, jobs.size());
+        assertEquals(14, jobs.size());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class JobAccessTest {
         for (JobDTO j : jobs) {
             cnt++;
         }
-        assertEquals(9, cnt);
+        assertEquals(10, cnt);
     }
 
     @Test

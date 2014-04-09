@@ -48,7 +48,7 @@ public class AttributeTypeAccessTest {
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(20, cnt);
+        assertEquals(21, cnt);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class AttributeTypeAccessTest {
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(20, cnt);
+        assertEquals(21, cnt);
     }
 
     @Test
