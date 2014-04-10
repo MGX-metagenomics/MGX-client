@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
+import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,10 +58,10 @@ public class SequenceAccessTest {
         assertNotNull(up);
         long numElem = up.getNumElementsSent();
         assertEquals(0, numElem);
-        
+
         boolean success = up.upload();
         assertFalse(success);
-        
+
         numElem = up.getNumElementsSent();
         assertEquals(0, numElem);
     }
@@ -80,6 +75,18 @@ public class SequenceAccessTest {
         assertEquals(23, result.getLength());
         assertEquals(23, result.getSequence().length());
         assertEquals("aaatttatatataaaactctctc", result.getSequence());
+    }
 
+    @Test
+    public void testFetchInvalid() {
+        System.out.println("fetchInvalid");
+        try {
+            SequenceDTO result = master.Sequence().fetch(999999);
+        } catch (MGXServerException ex) {
+            return; // ok
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail("Got data for invalid sequence ID");
     }
 }
