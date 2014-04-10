@@ -215,4 +215,90 @@ public class ReferenceAccessTest {
         assertNotNull(seq);
         assertEquals("ttgtgcacac", seq);
     }
+
+//    @Test
+//    public void testUploadGBKRegression() {
+//        System.out.println("testUploadGBKRegression");
+//        MGXDTOMaster m = TestMaster.getRW();
+//
+//        try {
+//            Iterator<ReferenceDTO> it = m.Reference().fetchall();
+//            while (it.hasNext()) {
+//                ReferenceDTO ref = it.next();
+//                if (ref.getName().contains("Flavobacterium johnsoniae")) {
+//                    System.err.println("Test reference already contained in project, deleting..");
+//                    UUID taskId = m.Reference().delete(ref.getId());
+//                    TaskDTO task = m.Task().get(taskId);
+//                    while ((task.getState() != TaskState.FINISHED) || (task.getState() != TaskState.FAILED)) {
+//                        System.err.println(" --> " + task.getState());
+//                        Thread.sleep(1000);
+//                        if ((task.getState() == TaskState.FINISHED) || (task.getState() == TaskState.FAILED)) {
+//                            break;
+//                        } else {
+//                            task = m.Task().get(taskId);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+//            fail(ex.getMessage());
+//        }
+//
+//        File f = new File("/vol/biodb/ncbi_genomes/Bacteria/Flavobacterium_johnsoniae_UW101_uid58493/NC_009441.gbk");
+//        if (!f.exists()) {
+//            fail("Missing input file");
+//        }
+//        ReferenceUploader up = m.Reference().createUploader(f);
+//        assertNotNull(up);
+//        boolean success = up.upload();
+//        if (!success) {
+//            fail(up.getErrorMessage());
+//        }
+//
+//        assertEquals(1, up.getReferenceIDs().size());
+//        long refId = up.getReferenceIDs().get(0);
+//
+//        try {
+//            Iterator<RegionDTO> iter = m.Reference().byReferenceInterval(refId, 0, 3203);
+//            assertNotNull(iter);
+//            int cnt = 0;
+//            while (iter.hasNext()) {
+//                iter.next();
+//                cnt++;
+//            }
+//            assertEquals(5, cnt);
+//        } catch (MGXServerException | MGXClientException ex) {
+//            fail(ex.getMessage());
+//        }
+//
+//        // delete it again
+//        try {
+//            UUID uuid = m.Reference().delete(refId);
+//            assertNotNull(uuid);
+//            TaskState state = m.Task().get(uuid).getState();
+//            while (!state.equals(TaskState.FINISHED)) {
+//                state = m.Task().get(uuid).getState();
+//                if (state.equals(TaskState.FAILED)) {
+//                    fail();
+//                }
+//            }
+//        } catch (MGXServerException | MGXClientException ex) {
+//            fail(ex.getMessage());
+//        }
+//
+//        // make sure they are all gone..
+//        Iterator<ReferenceDTO> iter = null;
+//        try {
+//            iter = m.Reference().fetchall();
+//        } catch (MGXServerException | MGXClientException ex) {
+//            fail(ex.getMessage());
+//        }
+//        assertNotNull(iter);
+//        int refCnt = 0;
+//        while (iter.hasNext()) {
+//            iter.next();
+//            refCnt++;
+//        }
+//        assertEquals(2, refCnt);
+//    }
 }
