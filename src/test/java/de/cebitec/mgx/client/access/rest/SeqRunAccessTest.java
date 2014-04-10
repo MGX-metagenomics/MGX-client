@@ -1,18 +1,11 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
-import de.cebitec.mgx.dto.dto.ReferenceDTO;
-import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
-import de.cebitec.mgx.dto.dto.TaskDTO;
-import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import java.io.File;
 import java.util.Iterator;
-import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,7 +36,6 @@ public class SeqRunAccessTest {
 
     @After
     public void tearDown() {
-        master = null;
     }
 
     @Test
@@ -77,5 +69,4 @@ public class SeqRunAccessTest {
         assertEquals("oneseq", dto.getName());
         assertEquals(1, dto.getNumSequences());
     }
-
 }
