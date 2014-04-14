@@ -40,6 +40,7 @@ public class ReferenceUploader extends UploadBase {
     private final File localFile;
     private long total_elements_sent = 0;
     private final List<Long> generatedRefIDs = new ArrayList<>();
+    private long reference_id = -1;
 
     public ReferenceUploader(final WebResource wr, final File file) {
         super();
@@ -92,10 +93,8 @@ public class ReferenceUploader extends UploadBase {
             }
 
             boolean sequenceSent = false;
-            int regionCount = 0;
             List<RegionDTO> regions = new LinkedList<>();
 
-            long reference_id;
             String session_uuid = null;
 
             Iterator<Feature> iter = rs.features();
@@ -140,7 +139,6 @@ public class ReferenceUploader extends UploadBase {
                     region.setStop(abs_stop);
 
                     regions.add(region.build());
-                    regionCount++;
                     if (regions.size() >= getChunkSize()) {
                         try {
                             sendRegions(regions, session_uuid);
@@ -223,6 +221,28 @@ public class ReferenceUploader extends UploadBase {
                 throw ex; // rethrow
             }
         }
+    }
+
+    @Override
+    protected void abortTransfer(String reason, long total) {
+        if (reference_id != -1) {
+            try {
+                ClientResponse res = wr.path("/Reference/delete/" + reference_id).accept("application/x-protobuf")
+                        .delete(ClientResponse.class);
+                try {
+                    catchException(res);
+                } catch (MGXServerException ex) {
+                    super.abortTransfer(ex.getMessage(), total);
+                }
+            } catch (ClientHandlerException ex) {
+                if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                    abortTransfer(reason, total);
+                } else {
+                    throw ex; // rethrow
+                }
+            }
+        }
+        super.abortTransfer(reason, total);
     }
 
     private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {

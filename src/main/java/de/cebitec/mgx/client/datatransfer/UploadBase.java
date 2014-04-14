@@ -1,5 +1,7 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import de.cebitec.mgx.client.exception.MGXServerException;
+
 /**
  *
  * @author sj
