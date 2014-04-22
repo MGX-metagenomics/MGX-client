@@ -2,7 +2,13 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.MGXLongList;
+import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
+import de.cebitec.mgx.dto.dto.MGXString;
+import de.cebitec.mgx.dto.dto.MGXStringList;
+import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
+import de.cebitec.mgx.dto.dto.ProfileDTO;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -121,17 +127,87 @@ public class StatisticsAccessTest {
         assertEquals(data.size(), p5.getY(), 0.0000001);  // always number of categories
     }
 
-//    @Test
-//    public void testRarefactionLarge() throws Exception {
-//        System.out.println("testRarefactionLarge");
-//        MGXDTOMaster m = TestMaster.getRO();
-//        AttributeDistribution dist = m.Attribute().getDistribution(1, 1);
-//        assertNotNull(dist);
-//        Collection<Number> data = new LinkedList<>();
-//        for (AttributeCount ac : dist.getAttributeCountsList()) {
-//            data.add(ac.getCount());
-//        }
-//        Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
-//        assertNotNull(iter);
-//    }
+    @Test
+    public void testPCA() throws Exception {
+        System.out.println("testPCA");
+        MGXDTOMaster m = TestMaster.getRO();
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new long[]{1, 2, 3}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new long[]{2, 2, 3}))
+                .build();
+        matrix.addRow(p2);
+
+        ProfileDTO p3 = ProfileDTO.newBuilder()
+                .setName("DS3")
+                .setValues(buildVector(new long[]{6, 1, 5}))
+                .build();
+        matrix.addRow(p3);
+
+        PCAResultDTO ret = master.Statistics().PCA(matrix.build());
+        assertNotNull(ret);
+
+        assertEquals(3, ret.getDatapointCount());
+
+        PointDTO ds1 = null;
+        for (PointDTO point : ret.getDatapointList()) {
+            if (point.getName().equals("DS1")) {
+                ds1 = point;
+                break;
+            }
+        }
+        assertNotNull(ds1);
+
+        // check points
+        for (PointDTO point : ret.getDatapointList()) {
+            assertTrue(point.hasName());
+            switch (point.getName()) {
+                case "DS1":
+                    assertEquals(1.1026783, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.1489825, Math.abs(point.getY()), 0.001);
+                    break;
+                case "DS2":
+                    assertEquals(0.8853494, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.16025085, Math.abs(point.getY()), 0.001);
+                    break;
+                case "DS3":
+                    assertEquals(1.9880277, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.01126835, Math.abs(point.getY()), 0.001);
+                    break;
+                default:
+                    fail();
+            }
+        }
+
+        // variances
+        assertEquals(3, ret.getVarianceCount());
+        assertEquals(2.975998e+00, ret.getVariance(0), 0.00001);
+        assertEquals(2.400155e-02, ret.getVariance(1), 0.00001);
+        assertEquals(9.423701e-35, ret.getVariance(2), 0.00001);
+
+        assertEquals(3, ret.getLoadingCount());
+        for (PointDTO p : ret.getLoadingList()) {
+            System.err.println(p.getName() + ": " + p.getX() + " / " + p.getY());
+        }
+    }
+
+    private static MGXLongList buildVector(long[] data) {
+        MGXLongList.Builder b = MGXLongList.newBuilder();
+        for (long l : data) {
+            b.addLong(l);
+        }
+        return b.build();
+    }
 }

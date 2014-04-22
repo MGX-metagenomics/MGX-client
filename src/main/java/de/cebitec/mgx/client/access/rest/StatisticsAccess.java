@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
+import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import java.util.Collection;
@@ -27,6 +28,10 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
 
     public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXServerException, MGXClientException {
         return put("Statistics/Clustering/" + distMethod + "/" + aggloMethod, dto, MGXString.class).getValue();
+    }
+
+    public PCAResultDTO PCA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
+        return put("Statistics/PCA/", dto, PCAResultDTO.class);
     }
 
     @Override
