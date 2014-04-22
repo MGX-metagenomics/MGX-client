@@ -131,6 +131,8 @@ public class StatisticsAccessTest {
     public void testPCA() throws Exception {
         System.out.println("testPCA");
         MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        
         MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
         matrix.setColNames(MGXStringList.newBuilder()
                 .addString(MGXString.newBuilder().setValue("Var1").build())
@@ -201,6 +203,34 @@ public class StatisticsAccessTest {
         for (PointDTO p : ret.getLoadingList()) {
             System.err.println(p.getName() + ": " + p.getX() + " / " + p.getY());
         }
+    }
+
+    @Test
+    public void testPCANullValues() throws Exception {
+        System.out.println("testPCANullValues");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new long[]{1, 2, 0}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new long[]{2, 1, 0}))
+                .build();
+        matrix.addRow(p2);
+
+        PCAResultDTO ret = master.Statistics().PCA(matrix.build());
+        assertNotNull(ret);
     }
 
     private static MGXLongList buildVector(long[] data) {
