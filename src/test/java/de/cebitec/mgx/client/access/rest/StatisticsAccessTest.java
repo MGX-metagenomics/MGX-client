@@ -1,6 +1,8 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
@@ -13,6 +15,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -132,7 +136,7 @@ public class StatisticsAccessTest {
         System.out.println("testPCA");
         MGXDTOMaster m = TestMaster.getRO();
         assertNotNull(m);
-        
+
         MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
         matrix.setColNames(MGXStringList.newBuilder()
                 .addString(MGXString.newBuilder().setValue("Var1").build())
@@ -231,6 +235,83 @@ public class StatisticsAccessTest {
 
         PCAResultDTO ret = master.Statistics().PCA(matrix.build());
         assertNotNull(ret);
+    }
+
+    @Test
+    public void testPCAUnbalancedValues() {
+        System.out.println("testPCAUnbalancedValues");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new long[]{1, 2, 0}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new long[]{2, 1, 0, 71}))
+                .build();
+        matrix.addRow(p2);
+
+        PCAResultDTO ret;
+        try {
+            ret = master.Statistics().PCA(matrix.build());
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Error in data matrix")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail();
+    }
+
+    @Test
+    public void testPCAColNames() {
+        System.out.println("testPCAColNames");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+                .addString(MGXString.newBuilder().setValue("Var4").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new long[]{1, 2, 0}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new long[]{2, 1, 1}))
+                .build();
+        matrix.addRow(p2);
+
+        PCAResultDTO ret;
+        try {
+            ret = master.Statistics().PCA(matrix.build());
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Error in data matrix")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail();
     }
 
     private static MGXLongList buildVector(long[] data) {
