@@ -4,7 +4,7 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
-import de.cebitec.mgx.dto.dto.MGXLongList;
+import de.cebitec.mgx.dto.dto.MGXDoubleList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.MGXStringList;
@@ -15,8 +15,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -146,19 +144,19 @@ public class StatisticsAccessTest {
 
         ProfileDTO p1 = ProfileDTO.newBuilder()
                 .setName("DS1")
-                .setValues(buildVector(new long[]{1, 2, 3}))
+                .setValues(buildVector(new double[]{1, 2, 3}))
                 .build();
         matrix.addRow(p1);
 
         ProfileDTO p2 = ProfileDTO.newBuilder()
                 .setName("DS2")
-                .setValues(buildVector(new long[]{2, 2, 3}))
+                .setValues(buildVector(new double[]{2, 2, 3}))
                 .build();
         matrix.addRow(p2);
 
         ProfileDTO p3 = ProfileDTO.newBuilder()
                 .setName("DS3")
-                .setValues(buildVector(new long[]{6, 1, 5}))
+                .setValues(buildVector(new double[]{6, 1, 5}))
                 .build();
         matrix.addRow(p3);
 
@@ -223,13 +221,13 @@ public class StatisticsAccessTest {
 
         ProfileDTO p1 = ProfileDTO.newBuilder()
                 .setName("DS1")
-                .setValues(buildVector(new long[]{1, 2, 0}))
+                .setValues(buildVector(new double[]{1, 2, 0}))
                 .build();
         matrix.addRow(p1);
 
         ProfileDTO p2 = ProfileDTO.newBuilder()
                 .setName("DS2")
-                .setValues(buildVector(new long[]{2, 1, 0}))
+                .setValues(buildVector(new double[]{2, 1, 0}))
                 .build();
         matrix.addRow(p2);
 
@@ -251,13 +249,13 @@ public class StatisticsAccessTest {
 
         ProfileDTO p1 = ProfileDTO.newBuilder()
                 .setName("DS1")
-                .setValues(buildVector(new long[]{1, 2, 0}))
+                .setValues(buildVector(new double[]{1, 2, 0}))
                 .build();
         matrix.addRow(p1);
 
         ProfileDTO p2 = ProfileDTO.newBuilder()
                 .setName("DS2")
-                .setValues(buildVector(new long[]{2, 1, 0}))
+                .setValues(buildVector(new double[]{2, 1, 0}))
                 .build();
         matrix.addRow(p2);
         try {
@@ -286,13 +284,13 @@ public class StatisticsAccessTest {
 
         ProfileDTO p1 = ProfileDTO.newBuilder()
                 .setName("DS1")
-                .setValues(buildVector(new long[]{1, 2, 0}))
+                .setValues(buildVector(new double[]{1, 2, 0}))
                 .build();
         matrix.addRow(p1);
 
         ProfileDTO p2 = ProfileDTO.newBuilder()
                 .setName("DS2")
-                .setValues(buildVector(new long[]{2, 1, 0, 71}))
+                .setValues(buildVector(new double[]{2, 1, 0, 71}))
                 .build();
         matrix.addRow(p2);
 
@@ -325,13 +323,13 @@ public class StatisticsAccessTest {
 
         ProfileDTO p1 = ProfileDTO.newBuilder()
                 .setName("DS1")
-                .setValues(buildVector(new long[]{1, 2, 0}))
+                .setValues(buildVector(new double[]{1, 2, 0}))
                 .build();
         matrix.addRow(p1);
 
         ProfileDTO p2 = ProfileDTO.newBuilder()
                 .setName("DS2")
-                .setValues(buildVector(new long[]{2, 1, 1}))
+                .setValues(buildVector(new double[]{2, 1, 1}))
                 .build();
         matrix.addRow(p2);
 
@@ -349,10 +347,10 @@ public class StatisticsAccessTest {
         fail();
     }
 
-    private static MGXLongList buildVector(long[] data) {
-        MGXLongList.Builder b = MGXLongList.newBuilder();
-        for (long l : data) {
-            b.addLong(l);
+    private static MGXDoubleList buildVector(double[] data) {
+        MGXDoubleList.Builder b = MGXDoubleList.newBuilder();
+        for (double l : data) {
+            b.addValue(l);
         }
         return b.build();
     }
