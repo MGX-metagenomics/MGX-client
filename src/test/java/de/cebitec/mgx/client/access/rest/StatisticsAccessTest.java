@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -202,9 +204,9 @@ public class StatisticsAccessTest {
         assertEquals(9.423701e-35, ret.getVariance(2), 0.00001);
 
         assertEquals(3, ret.getLoadingCount());
-        for (PointDTO p : ret.getLoadingList()) {
-            System.err.println(p.getName() + ": " + p.getX() + " / " + p.getY());
-        }
+//        for (PointDTO p : ret.getLoadingList()) {
+//            System.err.println(p.getName() + ": " + p.getX() + " / " + p.getY());
+//        }
     }
 
     @Test
@@ -233,6 +235,41 @@ public class StatisticsAccessTest {
 
         PCAResultDTO ret = master.Statistics().PCA(matrix.build(), 1, 2);
         assertNotNull(ret);
+    }
+
+    @Test
+    public void testPCANonExistingPC3() {
+        System.out.println("testPCANonExistingPC3");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new long[]{1, 2, 0}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new long[]{2, 1, 0}))
+                .build();
+        matrix.addRow(p2);
+        try {
+            PCAResultDTO ret = master.Statistics().PCA(matrix.build(), 1, 3);
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Could not access requested principal")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
     }
 
     @Test
