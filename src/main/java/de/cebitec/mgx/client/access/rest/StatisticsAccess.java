@@ -30,8 +30,14 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put("Statistics/Clustering/" + distMethod + "/" + aggloMethod, dto, MGXString.class).getValue();
     }
 
-    public PCAResultDTO PCA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
-        return put("Statistics/PCA/", dto, PCAResultDTO.class);
+    public PCAResultDTO PCA(MGXMatrixDTO dto, int pc1, int pc2) throws MGXServerException, MGXClientException {
+        if (pc1 < 1 || pc1 > 3) {
+            throw new MGXClientException("Invalid principal component: " + pc1);
+        }
+        if (pc2 < 1 || pc2 > 3) {
+            throw new MGXClientException("Invalid principal component: " + pc2);
+        }
+        return put("Statistics/PCA/" + pc1 + "/" + pc2 + "/", dto, PCAResultDTO.class);
     }
 
     @Override

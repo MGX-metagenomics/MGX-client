@@ -15,8 +15,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -162,7 +160,7 @@ public class StatisticsAccessTest {
                 .build();
         matrix.addRow(p3);
 
-        PCAResultDTO ret = master.Statistics().PCA(matrix.build());
+        PCAResultDTO ret = master.Statistics().PCA(matrix.build(), 1, 2);
         assertNotNull(ret);
 
         assertEquals(3, ret.getDatapointCount());
@@ -233,7 +231,7 @@ public class StatisticsAccessTest {
                 .build();
         matrix.addRow(p2);
 
-        PCAResultDTO ret = master.Statistics().PCA(matrix.build());
+        PCAResultDTO ret = master.Statistics().PCA(matrix.build(), 1, 2);
         assertNotNull(ret);
     }
 
@@ -263,7 +261,7 @@ public class StatisticsAccessTest {
 
         PCAResultDTO ret;
         try {
-            ret = master.Statistics().PCA(matrix.build());
+            ret = master.Statistics().PCA(matrix.build(), 1, 2);
         } catch (MGXServerException ex) {
             if (ex.getMessage().contains("Error in data matrix")) {
                 return;
@@ -302,7 +300,7 @@ public class StatisticsAccessTest {
 
         PCAResultDTO ret;
         try {
-            ret = master.Statistics().PCA(matrix.build());
+            ret = master.Statistics().PCA(matrix.build(), 1, 2);
         } catch (MGXServerException ex) {
             if (ex.getMessage().contains("Error in data matrix")) {
                 return;
