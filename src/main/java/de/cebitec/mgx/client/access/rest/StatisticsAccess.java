@@ -37,6 +37,9 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         if (pc2 < 1 || pc2 > 3) {
             throw new MGXClientException("Invalid principal component: " + pc2);
         }
+        if (pc1 == pc2) {
+            throw new MGXClientException("Need different principal components.");
+        }
         return put("Statistics/PCA/" + pc1 + "/" + pc2 + "/", dto, PCAResultDTO.class);
     }
 
