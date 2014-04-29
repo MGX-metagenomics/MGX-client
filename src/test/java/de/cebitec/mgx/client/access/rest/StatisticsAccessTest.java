@@ -399,16 +399,16 @@ public class StatisticsAccessTest {
             assertTrue(point.hasName());
             switch (point.getName()) {
                 case "DS1":
-                    assertEquals(1.1800964, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.19364590, Math.abs(point.getY()), 0.001);
+                    assertEquals(1.5105621, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.0205973, Math.abs(point.getY()), 0.001);
                     break;
                 case "DS2":
-                    assertEquals(0.3521005, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.80506150, Math.abs(point.getY()), 0.001);
+                    assertEquals(0.69076839, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.37201421, Math.abs(point.getY()), 0.001);
                     break;
                 case "DS3":
-                    assertEquals(0.9455717, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.05810423, Math.abs(point.getY()), 0.001);
+                    assertEquals(0.81979373, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.35141681, Math.abs(point.getY()), 0.001);
                     break;
                 default:
                     fail();
