@@ -4,12 +4,14 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.MGXDoubleList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.MGXStringList;
 import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
+import de.cebitec.mgx.dto.dto.PointDTOList;
 import de.cebitec.mgx.dto.dto.ProfileDTO;
 import java.util.Collection;
 import java.util.Iterator;
@@ -345,6 +347,73 @@ public class StatisticsAccessTest {
             fail(ex.getMessage());
         }
         fail();
+    }
+
+    @Test
+    public void testPCoA() throws Exception {
+        System.out.println("testPCoA");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new double[]{1, 2, 3}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new double[]{2, 0, 3}))
+                .build();
+        matrix.addRow(p2);
+
+        ProfileDTO p3 = ProfileDTO.newBuilder()
+                .setName("DS3")
+                .setValues(buildVector(new double[]{2.2, 0.1, 2.3}))
+                .build();
+        matrix.addRow(p3);
+
+        PointDTOList ret = master.Statistics().PCoA(matrix.build());
+        assertNotNull(ret);
+
+        assertEquals(3, ret.getPointCount());
+
+        PointDTO ds1 = null;
+        for (PointDTO point : ret.getPointList()) {
+            if (point.getName().equals("DS1")) {
+                ds1 = point;
+                break;
+            }
+        }
+        assertNotNull(ds1);
+
+        // check points
+        for (PointDTO point : ret.getPointList()) {
+            assertTrue(point.hasName());
+            switch (point.getName()) {
+                case "DS1":
+                    assertEquals(1.1800964, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.19364590, Math.abs(point.getY()), 0.001);
+                    break;
+                case "DS2":
+                    assertEquals(0.3521005, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.80506150, Math.abs(point.getY()), 0.001);
+                    break;
+                case "DS3":
+                    assertEquals(0.9455717, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.05810423, Math.abs(point.getY()), 0.001);
+                    break;
+                default:
+                    fail();
+            }
+        }
     }
 
     private static MGXDoubleList buildVector(double[] data) {
