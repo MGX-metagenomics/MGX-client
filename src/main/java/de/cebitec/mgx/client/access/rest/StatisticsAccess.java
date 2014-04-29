@@ -43,6 +43,10 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put("Statistics/PCA/" + pc1 + "/" + pc2 + "/", dto, PCAResultDTO.class);
     }
 
+    public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
+        return put("Statistics/PCoA/", dto, PointDTOList.class);
+    }
+
     @Override
     public PointDTO fetch(long id) throws MGXServerException, MGXClientException {
         throw new UnsupportedOperationException("Not supported.");
