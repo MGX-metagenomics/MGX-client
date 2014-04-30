@@ -40,10 +40,16 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         if (pc1 == pc2) {
             throw new MGXClientException("Need different principal components.");
         }
+        if (dto.getRowCount() < 2) {
+            throw new MGXClientException("Number of datasets too small.");
+        }
         return put("Statistics/PCA/" + pc1 + "/" + pc2 + "/", dto, PCAResultDTO.class);
     }
 
     public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
+        if (dto.getRowCount() < 3) {
+            throw new MGXClientException("Number of datasets too small.");
+        }
         return put("Statistics/PCoA/", dto, PointDTOList.class);
     }
 
