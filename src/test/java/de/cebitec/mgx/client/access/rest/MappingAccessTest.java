@@ -5,7 +5,10 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -78,6 +81,48 @@ public class MappingAccessTest {
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
+    }
+    
+    
+    @Test
+    public void testInvalidUUID() {
+        System.out.println("invalidUUID");
+        try {
+            master.Mapping().byReferenceInterval(UUID.randomUUID(), 0, 500000);
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().startsWith("No mapping session for")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testMappingData() throws Exception {
+        System.out.println("MappingData");
+        UUID uuid = master.Mapping().openMapping(30);
+        assertNotNull(uuid);
+        int numMappedReads = 0;
+        Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 0, 500000);
+        assertNotNull(iter);
+
+        MappedSequenceDTO testms = null;
+        while (iter.hasNext()) {
+            MappedSequenceDTO ms = iter.next();
+            numMappedReads++;
+            if (ms.getStart() == 22868) {
+                testms = ms;
+            }
+        }
+        master.Mapping().closeMapping(uuid);
+        assertEquals(94, numMappedReads);
+
+        assertNotNull(testms);
+        assertEquals(55550, testms.getSeqId());
+        assertEquals(23011, testms.getStop());
+        assertEquals(71, testms.getIdentity());
     }
 //
 //    @Test
