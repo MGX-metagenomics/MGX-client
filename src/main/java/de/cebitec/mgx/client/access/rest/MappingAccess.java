@@ -60,7 +60,7 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     }
 
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXServerException, MGXClientException {
-        return super.get("Mapping/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
+        return super.get("Mapping/byReferenceInterval/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
     }
 
     public void closeMapping(UUID uuid) throws MGXServerException {
