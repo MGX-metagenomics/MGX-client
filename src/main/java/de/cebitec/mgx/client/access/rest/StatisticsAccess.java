@@ -27,6 +27,12 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
     }
 
     public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXServerException, MGXClientException {
+        if (distMethod == null) {
+            throw new MGXClientException("Null distance method");
+        }
+        if (aggloMethod == null) {
+            throw new MGXClientException("Null agglomeration method");
+        }
         return put("Statistics/Clustering/" + distMethod + "/" + aggloMethod, dto, MGXString.class).getValue();
     }
 
