@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -129,6 +131,116 @@ public class StatisticsAccessTest {
         //assertEquals(1.999995589, p3.getY(), 0.0000001);
         //assertEquals(1.9999999917641063, p4.getY(), 0.00000000001);
         assertEquals(data.size(), p5.getY(), 0.0000001);  // always number of categories
+    }
+
+    @Test
+    public void testClusteringInvalidDist() {
+        System.out.println("ClusteringInvalidDist");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new double[]{1, 2, 10}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new double[]{11, 222, 3}))
+                .build();
+        matrix.addRow(p2);
+
+        try {
+            master.Statistics().Clustering(matrix.build(), "XXX", "ward");
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Invalid distance method")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail();
+    }
+
+    @Test
+    public void testClusteringInvalidAgglo() {
+        System.out.println("ClusteringInvalidAgglo");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new double[]{1, 2, 10}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new double[]{11, 222, 3}))
+                .build();
+        matrix.addRow(p2);
+
+        try {
+            master.Statistics().Clustering(matrix.build(), "euclidean", "XXX");
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Invalid agglomeration method")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail();
+    }
+
+    @Test
+    public void testClusteringEqual() {
+        System.out.println("ClusteringEqual");
+        MGXDTOMaster m = TestMaster.getRO();
+        assertNotNull(m);
+        MGXMatrixDTO.Builder matrix = MGXMatrixDTO.newBuilder();
+        matrix.setColNames(MGXStringList.newBuilder()
+                .addString(MGXString.newBuilder().setValue("Var1").build())
+                .addString(MGXString.newBuilder().setValue("Var2").build())
+                .addString(MGXString.newBuilder().setValue("Var3").build())
+        );
+
+        ProfileDTO p1 = ProfileDTO.newBuilder()
+                .setName("DS1")
+                .setValues(buildVector(new double[]{1, 2, 3}))
+                .build();
+        matrix.addRow(p1);
+
+        ProfileDTO p2 = ProfileDTO.newBuilder()
+                .setName("DS2")
+                .setValues(buildVector(new double[]{1, 2, 3}))
+                .build();
+        matrix.addRow(p2);
+        try {
+            master.Statistics().Clustering(matrix.build(), "euclidean", "ward");
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().contains("Could not cluster data")) {
+                return;
+            }
+            fail(ex.getMessage());
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail();
     }
 
     @Test
