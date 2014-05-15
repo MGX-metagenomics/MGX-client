@@ -10,10 +10,17 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappingDTO;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -82,8 +89,7 @@ public class MappingAccessTest {
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
     }
-    
-    
+
     @Test
     public void testInvalidUUID() {
         System.out.println("invalidUUID");
@@ -123,6 +129,61 @@ public class MappingAccessTest {
         assertEquals(55550, testms.getSeqId());
         assertEquals(23011, testms.getStop());
         assertEquals(71, testms.getIdentity());
+    }
+
+    @Test
+    public void testMappingConcurrentAccess() {
+        System.out.println("MappingConcurrentAccess");
+        UUID uuid = null;
+        try {
+            uuid = master.Mapping().openMapping(30);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(uuid);
+        CountDownLatch latch = new CountDownLatch(1);
+        List<Fetcher> l = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Fetcher f = new Fetcher(latch, master, uuid);
+            l.add(f);
+            f.execute();
+        }
+
+        latch.countDown();
+
+        for (Fetcher f : l) {
+            Iterator<MappedSequenceDTO> i = null;
+            try {
+                i = f.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                fail(ex.getMessage());
+            }
+            assertNotNull(i);
+        }
+        try {
+            master.Mapping().closeMapping(uuid);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    private class Fetcher extends SwingWorker<Iterator<MappedSequenceDTO>, Void> {
+
+        private final CountDownLatch latch;
+        private final MGXDTOMaster master;
+        private final UUID session;
+
+        public Fetcher(CountDownLatch latch, MGXDTOMaster master, UUID session) {
+            this.latch = latch;
+            this.master = master;
+            this.session = session;
+        }
+
+        @Override
+        protected Iterator<MappedSequenceDTO> doInBackground() throws Exception {
+            latch.await();
+            return master.Mapping().byReferenceInterval(session, 0, 500000);
+        }
     }
 //
 //    @Test
