@@ -3,27 +3,17 @@ package de.cebitec.mgx.client.mgxtestclient;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto.AttributeDTO;
-import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
-import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
-import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
-import de.cebitec.mgx.seqstorage.CSFReader;
-import de.cebitec.mgx.seqstorage.CSFWriter;
-import de.cebitec.mgx.seqstorage.FastaWriter;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import de.cebitec.mgx.sequence.SeqStoreException;
 import java.io.Console;
-import java.io.IOException;
 import java.util.*;
 
 public class App {
@@ -37,6 +27,51 @@ public class App {
         char[] password = con.readPassword("Password: ");
 
         MGXDTOMaster master = getMaster(username, password, pName);
+        ToolDTO aa = null;
+        Iterator<ToolDTO> it = master.Tool().fetchall();
+        while (it.hasNext()) {
+            aa = it.next();
+            if (aa.getName().equals("BestHit-AA")) {
+                break;
+            }
+        }
+        Iterable<JobParameterDTO> parameters = master.Job().getParameters(86);
+        JobParameterListDTO.Builder params = JobParameterListDTO.newBuilder();
+        for (JobParameterDTO jp : parameters) {
+            params.addParameter(jp);
+        }
+
+        Iterator<SeqRunDTO> sit = master.SeqRun().fetchall();
+        while (sit.hasNext()) {
+            SeqRunDTO sr = sit.next();
+            Iterable<JobDTO> jobs = master.Job().BySeqRun(sr.getId());
+            boolean ok = false;
+            for (JobDTO j : jobs) {
+                if (j.getToolId() == aa.getId()) {
+                    ok = true;
+                }
+            }
+
+            if (!ok) {
+                JobDTO dto = JobDTO.newBuilder()
+                        .setToolId(aa.getId())
+                        .setSeqrunId(sr.getId())
+                        .setState(JobDTO.JobState.CREATED)
+                        .setParameters(params.build())
+                        .build();
+                Long job_id = master.Job().create(dto);
+                System.err.println("job created.");
+                boolean job_ok = master.Job().verify(job_id);
+                System.err.println("job verification: " + job_ok);
+                if (job_ok) {
+                    System.err.println("submitting job " + job_id + "..");
+                    boolean submitted = master.Job().execute(job_id);
+                    System.err.println("job execution: " + submitted);
+                }
+            }
+        }
+        System.exit(0);
+
 //        AttributeDTO adto = master.Attribute().fetch(127400);
 //        assert adto != null;
 //        AttributeDTOList build = AttributeDTOList.newBuilder().addAttribute(adto).build();
@@ -73,113 +108,124 @@ public class App {
         //            }
         //        }
         //        System.exit(0);
-
-//        long extract_id = 1;
-//        for (DNAExtractDTO extract : master.DNAExtract().fetchall()) {
-//            extract_id = extract.getId();
-//        }
- //       TermDTO flx = master.Term().fetch(5); // miseq
-  //      TermDTO wgs = master.Term().fetch(13); // pe
-
-    //    for (int argpos = 1; argpos < args.length; argpos++) {
-     //       String fname = args[argpos];
-      //      fname = fname.replaceAll(".fastq", "");
-
-       //     System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
-        //    String answer = con.readLine();
-        //    if ("y".equals(answer)) {
-                // create new seqrun
-       //         SeqRunDTO sr = SeqRunDTO.newBuilder()
-        //                .setName(fname)
-       //                 .setExtractId(extract_id)
-        //                .setAccession("")
-         //               .setSubmittedToInsdc(false)
-          //              .setSequencingMethod(wgs)
-           //             .setSequencingTechnology(flx)
-       //                 .build();
-       //         Long seqrun_id = master.SeqRun().create(sr);
-       //         System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
-
-       //         // upload sequence data
-       //         SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
-       //         master.Sequence().sendSequences(seqrun_id, reader);
-      //      }
-   //     }
-   //     System.exit(0);
-
-        // fetch global tool Ids
-        Iterator<ToolDTO> globalTools = master.Tool().listGlobalTools();
-        Iterator<ToolDTO> localiter = master.Tool().fetchall();
-        Collection<ToolDTO> local = new ArrayList<>();
-        while (localiter.hasNext()) {
-            local.add(localiter.next());
+        Iterator<SeqRunDTO> runiter = master.SeqRun().fetchall();
+        Set<String> runs = new HashSet<>();
+        while (runiter.hasNext()) {
+            runs.add(runiter.next().getName());
         }
 
-        // copy tools to project
-        while (globalTools.hasNext()) {
-            ToolDTO globaltool = globalTools.next();
-            boolean isPresent = false;
-            for (ToolDTO localtool : local) {
-                if (globaltool.getName().equals(localtool.getName())) {
-                    isPresent = true;
-                }
-            }
-
-            if (!isPresent) {
-                //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
-                if ((globaltool.getAuthor().equals("Sebastian Jaenicke") && (!globaltool.getName().equals("PKS Screen")))) {
-                    master.Tool().installGlobalTool(globaltool.getId());
-                }
-            }
-        }
-
-        // fetch all tools in project
-        local.clear();
-        localiter = master.Tool().fetchall();
-        while (localiter.hasNext()) {
-            local.add(localiter.next());
-        }
-        Iterator<SeqRunDTO> iter = master.SeqRun().fetchall();
+        long extract_id = 1;
+        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
         while (iter.hasNext()) {
-            SeqRunDTO seqrun = iter.next();
-            Iterable<JobDTO> jobs = master.Job().BySeqRun(seqrun.getId());
+            extract_id = iter.next().getId();
+        }
+        TermDTO flx = master.Term().fetch(5); // miseq
+        TermDTO wgs = master.Term().fetch(13); // pe
 
-            // create and verify the jobs
-            for (ToolDTO tool : local) {
+        for (int argpos = 1; argpos < args.length; argpos++) {
+            String fname = args[argpos];
+            fname = fname.replaceAll(".fq.gz", "");
 
-                boolean isUsed = false;
-                for (JobDTO j : jobs) {
-                    if (j.getToolId() == tool.getId()) {
-                        isUsed = true;
-                    }
-                }
+            if (runs.contains(fname)) {
+                System.err.println("skipping " + fname + ", already present");
+                continue;
+            } else {
 
-                if (!isUsed) {
-                    System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + "/" + tool.getId() + " (y/n)? ");
-                    String answer = con.readLine();
-                    //if (tool.getName().contains("16S")) {
-                    if ("y".equals(answer)) {
-                        JobDTO dto = JobDTO.newBuilder()
-                                .setToolId(tool.getId())
-                                .setSeqrunId(seqrun.getId())
-                                .setState(JobDTO.JobState.CREATED)
-                                .setParameters(JobParameterListDTO.newBuilder().build())
-                                .build();
-                        Long job_id = master.Job().create(dto);
-                        System.err.println("job created.");
-                        boolean job_ok = master.Job().verify(job_id);
-                        System.err.println("job verification: " + job_ok);
-                        if (job_ok) {
-                            System.err.println("submitting job " + job_id + "..");
-                            boolean submitted = master.Job().execute(job_id);
-                            System.err.println("job execution: " + submitted);
-                        }
-                    }
+                System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
+                String answer = con.readLine();
+                if ("y".equals(answer)) {
+                    // create new seqrun
+                    SeqRunDTO sr = SeqRunDTO.newBuilder()
+                            .setName(fname)
+                            .setExtractId(extract_id)
+                            .setAccession("")
+                            .setSubmittedToInsdc(false)
+                            .setSequencingMethod(wgs)
+                            .setSequencingTechnology(flx)
+                            .build();
+                    Long seqrun_id = master.SeqRun().create(sr);
+                    System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+
+                    // upload sequence data
+                    SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
+                    master.Sequence().sendSequences(seqrun_id, reader);
                 }
             }
-
         }
+        System.exit(0);
 
+//        // fetch global tool Ids
+//        Iterator<ToolDTO> globalTools = master.Tool().listGlobalTools();
+//        Iterator<ToolDTO> localiter = master.Tool().fetchall();
+//        Collection<ToolDTO> local = new ArrayList<>();
+//        while (localiter.hasNext()) {
+//            local.add(localiter.next());
+//        }
+//
+//        // copy tools to project
+//        while (globalTools.hasNext()) {
+//            ToolDTO globaltool = globalTools.next();
+//            boolean isPresent = false;
+//            for (ToolDTO localtool : local) {
+//                if (globaltool.getName().equals(localtool.getName())) {
+//                    isPresent = true;
+//                }
+//            }
+//
+//            if (!isPresent) {
+//                //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
+//                if ((globaltool.getAuthor().equals("Sebastian Jaenicke") && (!globaltool.getName().equals("PKS Screen")))) {
+//                    master.Tool().installGlobalTool(globaltool.getId());
+//                }
+//            }
+//        }
+//
+//        // fetch all tools in project
+//        local.clear();
+//        localiter = master.Tool().fetchall();
+//        while (localiter.hasNext()) {
+//            local.add(localiter.next());
+//        }
+//        Iterator<SeqRunDTO> iter = master.SeqRun().fetchall();
+//        while (iter.hasNext()) {
+//            SeqRunDTO seqrun = iter.next();
+//            Iterable<JobDTO> jobs = master.Job().BySeqRun(seqrun.getId());
+//
+//            // create and verify the jobs
+//            for (ToolDTO tool : local) {
+//
+//                boolean isUsed = false;
+//                for (JobDTO j : jobs) {
+//                    if (j.getToolId() == tool.getId()) {
+//                        isUsed = true;
+//                    }
+//                }
+//
+//                if (!isUsed) {
+//                    System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + "/" + tool.getId() + " (y/n)? ");
+//                    String answer = con.readLine();
+//                    //if (tool.getName().contains("16S")) {
+//                    if ("y".equals(answer)) {
+//                        JobDTO dto = JobDTO.newBuilder()
+//                                .setToolId(tool.getId())
+//                                .setSeqrunId(seqrun.getId())
+//                                .setState(JobDTO.JobState.CREATED)
+//                                .setParameters(JobParameterListDTO.newBuilder().build())
+//                                .build();
+//                        Long job_id = master.Job().create(dto);
+//                        System.err.println("job created.");
+//                        boolean job_ok = master.Job().verify(job_id);
+//                        System.err.println("job verification: " + job_ok);
+//                        if (job_ok) {
+//                            System.err.println("submitting job " + job_id + "..");
+//                            boolean submitted = master.Job().execute(job_id);
+//                            System.err.println("job execution: " + submitted);
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
 //        // wait for jobs to finish execution
 //        for (Long job_id : jobIDs) {
 //            JobDTO job = master.Job().fetch(job_id);
@@ -190,9 +236,6 @@ public class App {
 //            }
 //            System.out.println("state of job " + job.getId() + " is " + job.getState().name());
 //        }
-
-
-
         //System.out.println("sending cancel()");
         //master.Job().cancel(lastjob);
         // deleting the toplevel obj  will also remove everything else
@@ -209,7 +252,9 @@ public class App {
             System.err.println("login failed");
             System.exit(1);
         }
-        for (MembershipI m : gpms.getMemberships()) {
+        Iterator<MembershipI> mIter = gpms.getMemberships();
+        while (mIter.hasNext()) {
+            MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
                 master = new MGXDTOMaster(gpms, m);
                 break; // just use the first project we find
@@ -235,7 +280,6 @@ public class App {
 //        }
 //        System.out.println("`------------------------------------------------------------");
 //    }
-
     protected static String join(Iterable< ? extends Object> pColl, String separator) {
         Iterator< ? extends Object> oIter;
         if (pColl == null || (!(oIter = pColl.iterator()).hasNext())) {

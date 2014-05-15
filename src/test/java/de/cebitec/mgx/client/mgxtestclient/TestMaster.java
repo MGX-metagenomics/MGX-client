@@ -6,6 +6,7 @@ import de.cebitec.mgx.restgpms.GPMS;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Properties;
 import static org.junit.Assert.fail;
 
@@ -20,7 +21,7 @@ public class TestMaster {
 
     public static MGXDTOMaster getRO() {
         if (masterRO != null) {
-           return masterRO;
+            return masterRO;
         }
 
         String serverURI = "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/";
@@ -41,7 +42,9 @@ public class TestMaster {
         if (!gpms.login("mgx_unittestRO", "gut-isM5iNt")) {
             fail(gpms.getError());
         }
-        for (MembershipI m : gpms.getMemberships()) {
+        Iterator<MembershipI> mIter = gpms.getMemberships();
+        while (mIter.hasNext()) {
+            MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRO = new MGXDTOMaster(gpms, m);
                 break;
@@ -74,7 +77,9 @@ public class TestMaster {
         if (!gpms.login("mgx_unittestRW", "hL0amo3oLae")) {
             fail(gpms.getError());
         }
-        for (MembershipI m : gpms.getMemberships()) {
+        Iterator<MembershipI> mIter = gpms.getMemberships();
+        while (mIter.hasNext()) {
+            MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRW = new MGXDTOMaster(gpms, m);
                 break;
