@@ -33,8 +33,8 @@ public class MGXDTOMaster {
         membership = mbr;
         accessors = new HashMap<>();
 
-        restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBReader.class);
-        restmaster.registerSerializer(de.cebitec.mgx.dtoserializer.PBWriter.class);
+        restmaster.registerSerializer(de.cebitec.mgx.protobuf.serializer.PBReader.class);
+        restmaster.registerSerializer(de.cebitec.mgx.protobuf.serializer.PBWriter.class);
 
         resource = new StringBuilder(gpms.getBaseURI()).append(mbr.getProject().getName()).toString();
     }
