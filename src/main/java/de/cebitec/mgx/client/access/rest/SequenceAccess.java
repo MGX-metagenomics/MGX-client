@@ -6,7 +6,6 @@ import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
-import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXLongList.Builder;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -32,8 +31,8 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
     }
 
-    public void downloadSequences(long seqrun_id, SeqWriterI<DNASequenceI> writer) throws MGXServerException {
-        SeqDownloader dl = new SeqDownloader(getWebResource(), seqrun_id, writer);
+    public void downloadSequences(long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) throws MGXServerException {
+        SeqDownloader dl = new SeqDownloader(getWebResource(), seqrun_id, writer, closeWriter);
         boolean success = dl.download();
         if (!success) {
             throw new MGXServerException(dl.getErrorMessage());
@@ -44,8 +43,8 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return new SeqUploader(getWebResource(), seqrun_id, reader);
     }
 
-    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<DNASequenceI> writer) {
-        return new SeqDownloader(getWebResource(), seqrun_id, writer);
+    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        return new SeqDownloader(getWebResource(), seqrun_id, writer, closeWriter);
     }
 
     @Override
@@ -62,12 +61,12 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return super.<SequenceDTOList>put(resolve, b.build(), SequenceDTOList.class);
     }
 
-    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer) {
-        return new SeqByAttributeDownloader(getWebResource(), attrs, writer);
+    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        return new SeqByAttributeDownloader(getWebResource(), attrs, writer, closeWriter);
     }
 
-    public void fetchAnnotatedReads(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer) throws MGXServerException {
-        SeqByAttributeDownloader dl = new SeqByAttributeDownloader(getWebResource(), attrs, writer);
+    public void fetchAnnotatedReads(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) throws MGXServerException {
+        SeqByAttributeDownloader dl = new SeqByAttributeDownloader(getWebResource(), attrs, writer, closeWriter);
         boolean success = dl.download();
         if (!success) {
             throw new MGXServerException(dl.getErrorMessage());

@@ -21,8 +21,8 @@ public class SeqByAttributeDownloader extends SeqDownloader {
 
     private final AttributeDTOList attrs;
 
-    public SeqByAttributeDownloader(WebResource wr, AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer) {
-        super(wr, writer);
+    public SeqByAttributeDownloader(WebResource wr, AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        super(wr, writer, closeWriter);
         this.attrs = attrs;
     }
 

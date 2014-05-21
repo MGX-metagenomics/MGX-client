@@ -26,17 +26,18 @@ public class SeqDownloader extends DownloadBase {
     private long seqrun_id = -1;
     private final SeqWriterI<DNASequenceI> writer;
     protected long total_elements = 0;
+    private final boolean closeWriter;
 
-    public SeqDownloader(WebResource wr, long seqrun_id, SeqWriterI<DNASequenceI> writer) {
-        this(wr, writer);
+    public SeqDownloader(WebResource wr, long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        this(wr, writer, closeWriter);
         this.seqrun_id = seqrun_id;
-
     }
 
-    protected SeqDownloader(WebResource wr, SeqWriterI<DNASequenceI> writer) {
+    protected SeqDownloader(WebResource wr, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
         super();
         this.wr = wr;
         this.writer = writer;
+        this.closeWriter = closeWriter;
     }
 
     @Override
@@ -62,10 +63,6 @@ public class SeqDownloader extends DownloadBase {
                 chunk = fetchChunk(session_uuid);
             } catch (MGXServerException ex) {
                 Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                try {
-                    writer.close();
-                } catch (Exception ex1) {
-                }
                 abortTransfer(ex.getMessage(), total_elements);
                 return false;
             }
@@ -102,10 +99,15 @@ public class SeqDownloader extends DownloadBase {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
-        try {
-            writer.close();
-        } catch (Exception ex) {
-            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+
+        if (closeWriter) {
+            try {
+                writer.close();
+            } catch (Exception ex) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                abortTransfer(ex.getMessage(), total_elements);
+                return false;
+            }
         }
         return true;
     }
