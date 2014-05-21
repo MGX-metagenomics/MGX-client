@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -13,6 +14,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  *
@@ -28,7 +30,7 @@ public class SeqDownloader extends DownloadBase {
     public SeqDownloader(WebResource wr, long seqrun_id, SeqWriterI<DNASequenceI> writer) {
         this(wr, writer);
         this.seqrun_id = seqrun_id;
-        
+
     }
 
     protected SeqDownloader(WebResource wr, SeqWriterI<DNASequenceI> writer) {
@@ -45,6 +47,7 @@ public class SeqDownloader extends DownloadBase {
         try {
             session_uuid = initTransfer();
         } catch (MGXServerException ex) {
+            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
@@ -58,6 +61,7 @@ public class SeqDownloader extends DownloadBase {
             try {
                 chunk = fetchChunk(session_uuid);
             } catch (MGXServerException ex) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 try {
                     writer.close();
                 } catch (Exception ex1) {
@@ -79,6 +83,7 @@ public class SeqDownloader extends DownloadBase {
                 try {
                     writer.addSequence(seq);
                 } catch (IOException ex) {
+                    Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     abortTransfer(ex.getMessage(), total_elements + current_num_elements);
                     return false;
                 }
@@ -89,12 +94,11 @@ public class SeqDownloader extends DownloadBase {
             fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
         }
 
-
         // finish the transfer
-
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
+            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
@@ -108,27 +112,50 @@ public class SeqDownloader extends DownloadBase {
 
     protected String initTransfer() throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Sequence/initDownload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
-        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
-        return session_uuid.getValue();
+        try {
+            ClientResponse res = wr.path("/Sequence/initDownload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
+            return session_uuid.getValue();
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                return initTransfer();
+            }
+        }
+        return null;
     }
 
     protected void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Sequence/closeDownload/" + uuid).get(ClientResponse.class);
-        catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        try {
+            ClientResponse res = wr.path("/Sequence/closeDownload/" + uuid).get(ClientResponse.class);
+            catchException(res);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                finishTransfer(uuid);
+            }
+        }
     }
 
     protected SequenceDTOList fetchChunk(String session_uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/Sequence/fetchSequences/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        SequenceDTOList entity = res.<SequenceDTOList>getEntity(SequenceDTOList.class);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
-        return entity;
+        try {
+            ClientResponse res = wr.path("/Sequence/fetchSequences/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
+            catchException(res);
+            SequenceDTOList entity = res.<SequenceDTOList>getEntity(SequenceDTOList.class);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            return entity;
+        } catch (ClientHandlerException ex) {
+            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                return fetchChunk(session_uuid);
+            }
+        }
+        return null;
     }
 
     public long getProgress() {
