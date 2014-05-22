@@ -5,6 +5,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import static de.cebitec.mgx.client.access.rest.RESTMethods.PROTOBUF_TYPE;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTOList;
@@ -61,6 +62,10 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXServerException, MGXClientException {
         return super.get("Mapping/byReferenceInterval/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
+    }
+    
+    public long getMaxCoverage(UUID uuid) throws MGXServerException {
+        return super.get("Mapping/getMaxCoverage/" + uuid, MGXLong.class).getValue();
     }
 
     public void closeMapping(UUID uuid) throws MGXServerException {
