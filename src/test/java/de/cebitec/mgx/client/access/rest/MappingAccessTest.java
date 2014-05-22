@@ -132,6 +132,31 @@ public class MappingAccessTest {
     }
 
     @Test
+    public void testMappingMaxCoverage() {
+        System.out.println("mappingMaxCoverage");
+        UUID uuid = null;
+        try {
+            uuid = master.Mapping().openMapping(30);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+        long cov = -1;
+        try {
+            cov = master.Mapping().getMaxCoverage(uuid);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+
+        assertEquals(3, cov);
+
+        try {
+            master.Mapping().closeMapping(uuid);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
     public void testMappingConcurrentAccess() {
         System.out.println("MappingConcurrentAccess");
         UUID uuid = null;
