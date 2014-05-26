@@ -123,6 +123,24 @@ public class MappingAccessTest {
     }
 
     @Test
+    public void testMappedSeqs2() throws Exception {
+        System.out.println("testMappedSeqs2");
+        UUID uuid = master.Mapping().openMapping(30);
+        assertNotNull(uuid);
+        int numMappedReads = 0;
+        Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 0, 1000);
+        assertNotNull(iter);
+
+        while (iter.hasNext()) {
+            MappedSequenceDTO ms = iter.next();
+            numMappedReads++;
+
+        }
+        master.Mapping().closeMapping(uuid);
+        assertEquals(0, numMappedReads);
+    }
+
+    @Test
     public void testMappingData() throws Exception {
         System.out.println("MappingData");
         UUID uuid = master.Mapping().openMapping(30);
