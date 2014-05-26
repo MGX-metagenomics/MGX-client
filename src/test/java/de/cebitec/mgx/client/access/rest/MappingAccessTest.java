@@ -18,8 +18,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -103,6 +101,25 @@ public class MappingAccessTest {
         } catch (MGXClientException ex) {
             fail(ex.getMessage());
         }
+    }
+
+    @Test
+    public void testMappedSeqs() throws Exception {
+        System.out.println("testMappedSeqs");
+        UUID uuid = master.Mapping().openMapping(30);
+        assertNotNull(uuid);
+        int numMappedReads = 0;
+        Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 566470, 566480);
+        assertNotNull(iter);
+
+        while (iter.hasNext()) {
+            MappedSequenceDTO ms = iter.next();
+            System.err.println(ms.getSeqId());
+            numMappedReads++;
+
+        }
+        master.Mapping().closeMapping(uuid);
+        assertEquals(3, numMappedReads);
     }
 
     @Test
