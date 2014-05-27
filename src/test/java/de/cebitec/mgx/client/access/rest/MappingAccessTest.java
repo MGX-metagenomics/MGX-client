@@ -153,7 +153,7 @@ public class MappingAccessTest {
         while (iter.hasNext()) {
             MappedSequenceDTO ms = iter.next();
             numMappedReads++;
-            if (ms.getStart() == 22868) {
+            if (ms.getSeqId() == 55550) {
                 testms = ms;
             }
         }
@@ -161,8 +161,8 @@ public class MappingAccessTest {
         assertEquals(94, numMappedReads);
 
         assertNotNull(testms);
-        assertEquals(55550, testms.getSeqId());
-        assertEquals(23011, testms.getStop());
+        assertEquals(23010, testms.getStart());
+        assertEquals(22867, testms.getStop());
         assertEquals(71, testms.getIdentity());
     }
 
