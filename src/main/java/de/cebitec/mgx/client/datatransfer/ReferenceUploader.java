@@ -50,6 +50,10 @@ public class ReferenceUploader extends UploadBase {
         setChunkSize(42 + randomNess);
     }
 
+    public long getNumElementsSent() {
+        return total_elements_sent;
+    }
+
     @Override
     public boolean upload() {
         CallbackI cb = getProgressCallback();
@@ -60,7 +64,7 @@ public class ReferenceUploader extends UploadBase {
             br = new BufferedReader(new FileReader(localFile));
             Namespace ns = RichObjectFactory.getDefaultNamespace();
             br.mark(10);
-            Character first = Character.valueOf((char) br.read());
+            Character first = (char) br.read();
             br.reset();
             if (first.toString().equals("L")) {
                 seqs = RichSequence.IOTools.readGenbankDNA(br, ns);
@@ -294,7 +298,7 @@ public class ReferenceUploader extends UploadBase {
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
         } catch (ClientHandlerException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
+            if (ex != null && ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid); // retry
             } else {
                 throw ex; // rethrow
