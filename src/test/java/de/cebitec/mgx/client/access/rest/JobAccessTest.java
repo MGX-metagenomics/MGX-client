@@ -7,14 +7,15 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTO.JobState;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -137,8 +138,7 @@ public class JobAccessTest {
             fail(ex.getMessage());
         }
         assertTrue(verified);
-        
-        
+
         //
         // check job state
         //
@@ -165,6 +165,67 @@ public class JobAccessTest {
         } catch (MGXServerException | MGXClientException | InterruptedException ex) {
             fail(ex.getMessage());
         }
+    }
+
+    @Test
+    public void testRegressionConnectionHang() throws Exception {
+        System.out.println("testRegressionConnectionHang");
+        List<Long> jobIds = new ArrayList<>();
+        MGXDTOMaster m = TestMaster.getRW();
+
+        // create jobs
+        System.err.print("  creating: ");
+        for (int i = 0; i < 10; i++) {
+            JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
+                    .setSeqrunId(2)
+                    .setToolId(2)
+                    .setState(JobState.CREATED)
+                    .build();
+            long job_id = -1;
+            try {
+                job_id = m.Job().create(dto);
+                System.err.print(job_id + "..");
+            } catch (MGXServerException | MGXClientException ex) {
+                fail(ex.getMessage());
+            }
+            assertTrue(job_id > 0);
+            jobIds.add(job_id);
+        }
+        System.err.println();
+
+        // verify
+        System.err.print("  verify: ");
+        for (long job_id : jobIds) {
+            boolean verified = false;
+            try {
+                verified = m.Job().verify(job_id);
+                System.err.print(job_id + "..");
+            } catch (MGXServerException ex) {
+                fail(ex.getMessage());
+            }
+            assertTrue(verified);
+        }
+        System.err.println();
+
+        // cleanup
+        System.err.print("  delete: ");
+        for (long job_id : jobIds) {
+            try {
+                System.err.print(job_id + "..");
+                UUID delTask = m.Job().delete(job_id);
+                TaskDTO t = m.Task().get(delTask);
+                while (!(t.getState().equals(TaskState.FINISHED) || t.getState().equals(TaskState.FAILED))) {
+                    Thread.sleep(500);
+                    t = m.Task().get(delTask);
+                }
+                if (t.getState().equals(TaskState.FAILED)) {
+                    fail("Task failed.");
+                }
+            } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+                fail(ex.getMessage());
+            }
+        }
+        System.err.println();
     }
 
     @Test
@@ -199,5 +260,10 @@ public class JobAccessTest {
     @Test
     public void testGetError() throws Exception {
         System.out.println("getError");
+        JobDTO job = master.Job().fetch(3);
+        assertNotNull(job);
+        MGXString error = master.Job().getError(3);
+        assertNotNull(error);
+        assertEquals("Job is not in FAILED state.", error.getValue());
     }
 }
