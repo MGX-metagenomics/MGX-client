@@ -16,7 +16,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.net.ssl.SSLHandshakeException;
@@ -68,6 +67,8 @@ public class ReferenceUploader extends UploadBase {
             br.reset();
             if (first.toString().equals("L")) {
                 seqs = RichSequence.IOTools.readGenbankDNA(br, ns);
+            } else if (first.toString().equals(">")) {
+                 seqs = RichSequence.IOTools.readFastaDNA(br, ns);
             } else {
                 seqs = RichSequence.IOTools.readEMBLDNA(br, ns);
             }
@@ -97,7 +98,7 @@ public class ReferenceUploader extends UploadBase {
             }
 
             boolean sequenceSent = false;
-            List<RegionDTO> regions = new LinkedList<>();
+            List<RegionDTO> regions = new ArrayList<>();
 
             String session_uuid = null;
 
