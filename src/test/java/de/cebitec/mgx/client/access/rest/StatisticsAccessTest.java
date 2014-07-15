@@ -73,7 +73,7 @@ public class StatisticsAccessTest {
             //System.err.println(p.getX() + " / " + p.getY());
             ret.add(p);
         }
-        assertEquals(5, ret.size());
+        assertEquals(14, ret.size());
 
         PointDTO p1 = ret.get(0);
         PointDTO p2 = ret.get(1);
@@ -110,7 +110,7 @@ public class StatisticsAccessTest {
             PointDTO p = iter.next();
             ret.add(p);
         }
-        assertEquals(77, ret.size());
+        assertEquals(80, ret.size());
 
         PointDTO p1 = ret.get(0);
         PointDTO p2 = ret.get(1);
