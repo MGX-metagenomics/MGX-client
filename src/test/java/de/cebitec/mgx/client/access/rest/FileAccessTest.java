@@ -4,12 +4,15 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
+import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -200,11 +203,17 @@ public class FileAccessTest {
         fw.close();
 
         FileUploader up = master.File().createUploader(f, FileAccess.ROOT + "Unittest.txt");
+
+        PropCounter pc = new PropCounter();
+        up.addPropertyChangeListener(pc);
+
         boolean success = up.upload();
         f.delete();
 
         // test executed with guest user, so upload should fail
         assertFalse(success);
+
+        assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
     }
 
     @Test
@@ -259,6 +268,12 @@ public class FileAccessTest {
         } catch (MGXClientException ex) {
             fail(ex.getMessage());
         }
+
+        assertNotNull(up);
+
+        PropCounter pc = new PropCounter();
+        up.addPropertyChangeListener(pc);
+
         boolean success = up.upload();
         f.delete(); // delete local file
 
@@ -290,6 +305,8 @@ public class FileAccessTest {
         if (!success) {
             fail(up.getErrorMessage());
         }
+
+        assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
     }
 
     @Test
@@ -315,8 +332,10 @@ public class FileAccessTest {
         }
         assertNotNull(down);
 
-        boolean success = down.download();
+        PropCounter pc = new PropCounter();
+        down.addPropertyChangeListener(pc);
 
+        boolean success = down.download();
         assertFalse(success);
 
         try {
@@ -331,6 +350,9 @@ public class FileAccessTest {
         if (f.exists()) {
             f.delete();
         }
+
+        assertEquals(1, pc.getCount());
+        assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
     }
 
     @Test
@@ -356,8 +378,10 @@ public class FileAccessTest {
         }
         assertNotNull(down);
 
-        boolean success = down.download();
+        PropCounter pc = new PropCounter();
+        down.addPropertyChangeListener(pc);
 
+        boolean success = down.download();
         assertTrue(success);
 
         try {
@@ -382,6 +406,8 @@ public class FileAccessTest {
             f.delete();
         }
 
+        assertEquals(69, pc.getCount());
+        assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
     }
 
     @Test
@@ -402,6 +428,9 @@ public class FileAccessTest {
 
         assertNotNull(down);
 
+        PropCounter pc = new PropCounter();
+        down.addPropertyChangeListener(pc);
+
         boolean success = down.download();
 
         assertTrue(success);
@@ -415,7 +444,7 @@ public class FileAccessTest {
         if (!success) {
             fail(down.getErrorMessage());
         }
-        
+
         assertTrue(f.length() > 5000);
 
         // cleanup
@@ -423,6 +452,8 @@ public class FileAccessTest {
             f.delete();
         }
 
+        assertEquals(309, pc.getCount());
+        assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
     }
 
     private static byte[] createChecksum(String filename) throws Exception {
@@ -451,5 +482,26 @@ public class FileAccessTest {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
+    }
+
+    private static class PropCounter implements PropertyChangeListener {
+
+        private int cnt = 0;
+        private PropertyChangeEvent last = null;
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            //System.err.println(evt.getPropertyName());
+            last = evt;
+            cnt++;
+        }
+
+        public int getCount() {
+            return cnt;
+        }
+
+        public PropertyChangeEvent getLastEvent() {
+            return last;
+        }
     }
 }

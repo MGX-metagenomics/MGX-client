@@ -74,6 +74,9 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     public FileUploader createUploader(File localFile, String remotePath) throws MGXClientException {
+        if (!localFile.exists() || !localFile.canRead()) {
+            throw new MGXClientException("Cannot access local file: "+ localFile.getAbsolutePath());
+        }
         if (!remotePath.startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + remotePath);
         }

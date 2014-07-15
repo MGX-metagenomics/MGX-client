@@ -101,6 +101,7 @@ public class FileDownloader extends DownloadBase {
         ClientResponse res = wr.path("/File/closeDownload/" + uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {

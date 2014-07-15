@@ -1,7 +1,5 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import de.cebitec.mgx.client.exception.MGXServerException;
-
 /**
  *
  * @author sj
@@ -28,7 +26,7 @@ public abstract class UploadBase extends TransferBase {
 
     protected void abortTransfer(String reason, long total) {
         setErrorMessage(reason);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total);
+        fireTaskChange(TransferBase.TRANSFER_FAILED, total);
     }
 
     public String getErrorMessage() {
