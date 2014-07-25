@@ -55,6 +55,9 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         if (!t.getName().startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + t.getName());
         }
+        if (t.getName().contains("..")) {
+            throw new MGXClientException("Invalid characters in path: ..");
+        }
         // this method is only used to create directories; files
         // are created using the upload mechanism
         if (!t.getIsDirectory()) {
