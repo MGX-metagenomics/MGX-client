@@ -109,6 +109,7 @@ public class SeqDownloader extends DownloadBase {
                 return false;
             }
         }
+        fireTaskChange(TransferBase.TRANSFER_COMPLETED, 1);
         return true;
     }
 
