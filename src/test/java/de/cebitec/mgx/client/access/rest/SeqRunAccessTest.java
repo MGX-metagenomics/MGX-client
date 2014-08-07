@@ -2,14 +2,19 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.SeqDownloader;
+import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.seqstorage.FastaWriter;
+import de.cebitec.mgx.sequence.DNASequenceI;
+import de.cebitec.mgx.sequence.SeqReaderFactory;
+import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -92,5 +97,30 @@ public class SeqRunAccessTest {
         assertTrue(success);
         assertNotNull(pc.getLastEvent());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
+    }
+
+    @Test
+    public void testUploadFail() throws Exception {
+        // upload as guest should fail
+        System.out.println("testUploadFail");
+        File tmpFile = File.createTempFile("down", "xx");
+        FileWriter fw = new FileWriter(tmpFile);
+        fw.write(">seq1\nAAAAAAAA\n");
+        fw.close();
+        
+        SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
+        assertNotNull(reader);
+
+        PropCounter pc = new PropCounter();
+        SeqUploader up = master.Sequence().createUploader(999999, reader);
+        up.addPropertyChangeListener(pc);
+        boolean success = up.upload();
+
+        tmpFile.delete();
+
+        assertFalse(success);
+        assertTrue(up.getErrorMessage().contains("access denied"));
+        assertNotNull(pc.getLastEvent());
+        assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
     }
 }
