@@ -119,7 +119,6 @@ public class SeqUploader extends UploadBase {
         try {
             ClientResponse res = wr.path("/Sequence/closeUpload/" + uuid).get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid); // retry
@@ -127,6 +126,8 @@ public class SeqUploader extends UploadBase {
                 throw ex; // rethrow
             }
         }
+        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
