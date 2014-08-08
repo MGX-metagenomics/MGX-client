@@ -99,6 +99,8 @@ public class FileUploader extends UploadBase {
             abortTransfer(ex.getMessage(), total_elements_sent);
             return false;
         }
+
+        fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements_sent);
         return true;
     }
 
@@ -124,6 +126,5 @@ public class FileUploader extends UploadBase {
         ClientResponse res = wr.path("/File/closeUpload/" + uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
-        fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements_sent);
     }
 }

@@ -310,6 +310,45 @@ public class FileAccessTest {
     }
 
     @Test
+    public void testUploadSameName() throws IOException {
+        System.out.println("testUploadSameName");
+        MGXDTOMaster m = TestMaster.getRW();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
+
+        File f = File.createTempFile("testUpload", "xxx");
+        try (FileWriter fw = new FileWriter(f)) {
+            fw.write("Unit Test DATA");
+        } catch (IOException ex) {
+            fail(ex.getMessage());
+        }
+
+        // a directory with this name already exists
+        String targetName = FileAccess.ROOT + FileAccess.separator + "dir1";
+
+        FileUploader up = null;
+        try {
+            up = m.File().createUploader(f, targetName);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+
+        assertNotNull(up);
+
+        PropCounter pc = new PropCounter();
+        up.addPropertyChangeListener(pc);
+
+        boolean success = up.upload();
+        f.delete(); // delete local file
+
+        assertFalse(success);
+        assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
+        assertEquals("File already exists: ./dir1", up.getErrorMessage());
+    }
+
+    @Test
     public void testDownloadMissingFile() {
         System.out.println("DownloadMissingFile");
         MGXDTOMaster m = TestMaster.getRO();
