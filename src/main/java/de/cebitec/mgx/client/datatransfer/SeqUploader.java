@@ -95,7 +95,8 @@ public class SeqUploader extends UploadBase {
         return true;
     }
 
-    public long getNumElementsSent() {
+    @Override
+    public long getProgress() {
         return total_elements;
     }
 
@@ -103,7 +104,7 @@ public class SeqUploader extends UploadBase {
         try {
             ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
@@ -126,7 +127,7 @@ public class SeqUploader extends UploadBase {
                 throw ex; // rethrow
             }
         }
-        fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
@@ -134,7 +135,7 @@ public class SeqUploader extends UploadBase {
         try {
             ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 sendChunk(seqList, session_uuid); // retry

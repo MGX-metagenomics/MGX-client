@@ -256,6 +256,9 @@ public class FileAccessTest {
         File f = new File("/tmp/testUpload");
         try (FileWriter fw = new FileWriter(f)) {
             fw.write("Unit Test DATA");
+            for (int i = 0; i < 10000; i++) {
+                fw.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            }
         } catch (IOException ex) {
             fail(ex.getMessage());
         }
@@ -275,7 +278,8 @@ public class FileAccessTest {
         up.addPropertyChangeListener(pc);
 
         boolean success = up.upload();
-        f.delete(); // delete local file
+
+        up.removePropertyChangeListener(pc);
 
         if (success) {
             // cleanup
@@ -306,6 +310,10 @@ public class FileAccessTest {
             fail(up.getErrorMessage());
         }
 
+        long fileSize = f.length();
+        f.delete(); // delete local file
+
+        assertEquals(fileSize, pc.getLastEvent().getNewValue());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
     }
 
@@ -530,7 +538,7 @@ public class FileAccessTest {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            //System.err.println(evt.getPropertyName());
+            System.err.println("    " + evt.getPropertyName() + ": " + evt.getNewValue());
             last = evt;
             cnt++;
         }

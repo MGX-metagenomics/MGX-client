@@ -64,7 +64,7 @@ public class PluginDumpDownloader extends DownloadBase {
             }
             total_elements += chunk.length;
             cb.callback(total_elements);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         }
 
         // finish the transfer
@@ -90,7 +90,7 @@ public class PluginDumpDownloader extends DownloadBase {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/initPluginDownload/").accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
@@ -99,7 +99,7 @@ public class PluginDumpDownloader extends DownloadBase {
         assert !EventQueue.isDispatchThread();
         ClientResponse res = wr.path("/File/closeDownload/" + uuid).get(ClientResponse.class);
         catchException(res);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
@@ -107,7 +107,7 @@ public class PluginDumpDownloader extends DownloadBase {
         ClientResponse res = wr.path("/File/get/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         BytesDTO entity = res.<BytesDTO>getEntity(BytesDTO.class);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }
 

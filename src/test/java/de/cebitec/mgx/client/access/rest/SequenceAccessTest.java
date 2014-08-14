@@ -56,13 +56,13 @@ public class SequenceAccessTest {
         assertNotNull(reader);
         SeqUploader up = master.Sequence().createUploader(9999, reader);
         assertNotNull(up);
-        long numElem = up.getNumElementsSent();
+        long numElem = up.getProgress();
         assertEquals(0, numElem);
 
         boolean success = up.upload();
         assertFalse(success);
 
-        numElem = up.getNumElementsSent();
+        numElem = up.getProgress();
         assertEquals(0, numElem);
     }
 

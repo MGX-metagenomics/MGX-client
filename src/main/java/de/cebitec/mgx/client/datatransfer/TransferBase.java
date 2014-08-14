@@ -13,8 +13,7 @@ import java.beans.PropertyChangeSupport;
 public abstract class TransferBase {
 
     private final PropertyChangeSupport pcs;
-    public static final String NUM_ELEMENTS_SENT = "numElementsSent";
-    public static final String NUM_ELEMENTS_RECEIVED = "numElementsReceived";
+    public static final String NUM_ELEMENTS_TRANSFERRED = "numElementsTransferred";
     public static final String TRANSFER_FAILED = "transferFailed";
     public static final String TRANSFER_COMPLETED = "transferCompleted";
 
@@ -37,4 +36,6 @@ public abstract class TransferBase {
     public void removePropertyChangeListener(PropertyChangeListener p) {
         pcs.removePropertyChangeListener(p);
     }
+    
+    public abstract long getProgress();
 }

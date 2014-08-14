@@ -49,7 +49,8 @@ public class ReferenceUploader extends UploadBase {
         setChunkSize(42 + randomNess);
     }
 
-    public long getNumElementsSent() {
+    @Override
+    public long getProgress() {
         return total_elements_sent;
     }
 
@@ -196,7 +197,7 @@ public class ReferenceUploader extends UploadBase {
         try {
             ClientResponse res = wr.path("/Reference/init/" + ref_id).accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
@@ -297,7 +298,7 @@ public class ReferenceUploader extends UploadBase {
         try {
             ClientResponse res = wr.path("/Reference/close/" + uuid).get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_SENT, total_elements_sent);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
         } catch (ClientHandlerException ex) {
             if (ex != null && ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid); // retry

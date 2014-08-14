@@ -32,7 +32,7 @@ public class SeqByAttributeDownloader extends SeqDownloader {
         try {
             ClientResponse res = wr.path("/Sequence/initDownloadforAttributes/").accept("application/x-protobuf").post(ClientResponse.class, attrs);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
             String uuid = session_uuid.getValue();
             if (uuid == null || "".equals(uuid)) {

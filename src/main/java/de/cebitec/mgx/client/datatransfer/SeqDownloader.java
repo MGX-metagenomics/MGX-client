@@ -88,7 +88,7 @@ public class SeqDownloader extends DownloadBase {
             }
             total_elements += current_num_elements;
             cb.callback(total_elements);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         }
 
         // finish the transfer
@@ -118,7 +118,7 @@ public class SeqDownloader extends DownloadBase {
         try {
             ClientResponse res = wr.path("/Sequence/initDownload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
@@ -135,7 +135,7 @@ public class SeqDownloader extends DownloadBase {
         try {
             ClientResponse res = wr.path("/Sequence/closeDownload/" + uuid).get(ClientResponse.class);
             catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
@@ -150,7 +150,7 @@ public class SeqDownloader extends DownloadBase {
             ClientResponse res = wr.path("/Sequence/fetchSequences/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
             SequenceDTOList entity = res.<SequenceDTOList>getEntity(SequenceDTOList.class);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_RECEIVED, total_elements);
+            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return entity;
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
