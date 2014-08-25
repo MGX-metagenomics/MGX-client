@@ -77,7 +77,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public List<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
+    public Iterator<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
         List<SequenceDTO> ret = new ArrayList<>();
         SequenceDTOList reply = put("/Attribute/search/", req, SequenceDTOList.class);
         ret.addAll(reply.getSeqList());
@@ -89,6 +89,6 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
             //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
             ret.addAll(reply.getSeqList());
         }
-        return ret;
+        return ret.iterator();
     }
 }
