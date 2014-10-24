@@ -80,7 +80,7 @@ public class SeqDownloader extends DownloadBase {
                 try {
                     writer.addSequence(seq);
                 } catch (IOException ex) {
-                    Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     abortTransfer(ex.getMessage(), total_elements + current_num_elements);
                     return false;
                 }
