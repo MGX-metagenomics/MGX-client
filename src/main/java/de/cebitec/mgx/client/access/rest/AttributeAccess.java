@@ -6,6 +6,8 @@ import de.cebitec.mgx.dto.dto.AttributeCorrelation;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
+import de.cebitec.mgx.dto.dto.MGXString;
+import de.cebitec.mgx.dto.dto.MGXStringList;
 import de.cebitec.mgx.dto.dto.SearchRequestDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
@@ -88,6 +90,15 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
             reply = get("/Attribute/continueSearch/" + uuid, SequenceDTOList.class);
             //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
             ret.addAll(reply.getSeqList());
+        }
+        return ret.iterator();
+    }
+
+    public Iterator<String> find(SearchRequestDTO req) throws MGXServerException {
+        List<String> ret = new ArrayList<>();
+        MGXStringList reply = put("/Attribute/find/", req, MGXStringList.class);
+        for (MGXString ms : reply.getStringList()) {
+            ret.add(ms.getValue());
         }
         return ret.iterator();
     }
