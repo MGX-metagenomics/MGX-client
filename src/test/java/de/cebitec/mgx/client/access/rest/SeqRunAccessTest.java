@@ -48,6 +48,23 @@ public class SeqRunAccessTest {
 
     @After
     public void tearDown() {
+        MGXDTOMaster m = TestMaster.getRW();
+        Iterator<SeqRunDTO> iter = null;
+        try {
+            iter = m.SeqRun().fetchall();
+            while (iter.hasNext()) {
+                SeqRunDTO sr = iter.next();
+                if ("Unittest-Run".equals(sr.getName())) {
+                    UUID taskId = m.SeqRun().delete(sr.getId());
+                    TaskState ts = m.Task().get(taskId).getState();
+                    while (ts != TaskState.FINISHED) {
+                        Thread.sleep(500);
+                        ts = m.Task().get(taskId).getState();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
     }
 
     @Test
@@ -166,7 +183,7 @@ public class SeqRunAccessTest {
                 .setSequencingTechnology(m.Term().fetch(1))
                 .setSubmittedToInsdc(false)
                 .build();
-        
+
         long run_id = m.SeqRun().create(sr);
         assertNotEquals(-1, run_id);
 
@@ -189,7 +206,7 @@ public class SeqRunAccessTest {
         assertTrue(success);
         assertNotNull(pc.getLastEvent());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
-        
+
         UUID taskId = m.SeqRun().delete(run_id);
         TaskState ts = m.Task().get(taskId).getState();
         while (ts != TaskState.FINISHED) {
@@ -197,6 +214,6 @@ public class SeqRunAccessTest {
             ts = m.Task().get(taskId).getState();
         }
         assertEquals(ts, TaskState.FINISHED);
-           
+
     }
 }
