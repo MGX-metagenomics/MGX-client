@@ -94,7 +94,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         return ret.iterator();
     }
 
-    public Iterator<String> find(SearchRequestDTO req) throws MGXServerException {
+    public Iterator<String> find(SearchRequestDTO req) throws MGXServerException, MGXClientException {
         List<String> ret = new ArrayList<>();
         MGXStringList reply = put("/Attribute/find/", req, MGXStringList.class);
         for (MGXString ms : reply.getStringList()) {
