@@ -8,6 +8,8 @@ import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDistribution;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
+import de.cebitec.mgx.dto.dto.SearchRequestDTO;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -108,5 +110,30 @@ public class AttributeAccessTest {
         assertEquals(1, roots);
         assertEquals(339, total);
 
+    }
+
+    @Test
+    public void testFind() {
+        System.out.println("testFind");
+        SearchRequestDTO req = SearchRequestDTO.newBuilder()
+                .setExact(false)
+                .setTerm("meth")
+                .addSeqrunId(2)
+                .build();
+        
+         Iterator<String> iter = null;
+        try {
+            iter = master.Attribute().find(req);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        int cnt = 0;
+        while (iter.hasNext()) {
+            String s = iter.next();
+            cnt++;
+            System.err.println(s);
+        }
+        assertEquals(179, cnt);
     }
 }
