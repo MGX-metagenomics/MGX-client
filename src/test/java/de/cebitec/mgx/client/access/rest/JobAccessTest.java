@@ -241,6 +241,18 @@ public class JobAccessTest {
     }
 
     @Test
+    public void testByNonExistingSeqRun() throws Exception {
+        System.out.println("testByNonExistingSeqRun");
+        Iterable<JobDTO> jobs = master.Job().BySeqRun(1000);
+        assertNotNull(jobs);
+        int cnt = 0;
+        for (JobDTO j : jobs) {
+            cnt++;
+        }
+        assertEquals(0, cnt);
+    }
+
+    @Test
     public void testGetParameters() throws Exception {
         System.out.println("getParameters");
         Iterable<JobParameterDTO> parameters = master.Job().getParameters(3);
