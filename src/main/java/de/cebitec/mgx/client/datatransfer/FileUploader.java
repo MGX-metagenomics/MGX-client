@@ -68,6 +68,7 @@ public class FileUploader extends UploadBase {
                 in = new BufferedInputStream(fis);
             } catch (FileNotFoundException ex) {
                 abortTransfer(ex.getMessage(), total_elements_sent);
+                return false;
             }
         }
 

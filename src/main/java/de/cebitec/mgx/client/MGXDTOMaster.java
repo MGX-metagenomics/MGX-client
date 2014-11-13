@@ -121,7 +121,12 @@ public class MGXDTOMaster {
 
     private <T extends AccessBase> T getAccessor(Class<T> clazz) {
         if (!accessors.containsKey(clazz)) {
-            accessors.put(clazz, createDAO(clazz));
+            synchronized (accessors) {
+                if (!accessors.containsKey(clazz)) {
+                    accessors.put(clazz, createDAO(clazz));
+                }
+            }
+            //accessors.put(clazz, createDAO(clazz));
         }
         return (T) accessors.get(clazz);
     }

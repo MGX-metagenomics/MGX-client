@@ -203,7 +203,7 @@ public class SeqRunAccessTest {
 
         tmpFile.delete();
 
-        assertTrue(success);
+        assertTrue(up.getErrorMessage(), success);
         assertNotNull(pc.getLastEvent());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
 

@@ -253,7 +253,7 @@ public class FileAccessTest {
             return;
         }
 
-        File f = new File("/tmp/testUpload");
+        File f = new File("/tmp/testUpload1");
         try (FileWriter fw = new FileWriter(f)) {
             fw.write("Unit Test DATA");
             for (int i = 0; i < 10000; i++) {
@@ -408,7 +408,7 @@ public class FileAccessTest {
         MGXDTOMaster m = TestMaster.getRO();
 
         OutputStream os = null;
-        File f = new File("/tmp/testDownload");
+        File f = new File("/tmp/testDownload1");
         try {
             os = new FileOutputStream(f);
         } catch (FileNotFoundException ex) {
@@ -463,7 +463,7 @@ public class FileAccessTest {
         MGXDTOMaster m = TestMaster.getRO();
 
         OutputStream os = null;
-        File f = new File("/tmp/testDownload");
+        File f = new File("/tmp/testDownload2");
         try {
             os = new FileOutputStream(f);
         } catch (FileNotFoundException ex) {

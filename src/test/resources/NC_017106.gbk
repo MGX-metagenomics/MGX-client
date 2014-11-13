@@ -1,13 +1,13 @@
 LOCUS       NC_017106               3204 bp    DNA     circular BCT 27-SEP-2012
-DEFINITION  Acetobacter pasteurianus IFO 3283-01-42C plasmid pAPA42C_040,
+DEFINITION  TEST,
             complete sequence.
 ACCESSION   NC_017106
 VERSION     NC_017106.1  GI:384117533
 DBLINK      Project: 158377
             BioProject: PRJNA158377
 KEYWORDS    .
-SOURCE      Acetobacter pasteurianus IFO 3283-01-42C
-  ORGANISM  Acetobacter pasteurianus IFO 3283-01-42C
+SOURCE      TEST
+  ORGANISM  TEST
             Bacteria; Proteobacteria; Alphaproteobacteria; Rhodospirillales;
             Acetobacteraceae; Acetobacter.
 REFERENCE   1  (bases 1 to 3204)
