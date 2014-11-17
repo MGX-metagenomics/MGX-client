@@ -111,7 +111,7 @@ public abstract class RESTMethods {
     }
 
     public static void catchException(final ClientResponse res) throws MGXServerException {
-        if (res.getClientResponseStatus() != Status.OK) {
+        if (Status.fromStatusCode(res.getStatus()) != Status.OK) {
             StringBuilder msg = new StringBuilder();
             try (BufferedReader r = new BufferedReader(new InputStreamReader(res.getEntityInputStream()))) {
                 String buf;
