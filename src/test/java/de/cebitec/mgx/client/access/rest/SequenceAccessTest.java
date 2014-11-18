@@ -22,8 +22,6 @@ import static org.junit.Assert.*;
  */
 public class SequenceAccessTest {
 
-    private MGXDTOMaster master;
-
     public SequenceAccessTest() {
     }
 
@@ -37,7 +35,6 @@ public class SequenceAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRW();
     }
 
     @After
@@ -47,6 +44,7 @@ public class SequenceAccessTest {
     @Test
     public void testCreateUploaderForInvalidID() {
         System.out.println("createUploaderForInvalidID");
+        MGXDTOMaster master = TestMaster.getRW();
         SeqReaderI reader = null;
         try {
             reader = SeqReaderFactory.getReader("src/test/resources/sample.fas");
@@ -69,17 +67,19 @@ public class SequenceAccessTest {
     @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
+        MGXDTOMaster master = TestMaster.getRW();
         SequenceDTO result = master.Sequence().fetch(109902);
         assertNotNull(result);
         assertEquals("seq1", result.getName());
         assertEquals(23, result.getLength());
         assertEquals(23, result.getSequence().length());
-        assertEquals("aaatttatatataaaactctctc", result.getSequence());
+        assertEquals("AAATTTATATATAAAACTCTCTC", result.getSequence());
     }
 
     @Test
     public void testFetchInvalid() {
         System.out.println("fetchInvalid");
+        MGXDTOMaster master = TestMaster.getRW();
         try {
             SequenceDTO result = master.Sequence().fetch(999999);
         } catch (MGXServerException ex) {

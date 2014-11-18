@@ -18,8 +18,6 @@ import static org.junit.Assert.*;
  */
 public class AttributeTypeAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -30,7 +28,6 @@ public class AttributeTypeAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -40,6 +37,7 @@ public class AttributeTypeAccessTest {
     @Test
     public void testBySeqRun() throws Exception {
         System.out.println("BySeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<AttributeTypeDTO> types = master.AttributeType().BySeqRun(1);
         assertNotNull(types);
         int cnt = 0;
@@ -54,6 +52,7 @@ public class AttributeTypeAccessTest {
     @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
+        MGXDTOMaster master = TestMaster.getRO();
         AttributeTypeDTO atype = master.AttributeType().fetch(1);
         assertNotNull(atype);
     }
@@ -61,6 +60,7 @@ public class AttributeTypeAccessTest {
     @Test
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<AttributeTypeDTO> types = master.AttributeType().fetchall();
         assertNotNull(types);
         int cnt = 0;
@@ -75,6 +75,7 @@ public class AttributeTypeAccessTest {
     @Test
     public void testByJob() throws Exception {
         System.out.println("ByJob");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<AttributeTypeDTO> types = master.AttributeType().ByJob(3);
         assertNotNull(types);
         int cnt = 0;

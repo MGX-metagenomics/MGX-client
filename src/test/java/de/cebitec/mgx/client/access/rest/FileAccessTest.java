@@ -39,8 +39,6 @@ import static org.junit.Assert.*;
  */
 public class FileAccessTest {
 
-    private MGXDTOMaster master;
-
     public FileAccessTest() {
     }
 
@@ -54,7 +52,6 @@ public class FileAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -64,6 +61,7 @@ public class FileAccessTest {
     @Test
     public void testListRoot() throws Exception {
         System.out.println("listRoot");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<FileDTO> iter = master.File().fetchall();
 
         int numFiles = 0;
@@ -86,6 +84,7 @@ public class FileAccessTest {
     @Test
     public void testListDir() throws Exception {
         System.out.println("listDir");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<FileDTO> iter = master.File().fetchall();
 
         int numFiles = 0;
@@ -113,6 +112,7 @@ public class FileAccessTest {
     @Test
     public void testCreateDir() {
         System.out.println("createDirGuest");
+        MGXDTOMaster master = TestMaster.getRO();
         FileDTO newDir = FileDTO.newBuilder()
                 .setName(FileAccess.ROOT + "testDir")
                 .setIsDirectory(true)
@@ -201,6 +201,8 @@ public class FileAccessTest {
         FileWriter fw = new FileWriter(f);
         fw.write("Unit Test DATA");
         fw.close();
+
+        MGXDTOMaster master = TestMaster.getRO();
 
         FileUploader up = master.File().createUploader(f, FileAccess.ROOT + "Unittest.txt");
 

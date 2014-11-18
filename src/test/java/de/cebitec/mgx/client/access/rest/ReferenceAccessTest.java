@@ -25,8 +25,6 @@ import static org.junit.Assert.*;
  */
 public class ReferenceAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -37,7 +35,6 @@ public class ReferenceAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -47,6 +44,7 @@ public class ReferenceAccessTest {
     @Test
     public void testListGlobal() {
         System.out.println("testListGlobal");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = master.Reference().listGlobalReferences();
@@ -65,6 +63,7 @@ public class ReferenceAccessTest {
     @Test
     public void testFetchall() {
         System.out.println("testFetchall");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = master.Reference().fetchall();
@@ -83,6 +82,7 @@ public class ReferenceAccessTest {
     @Test
     public void testInterval() {
         System.out.println("testInterval");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<RegionDTO> iter = null;
         try {
             iter = master.Reference().byReferenceInterval(4, 0, 99999);
@@ -206,6 +206,7 @@ public class ReferenceAccessTest {
     @Test
     public void testGetSequence() {
         System.out.println("testGetSequence");
+        MGXDTOMaster master = TestMaster.getRO();
         String seq = null;
         try {
             seq = master.Reference().getSequence(4, 0, 9);

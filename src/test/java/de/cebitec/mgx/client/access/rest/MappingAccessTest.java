@@ -32,8 +32,6 @@ import static org.junit.Assert.*;
  */
 public class MappingAccessTest {
 
-    private MGXDTOMaster master;
-
     public MappingAccessTest() {
     }
 
@@ -47,7 +45,6 @@ public class MappingAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -57,6 +54,7 @@ public class MappingAccessTest {
     @Test
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<MappingDTO> it = master.Mapping().fetchall();
         assertNotNull(it);
         Set<MappingDTO> data = new HashSet<>();
@@ -71,6 +69,7 @@ public class MappingAccessTest {
     @Test
     public void testBySeqRun() throws Exception {
         System.out.println("BySeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<MappingDTO> it = master.Mapping().BySeqRun(1);
         assertNotNull(it);
         Set<MappingDTO> data = new HashSet<>();
@@ -83,6 +82,7 @@ public class MappingAccessTest {
     @Test
     public void testOpenMapping() throws Exception {
         System.out.println("openMapping");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
@@ -91,6 +91,7 @@ public class MappingAccessTest {
     @Test
     public void testInvalidUUID() {
         System.out.println("invalidUUID");
+        MGXDTOMaster master = TestMaster.getRO();
         try {
             master.Mapping().byReferenceInterval(UUID.randomUUID(), 0, 500000);
         } catch (MGXServerException ex) {
@@ -106,6 +107,7 @@ public class MappingAccessTest {
     @Test
     public void testMappedSeqs() throws Exception {
         System.out.println("testMappedSeqs");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         int numMappedReads = 0;
@@ -125,6 +127,7 @@ public class MappingAccessTest {
     @Test
     public void testMappedSeqs2() throws Exception {
         System.out.println("testMappedSeqs2");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         int numMappedReads = 0;
@@ -143,6 +146,7 @@ public class MappingAccessTest {
     @Test
     public void testMappingData() throws Exception {
         System.out.println("MappingData");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         int numMappedReads = 0;
@@ -169,6 +173,7 @@ public class MappingAccessTest {
     @Test
     public void testMappingMaxCoverage() {
         System.out.println("mappingMaxCoverage");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = null;
         try {
             uuid = master.Mapping().openMapping(30);
@@ -194,6 +199,7 @@ public class MappingAccessTest {
     @Test
     public void testMappingConcurrentAccess() {
         System.out.println("MappingConcurrentAccess");
+        MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = null;
         try {
             uuid = master.Mapping().openMapping(30);

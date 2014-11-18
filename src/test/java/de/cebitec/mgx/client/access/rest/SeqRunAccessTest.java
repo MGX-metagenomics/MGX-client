@@ -31,8 +31,6 @@ import static org.junit.Assert.*;
  */
 public class SeqRunAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -43,7 +41,6 @@ public class SeqRunAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -71,6 +68,7 @@ public class SeqRunAccessTest {
     public void testFetchall() {
         System.out.println("testFetchall");
         Iterator<SeqRunDTO> iter = null;
+        MGXDTOMaster master = TestMaster.getRO();
         try {
             iter = master.SeqRun().fetchall();
         } catch (MGXServerException | MGXClientException ex) {
@@ -88,6 +86,7 @@ public class SeqRunAccessTest {
     @Test
     public void testFetchId() {
         System.out.println("testById");
+        MGXDTOMaster master = TestMaster.getRO();
         SeqRunDTO dto = null;
         try {
             dto = master.SeqRun().fetch(3);
@@ -104,6 +103,8 @@ public class SeqRunAccessTest {
         System.out.println("testDownload");
         File tmpFile = File.createTempFile("down", "xx");
         final SeqWriterI writer = new FastaWriter(tmpFile.getAbsolutePath());
+
+        MGXDTOMaster master = TestMaster.getRO();
 
         SeqRunDTO sr1 = master.SeqRun().fetch(1);
         PropCounter pc = new PropCounter();
@@ -129,6 +130,8 @@ public class SeqRunAccessTest {
 
         SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
         assertNotNull(reader);
+
+        MGXDTOMaster master = TestMaster.getRO();
 
         PropCounter pc = new PropCounter();
         SeqUploader up = master.Sequence().createUploader(999999, reader);

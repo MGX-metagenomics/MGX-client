@@ -29,8 +29,6 @@ import static org.junit.Assert.*;
  */
 public class JobAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -41,7 +39,6 @@ public class JobAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -51,6 +48,7 @@ public class JobAccessTest {
     @Test
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<JobDTO> it = master.Job().fetchall();
         assertNotNull(it);
         Set<JobDTO> jobs = new HashSet<>();
@@ -63,6 +61,7 @@ public class JobAccessTest {
     @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
+        MGXDTOMaster master = TestMaster.getRO();
         JobDTO job = master.Job().fetch(1);
         assertNotNull(job);
     }
@@ -70,6 +69,7 @@ public class JobAccessTest {
     @Test
     public void testDelete() {
         System.out.println("delete");
+        MGXDTOMaster master = TestMaster.getRO();
         boolean failed = false;
         try {
             master.Job().delete(1);
@@ -231,6 +231,7 @@ public class JobAccessTest {
     @Test
     public void testBySeqRun() throws Exception {
         System.out.println("BySeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobDTO> jobs = master.Job().BySeqRun(1);
         assertNotNull(jobs);
         int cnt = 0;
@@ -243,6 +244,7 @@ public class JobAccessTest {
     @Test
     public void testByNonExistingSeqRun() throws Exception {
         System.out.println("testByNonExistingSeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobDTO> jobs = master.Job().BySeqRun(1000);
         assertNotNull(jobs);
         int cnt = 0;
@@ -255,6 +257,7 @@ public class JobAccessTest {
     @Test
     public void testGetParameters() throws Exception {
         System.out.println("getParameters");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobParameterDTO> parameters = master.Job().getParameters(3);
         int params = 0;
         for (JobParameterDTO d : parameters) {
@@ -272,6 +275,7 @@ public class JobAccessTest {
     @Test
     public void testGetError() throws Exception {
         System.out.println("getError");
+        MGXDTOMaster master = TestMaster.getRO();
         JobDTO job = master.Job().fetch(3);
         assertNotNull(job);
         MGXString error = master.Job().getError(3);

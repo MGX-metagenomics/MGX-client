@@ -24,8 +24,6 @@ import static org.junit.Assert.*;
  */
 public class AttributeAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -36,17 +34,16 @@ public class AttributeAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
     public void tearDown() {
-        master = null;
     }
 
     @Test
     public void testGetAttribute() {
         System.out.println("testGetAttribute");
+        MGXDTOMaster master = TestMaster.getRO();
         AttributeDTO attr = null;
         try {
             attr = master.Attribute().fetch(1);
@@ -64,6 +61,8 @@ public class AttributeAccessTest {
     public void testGetDistribution() {
         System.out.println("getDistribution");
 
+        MGXDTOMaster master = TestMaster.getRO();
+
         AttributeDistribution dist = null;
         try {
             dist = master.Attribute().getDistribution(6, 3);
@@ -77,6 +76,7 @@ public class AttributeAccessTest {
     @Test
     public void testGetHierarchy() {
         System.out.println("getHierarchy");
+        MGXDTOMaster master = TestMaster.getRO();
 
         AttributeDistribution ad = null;
 
@@ -115,13 +115,15 @@ public class AttributeAccessTest {
     @Test
     public void testFind() {
         System.out.println("testFind");
+        MGXDTOMaster master = TestMaster.getRO();
+
         SearchRequestDTO req = SearchRequestDTO.newBuilder()
                 .setExact(false)
                 .setTerm("meth")
                 .addSeqrunId(2)
                 .build();
-        
-         Iterator<String> iter = null;
+
+        Iterator<String> iter = null;
         try {
             iter = master.Attribute().find(req);
         } catch (MGXServerException | MGXClientException ex) {

@@ -20,8 +20,6 @@ import static org.junit.Assert.*;
  */
 public class ToolAccessTest {
 
-    private MGXDTOMaster master;
-
     @BeforeClass
     public static void setUpClass() {
     }
@@ -32,7 +30,6 @@ public class ToolAccessTest {
 
     @Before
     public void setUp() {
-        master = TestMaster.getRO();
     }
 
     @After
@@ -42,6 +39,7 @@ public class ToolAccessTest {
     @Test
     public void testGetAvailableParameters_long_boolean() throws Exception {
         System.out.println("getAvailableParameters");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(3, false);
         assertNotNull(it);
         int cnt = 0;
@@ -55,6 +53,7 @@ public class ToolAccessTest {
     @Test
     public void testGetAvailableParameters_frhit() throws Exception {
         System.out.println("testGetAvailableParameters_frhit");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(17, false);
         assertNotNull(it);
         int cnt = 0;
@@ -82,6 +81,7 @@ public class ToolAccessTest {
     @Test
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<ToolDTO> it = master.Tool().fetchall();
         assertNotNull(it);
         int cnt = 0;
@@ -95,6 +95,7 @@ public class ToolAccessTest {
     @Test
     public void testListGlobalTools() throws Exception {
         System.out.println("listGlobalTools");
+        MGXDTOMaster master = TestMaster.getRO();
         Iterator<ToolDTO> it = master.Tool().listGlobalTools();
         assertNotNull(it);
         int cnt = 0;
@@ -108,6 +109,7 @@ public class ToolAccessTest {
     @Test
     public void testDelete() {
         System.out.println("delete");
+        MGXDTOMaster master = TestMaster.getRO();
         boolean failed = false;
         try {
             master.Tool().delete(1);
@@ -120,6 +122,7 @@ public class ToolAccessTest {
     @Test
     public void testDeleteInvalidId() {
         System.out.println("deleteInvalidId");
+        MGXDTOMaster master = TestMaster.getRO();
         boolean failed = false;
         try {
             master.Tool().delete(-1);
@@ -134,6 +137,7 @@ public class ToolAccessTest {
     @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
+        MGXDTOMaster master = TestMaster.getRO();
         ToolDTO t = master.Tool().fetch(1);
         assertNotNull(t);
         assertNotNull(t.getName());
@@ -142,6 +146,7 @@ public class ToolAccessTest {
     @Test
     public void testCreate() {
         System.out.println("create");
+        MGXDTOMaster master = TestMaster.getRO();
         ToolDTO t = null;
         boolean failed = false;
         try {
@@ -157,6 +162,7 @@ public class ToolAccessTest {
     @Test
     public void testByJob() throws Exception {
         System.out.println("ByJob");
+        MGXDTOMaster master = TestMaster.getRO();
         ToolDTO t = master.Tool().ByJob(1);
         assertNotNull(t);
         assertNotNull(t.getName());
