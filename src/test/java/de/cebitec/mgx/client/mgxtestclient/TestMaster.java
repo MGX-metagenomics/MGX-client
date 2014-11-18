@@ -19,7 +19,7 @@ public class TestMaster {
     private static MGXDTOMaster masterRO;
     private static MGXDTOMaster masterRW;
 
-    public static MGXDTOMaster getRO() {
+    public static synchronized MGXDTOMaster getRO() {
         if (masterRO != null) {
             return masterRO;
         }
@@ -56,7 +56,7 @@ public class TestMaster {
         return masterRO;
     }
 
-    public static MGXDTOMaster getRW() {
+    public static synchronized MGXDTOMaster getRW() {
         if (masterRW != null) {
             return masterRW;
         }
