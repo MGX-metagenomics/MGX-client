@@ -76,9 +76,9 @@ public class FileAccessTest {
                 numFiles++;
             }
         }
-        assertEquals(4, tmp.size());
         assertEquals(3, numFiles);
         assertEquals(1, numDirectories);
+        assertEquals(4, tmp.size());
     }
 
     @Test
