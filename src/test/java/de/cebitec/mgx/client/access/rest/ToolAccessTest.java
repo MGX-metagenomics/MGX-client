@@ -58,8 +58,31 @@ public class ToolAccessTest {
         assertNotNull(it);
         int cnt = 0;
         for (JobParameterDTO jp : it) {
+            assertEquals(-1L, jp.getId()); // invalid identifier
             assertNotNull(jp.getDisplayName());
             assertEquals("ConfigMGXReference", jp.getType());
+            assertFalse(jp.getIsOptional());
+            cnt++;
+        }
+        assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testGetAvailableParameters_bowtie() throws Exception {
+        System.out.println("testGetAvailableParameters_bowtie");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(18, false);
+        assertNotNull(it);
+        int cnt = 0;
+        for (JobParameterDTO jp : it) {
+            assertNotNull(jp.getDisplayName());
+            assertEquals("Conveyor.MGX.GetMGXReference", jp.getClassName());
+            assertEquals("GetMGXReference", jp.getDisplayName());
+            assertEquals("ConfigMGXReference", jp.getType());
+            assertEquals(-1L, jp.getId()); // invalid identifier
+            assertEquals(3, jp.getNodeId());
+            assertEquals("refId", jp.getParameterName());
+            assertEquals("", jp.getParameterValue());
             assertFalse(jp.getIsOptional());
             cnt++;
         }
