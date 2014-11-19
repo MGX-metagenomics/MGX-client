@@ -59,7 +59,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testListRoot() throws Exception {
+    public synchronized void testListRoot() throws Exception {
         System.out.println("listRoot");
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<FileDTO> iter = master.File().fetchall();
@@ -82,7 +82,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testListDir() throws Exception {
+    public synchronized void testListDir() throws Exception {
         System.out.println("listDir");
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<FileDTO> iter = master.File().fetchall();
@@ -110,7 +110,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testCreateDir() {
+    public synchronized void testCreateDir() {
         System.out.println("createDirGuest");
         MGXDTOMaster master = TestMaster.getRO();
         FileDTO newDir = FileDTO.newBuilder()
@@ -130,7 +130,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testCreateDirUser() {
+    public synchronized void testCreateDirUser() {
         System.out.println("createDirUser");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -161,7 +161,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testCreateExistingDir() {
+    public synchronized void testCreateExistingDir() {
         System.out.println("createExistingDir");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -194,7 +194,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testUploadFail() throws Exception {
+    public synchronized void testUploadFail() throws Exception {
         System.out.println("upload_Guest");
 
         File f = new File("/tmp/testUpload");
@@ -219,7 +219,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testDeleteInvalid() {
+    public synchronized void testDeleteInvalid() {
         System.out.println("deleteInvalid");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -247,7 +247,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testUploadSuccess() {
+    public synchronized void testUploadSuccess() {
         System.out.println("upload_Success");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -320,7 +320,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testUploadSameName() throws IOException {
+    public synchronized void testUploadSameName() throws IOException {
         System.out.println("testUploadSameName");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -359,7 +359,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testDownloadMissingFile() {
+    public synchronized void testDownloadMissingFile() {
         System.out.println("DownloadMissingFile");
         MGXDTOMaster m = TestMaster.getRO();
 
@@ -405,7 +405,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testDownloadFile() {
+    public synchronized void testDownloadFile() {
         System.out.println("DownloadFile");
         MGXDTOMaster m = TestMaster.getRO();
 
@@ -460,7 +460,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public void testDownloadPluginDump() {
+    public synchronized void testDownloadPluginDump() {
         System.out.println("DownloadPluginDump");
         MGXDTOMaster m = TestMaster.getRO();
 
