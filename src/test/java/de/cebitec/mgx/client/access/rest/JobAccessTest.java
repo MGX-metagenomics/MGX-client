@@ -7,9 +7,11 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTO.JobState;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
+import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
+import de.cebitec.mgx.dto.dto.ToolDTO;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,7 +55,15 @@ public class JobAccessTest {
         assertNotNull(it);
         Set<JobDTO> jobs = new HashSet<>();
         while (it.hasNext()) {
-            jobs.add(it.next());
+            JobDTO j = it.next();
+            if (j.hasParameters()) {
+                List<JobParameterDTO> params = j.getParameters().getParameterList();
+                for (JobParameterDTO jp : params) {
+                    assertNotNull(jp.getType());
+                    assertNotEquals("", jp.getType());
+                }
+            }
+            jobs.add(j);
         }
         assertEquals(14, jobs.size());
     }
@@ -237,6 +247,13 @@ public class JobAccessTest {
         int cnt = 0;
         for (JobDTO j : jobs) {
             cnt++;
+            if (j.hasParameters()) {
+                List<JobParameterDTO> params = j.getParameters().getParameterList();
+                for (JobParameterDTO jp : params) {
+                    assertNotNull(jp.getType());
+                    assertNotEquals("", jp.getType());
+                }
+            }
         }
         assertEquals(10, cnt);
     }
@@ -267,12 +284,6 @@ public class JobAccessTest {
     }
 
     @Test
-    public void testSetParameters() throws Exception {
-        System.out.println("setParameters");
-
-    }
-
-    @Test
     public void testGetError() throws Exception {
         System.out.println("getError");
         MGXDTOMaster master = TestMaster.getRO();
@@ -281,5 +292,30 @@ public class JobAccessTest {
         MGXString error = master.Job().getError(3);
         assertNotNull(error);
         assertEquals("Job is not in FAILED state.", error.getValue());
+    }
+
+    @Test
+    public void testParams() throws Exception {
+        System.out.println("testParams");
+        MGXDTOMaster master = TestMaster.getRO();
+        JobDTO job = master.Job().fetch(124);
+        ToolDTO tool = master.Tool().ByJob(job.getId());
+        assertEquals("bowtie2", tool.getName());
+        JobParameterListDTO params = job.getParameters();
+        assertNotNull(params);
+        assertEquals(1, params.getParameterCount());
+
+        JobParameterDTO parameter = params.getParameter(0);
+        assertNotNull(parameter);
+        assertEquals(22, parameter.getId());
+        assertEquals("GetMGXReference", parameter.getDisplayName());
+        assertEquals("ConfigMGXReference", parameter.getType());
+        assertEquals("foo", parameter.getUserName());
+        assertEquals("reference sequence to map reads against", parameter.getUserDesc());
+        assertFalse(parameter.getIsOptional());
+        assertEquals(3, parameter.getNodeId());
+        assertEquals("refId", parameter.getParameterName());
+        assertEquals("8", parameter.getParameterValue());
+        assertEquals("Conveyor.MGX.GetMGXReference", parameter.getClassName());
     }
 }
