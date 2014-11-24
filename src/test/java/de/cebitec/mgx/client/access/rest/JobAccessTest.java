@@ -97,6 +97,7 @@ public class JobAccessTest {
                 .setSeqrunId(2)
                 .setToolId(2)
                 .setState(JobState.CREATED)
+                .setParameters(JobParameterListDTO.newBuilder().build())
                 .build();
         long job_id = -1;
         try {
@@ -129,6 +130,7 @@ public class JobAccessTest {
                 .setSeqrunId(2)
                 .setToolId(2)
                 .setState(JobState.CREATED)
+                .setParameters(JobParameterListDTO.newBuilder().build())
                 .build();
         long job_id = -1;
         try {
@@ -190,6 +192,7 @@ public class JobAccessTest {
                     .setSeqrunId(2)
                     .setToolId(2)
                     .setState(JobState.CREATED)
+                    .setParameters(JobParameterListDTO.newBuilder().build())
                     .build();
             long job_id = -1;
             try {
