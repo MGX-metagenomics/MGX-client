@@ -197,7 +197,7 @@ public class FileAccessTest {
     public synchronized void testUploadFail() throws Exception {
         System.out.println("upload_Guest");
 
-        File f = new File("/tmp/testUpload");
+        File f = File.createTempFile("uploadTest", "xx");
         FileWriter fw = new FileWriter(f);
         fw.write("Unit Test DATA");
         fw.close();
@@ -247,7 +247,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public synchronized void testUploadSuccess() {
+    public synchronized void testUploadSuccess() throws IOException {
         System.out.println("upload_Success");
         MGXDTOMaster m = TestMaster.getRW();
         if (m == null) {
@@ -255,7 +255,7 @@ public class FileAccessTest {
             return;
         }
 
-        File f = new File("/tmp/testUpload1");
+        File f = File.createTempFile("uploadTest", "xx");
         try (FileWriter fw = new FileWriter(f)) {
             fw.write("Unit Test DATA");
             for (int i = 0; i < 10000; i++) {
@@ -359,12 +359,13 @@ public class FileAccessTest {
     }
 
     @Test
-    public synchronized void testDownloadMissingFile() {
+    public synchronized void testDownloadMissingFile() throws IOException {
         System.out.println("DownloadMissingFile");
         MGXDTOMaster m = TestMaster.getRO();
 
         OutputStream os = null;
-        File f = new File("/tmp/testDownload");
+
+        File f = File.createTempFile("testDownload", "xx");
         try {
             os = new FileOutputStream(f);
         } catch (FileNotFoundException ex) {
@@ -405,12 +406,12 @@ public class FileAccessTest {
     }
 
     @Test
-    public synchronized void testDownloadFile() {
+    public synchronized void testDownloadFile() throws IOException {
         System.out.println("DownloadFile");
         MGXDTOMaster m = TestMaster.getRO();
 
         OutputStream os = null;
-        File f = new File("/tmp/testDownload1");
+        File f = File.createTempFile("testDownload", "xx");
         try {
             os = new FileOutputStream(f);
         } catch (FileNotFoundException ex) {
@@ -460,12 +461,12 @@ public class FileAccessTest {
     }
 
     @Test
-    public synchronized void testDownloadPluginDump() {
+    public synchronized void testDownloadPluginDump() throws IOException {
         System.out.println("DownloadPluginDump");
         MGXDTOMaster m = TestMaster.getRO();
 
         OutputStream os = null;
-        File f = new File("/tmp/testDownload2");
+        File f = File.createTempFile("testDownload", "xx");
         try {
             os = new FileOutputStream(f);
         } catch (FileNotFoundException ex) {
