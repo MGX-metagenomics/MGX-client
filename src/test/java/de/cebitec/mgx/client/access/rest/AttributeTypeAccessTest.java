@@ -4,7 +4,6 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import java.util.Iterator;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,6 +54,8 @@ public class AttributeTypeAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         AttributeTypeDTO atype = master.AttributeType().fetch(1);
         assertNotNull(atype);
+        assertNotNull(atype.getName());
+        assertNotNull(atype.getStructure());
     }
 
     @Test
