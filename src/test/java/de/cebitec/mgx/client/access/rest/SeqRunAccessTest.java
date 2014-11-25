@@ -7,6 +7,10 @@ import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
+import de.cebitec.mgx.dto.dto.JobDTO;
+import de.cebitec.mgx.dto.dto.JobParameterDTO;
+import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
 import de.cebitec.mgx.seqstorage.FastaWriter;
@@ -17,6 +21,7 @@ import de.cebitec.mgx.sequence.SeqWriterI;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -96,6 +101,34 @@ public class SeqRunAccessTest {
         assertNotNull(dto);
         assertEquals("oneseq", dto.getName());
         assertEquals(1, dto.getNumSequences());
+    }
+
+    @Test
+    public void testJobsAndAttributeTypes() {
+        System.out.println("testJobsAndAttributeTypes");
+        MGXDTOMaster master = TestMaster.getRO();
+        List<JobAndAttributeTypes> jat = null;
+        try {
+            jat = master.SeqRun().getJobsAndAttributeTypes(1);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(jat);
+        assertEquals(10, jat.size());
+        
+        int paramCnt=0;
+        
+        for (JobAndAttributeTypes jaa : jat) {
+            JobDTO job = jaa.getJob();
+            assertTrue(job.hasParameters()); //non-null, but maybe empty list
+            paramCnt += job.getParameters().getParameterCount();
+            
+            JobParameterListDTO parameters = job.getParameters();
+            for (JobParameterDTO jp : parameters.getParameterList()) {
+                assertNotNull(jp.getType());
+            }
+        }
+        assertEquals(7, paramCnt);
     }
 
     @Test
