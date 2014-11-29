@@ -102,7 +102,8 @@ public class SeqUploader extends UploadBase {
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
         try {
-            ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id).accept("application/x-protobuf").get(ClientResponse.class);
+            ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id + "/" + reader.hasQuality())
+                    .accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
