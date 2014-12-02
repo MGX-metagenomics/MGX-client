@@ -2,8 +2,11 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobsAndAttributeTypesDTO;
+import de.cebitec.mgx.dto.dto.QCResultDTO;
+import de.cebitec.mgx.dto.dto.QCResultDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTOList;
 import java.util.Iterator;
@@ -47,5 +50,9 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id) throws MGXServerException, MGXClientException {
         return get(r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes") + seqrun_id, JobsAndAttributeTypesDTO.class).getEntryList();
+    }
+    
+    public List<QCResultDTO> getQC(long seqrun_id) throws MGXServerException, MGXClientException {
+        return get(r.resolve(SeqRunDTO.class, "getQC") + seqrun_id, QCResultDTOList.class).getResultList();
     }
 }
