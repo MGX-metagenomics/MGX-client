@@ -13,6 +13,7 @@ import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
+import de.cebitec.mgx.seqstorage.FastaReader;
 import de.cebitec.mgx.seqstorage.FastaWriter;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
@@ -115,14 +116,14 @@ public class SeqRunAccessTest {
         }
         assertNotNull(jat);
         assertEquals(10, jat.size());
-        
-        int paramCnt=0;
-        
+
+        int paramCnt = 0;
+
         for (JobAndAttributeTypes jaa : jat) {
             JobDTO job = jaa.getJob();
             assertTrue(job.hasParameters()); //non-null, but maybe empty list
             paramCnt += job.getParameters().getParameterCount();
-            
+
             JobParameterListDTO parameters = job.getParameters();
             for (JobParameterDTO jp : parameters.getParameterList()) {
                 assertNotNull(jp.getType());
@@ -145,11 +146,19 @@ public class SeqRunAccessTest {
         downloader.addPropertyChangeListener(pc);
         boolean success = downloader.download();
 
-        tmpFile.delete();
-
         assertTrue(success);
         assertNotNull(pc.getLastEvent());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
+
+        long cnt = 0;
+        SeqReaderI reader = new FastaReader(tmpFile.getAbsolutePath(), false);
+        while (reader.hasMoreElements()) {
+            reader.nextElement();
+            cnt++;
+        }
+        reader.close();
+        assertEquals(sr1.getNumSequences(), cnt);
+        tmpFile.delete();
     }
 
     @Test
