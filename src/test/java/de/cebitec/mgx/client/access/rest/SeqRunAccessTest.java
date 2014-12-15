@@ -7,10 +7,12 @@ import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.DataRowDTO;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
+import de.cebitec.mgx.dto.dto.QCResultDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
 import de.cebitec.mgx.seqstorage.FastaReader;
@@ -30,6 +32,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 
 /**
  *
@@ -260,5 +263,36 @@ public class SeqRunAccessTest {
         }
         assertEquals(ts, TaskState.FINISHED);
 
+    }
+
+    @Test
+    public void testQC() throws MGXServerException, MGXClientException {
+        System.out.println("testQC");
+        MGXDTOMaster master = TestMaster.getRO();
+        SeqRunDTO dto = null;
+        try {
+            dto = master.SeqRun().fetch(1);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(dto);
+        List<QCResultDTO> qc = master.SeqRun().getQC(dto.getId());
+        Assume.assumeTrue(qc.size() == 3);
+        QCResultDTO gc = null;
+        for (QCResultDTO q : qc) {
+            if (q.getName().equals("GC")) {
+                gc = q;
+                break;
+            }
+        }
+        assertNotNull(gc);
+        assertEquals(1, gc.getRowCount());
+        DataRowDTO row = gc.getRow(0);
+        assertNotNull(row);
+        List<Float> values = row.getValueList();
+        assertEquals(101, values.size());
+        for (Float f : values) {
+            assertNotEquals(Float.NaN, f);
+        }
     }
 }

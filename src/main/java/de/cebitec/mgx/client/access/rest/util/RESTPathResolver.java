@@ -55,7 +55,6 @@ public class RESTPathResolver {
         objmappings.put(ReferenceDTO.class, "Reference");
         objmappings.put(MappingDTO.class, "Mapping");
 
-
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
         objmappings.put(SampleDTOList.class, "Sample");
@@ -83,6 +82,7 @@ public class RESTPathResolver {
         methodmappings.put("byReference", "byReference");
         methodmappings.put("bySeqRun", "bySeqRun");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
+        methodmappings.put("getQC", "getQC");
     }
 
     private RESTPathResolver() {
