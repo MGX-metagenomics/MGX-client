@@ -23,7 +23,7 @@ public class XMLValidator {
     /**
      * ToolDocumentHandler fuer das melden von einzelnen Bestandteilen.
      */
-    private final ToolDocumentHandler handler;
+    private final ToolDocumentHandler handler= new ToolDocumentHandler();
     /**
      * Sobald der "nodes" startet, wird dieses Flag auf true gesetzt.
      */
@@ -39,16 +39,6 @@ public class XMLValidator {
 
     /**
      *
-     * Konstruktor fuer das erzeugen von Objekten.
-     *
-     */
-    public XMLValidator() {
-        valid = false;
-        handler = new ToolDocumentHandler();
-    }
-
-    /**
-     *
      * Validiert die XML.
      *
      *
@@ -59,7 +49,7 @@ public class XMLValidator {
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             parser.parse(new InputSource(new StringReader(lXml)), handler);
-            return valid;
+            return valid && getmgxjobCnt > 0;
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             return false;
         }
