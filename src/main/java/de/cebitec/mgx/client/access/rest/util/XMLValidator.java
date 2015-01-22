@@ -46,6 +46,9 @@ public class XMLValidator {
      * @return isValid
      */
     public boolean isValid(String lXml) {
+        if (lXml == null || lXml.isEmpty()) {
+            return false;
+        }
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             parser.parse(new InputSource(new StringReader(lXml)), handler);

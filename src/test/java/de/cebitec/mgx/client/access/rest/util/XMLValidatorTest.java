@@ -37,6 +37,14 @@ public class XMLValidatorTest {
     }
 
     @Test
+    public void testNull() {
+        System.out.println("testNull");
+        XMLValidator instance = new XMLValidator();
+        boolean result = instance.isValid(null);
+        assertEquals(false, result);
+    }
+
+    @Test
     public void testIsInvalid() {
         System.out.println("isInvalid");
         XMLValidator instance = new XMLValidator();
