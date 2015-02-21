@@ -26,7 +26,7 @@
                     <instructions>
                         <Export-Package>de.cebitec.mgx.client,de.cebitec.mgx.client.access.rest,de.cebitec.mgx.client.access.rest.util,de.cebitec.mgx.client.datatransfer,de.cebitec.mgx.client.exception</Export-Package>
                         <Private-Package>de.cebitec.mgx.client.*</Private-Package>
-                        <Import-Package>com.sun.jersey.api.client,de.cebitec.mgx.protobuf.serializer,de.cebitec.gpms.core,de.cebitec.gpms.rest,de.cebitec.mgx.dto,de.cebitec.mgx.sequence,de.cebitec.mgx.seqholder,de.cebitec.mgx.seqstorage,javax.xml.parsers,org.xml.sax,org.xml.sax.*</Import-Package>
+                        <Import-Package>com.sun.jersey.api.client,de.cebitec.mgx.protobuf.serializer,com.google.protobuf,de.cebitec.gpms.core,de.cebitec.gpms.rest,de.cebitec.mgx.dto,de.cebitec.mgx.sequence,de.cebitec.mgx.seqholder,de.cebitec.mgx.seqstorage,javax.xml.parsers,org.xml.sax,org.xml.sax.*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
