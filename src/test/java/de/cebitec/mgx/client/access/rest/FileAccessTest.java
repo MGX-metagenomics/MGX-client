@@ -461,7 +461,7 @@ public class FileAccessTest {
     }
 
     @Test
-    public synchronized void testDownloadPluginDump() throws IOException {
+    public synchronized void testDownloadPluginDump() throws Exception {
         System.out.println("DownloadPluginDump");
         MGXDTOMaster m = TestMaster.getRO();
 
