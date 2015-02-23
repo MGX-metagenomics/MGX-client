@@ -93,7 +93,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         return new FileDownloader(getWebResource(), serverFname, writer);
     }
 
-    public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) {
+    public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) throws MGXClientException {
         return new PluginDumpDownloader(getWebResource(), writer);
     }
 }
