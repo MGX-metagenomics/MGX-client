@@ -8,6 +8,8 @@ import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.seqstorage.DNASequence;
+import de.cebitec.mgx.seqstorage.QualityDNASequence;
+import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
@@ -71,7 +73,14 @@ public class SeqDownloader extends DownloadBase {
             need_refetch = chunk.getSeqCount() > 0;
 
             for (SequenceDTO dto : chunk.getSeqList()) {
-                DNASequenceI seq = new DNASequence();
+                DNASequenceI seq;
+                if (dto.hasQuality()) {
+                    DNAQualitySequenceI qseq = new QualityDNASequence();
+                    qseq.setQuality(dto.getQuality().toByteArray());
+                    seq = qseq;
+                } else {
+                    seq = new DNASequence();
+                }
                 if (dto.hasId()) {
                     seq.setId(dto.getId());
                 }
@@ -80,7 +89,6 @@ public class SeqDownloader extends DownloadBase {
                 try {
                     writer.addSequence(seq);
                 } catch (IOException ex) {
-                    //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                     abortTransfer(ex.getMessage(), total_elements + current_num_elements);
                     return false;
                 }
@@ -161,6 +169,7 @@ public class SeqDownloader extends DownloadBase {
         return null;
     }
 
+    @Override
     public long getProgress() {
         return total_elements;
     }

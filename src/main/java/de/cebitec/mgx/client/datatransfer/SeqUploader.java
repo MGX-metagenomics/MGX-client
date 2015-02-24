@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import com.google.protobuf.ByteString;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -8,7 +9,8 @@ import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
-import de.cebitec.mgx.seqholder.ReadSequenceI;
+import de.cebitec.mgx.sequence.DNAQualitySequenceI;
+import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -20,10 +22,10 @@ public class SeqUploader extends UploadBase {
 
     private final WebResource wr;
     private final long seqrun_id;
-    private final SeqReaderI<? extends ReadSequenceI> reader;
+    private final SeqReaderI<? extends DNASequenceI> reader;
     private long total_elements = 0;
 
-    public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI<? extends ReadSequenceI> reader) {
+    public SeqUploader(WebResource wr, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
         super();
         this.wr = wr;
         this.seqrun_id = seqrun_id;
@@ -50,15 +52,24 @@ public class SeqUploader extends UploadBase {
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         seqListBuilder.setComplete(true);
         while (reader.hasMoreElements()) {
-            ReadSequenceI nextElement = reader.nextElement();
+            DNASequenceI nextElement = reader.nextElement();
 
             // ignore empty sequences
-            if (nextElement.getSequence().getSequence().length == 0) {
+            if (nextElement.getSequence().length == 0) {
                 continue;
             }
 
-            SequenceDTO seq = nextElement.toDTO();
-            seqListBuilder.addSeq(seq);
+                            
+
+            SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
+                    .setName(new String(nextElement.getName()))
+                    .setSequence(new String(nextElement.getSequence()));
+            
+            if (nextElement instanceof DNAQualitySequenceI) {
+                DNAQualitySequenceI q = (DNAQualitySequenceI) nextElement;
+                seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(q.getQuality()));
+            }
+            seqListBuilder.addSeq(seqbuilder.build());
             current_num_elements++;
 
             if (current_num_elements >= chunk_size) {
