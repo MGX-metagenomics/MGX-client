@@ -110,7 +110,7 @@ public class MGXDTOMaster {
     public TaskAccess Task() {
         return getAccessor(TaskAccess.class);
     }
-    
+
     public StatisticsAccess Statistics() {
         return getAccessor(StatisticsAccess.class);
     }
@@ -119,6 +119,7 @@ public class MGXDTOMaster {
         logger.log(lvl, msg);
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends AccessBase> T getAccessor(Class<T> clazz) {
         if (!accessors.containsKey(clazz)) {
             synchronized (accessors) {

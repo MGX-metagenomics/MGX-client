@@ -6,6 +6,7 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
@@ -45,7 +46,7 @@ public class SequenceAccessTest {
     public void testCreateUploaderForInvalidID() {
         System.out.println("createUploaderForInvalidID");
         MGXDTOMaster master = TestMaster.getRW();
-        SeqReaderI reader = null;
+        SeqReaderI<DNASequenceI> reader = null;
         try {
             reader = SeqReaderFactory.getReader("src/test/resources/sample.fas");
         } catch (SeqStoreException ex) {

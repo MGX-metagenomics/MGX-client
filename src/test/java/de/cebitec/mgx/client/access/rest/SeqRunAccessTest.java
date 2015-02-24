@@ -69,7 +69,7 @@ public class SeqRunAccessTest {
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
         }
     }
 
@@ -139,7 +139,7 @@ public class SeqRunAccessTest {
     public void testDownload() throws Exception {
         System.out.println("testDownload");
         File tmpFile = File.createTempFile("down", "xx");
-        final SeqWriterI writer = new FastaWriter(tmpFile.getAbsolutePath());
+        final SeqWriterI<DNASequenceI> writer = new FastaWriter(tmpFile.getAbsolutePath());
 
         MGXDTOMaster master = TestMaster.getRO();
 

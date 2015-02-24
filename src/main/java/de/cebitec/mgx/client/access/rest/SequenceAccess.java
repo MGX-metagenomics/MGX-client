@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 
-    public void sendSequences(long seqrun_id, SeqReaderI reader) throws MGXServerException {
+    public void sendSequences(long seqrun_id, SeqReaderI<DNASequenceI> reader) throws MGXServerException {
         SeqUploader seqUploader = new SeqUploader(getWebResource(), seqrun_id, reader);
         boolean success = seqUploader.upload();
         if (!success) {
@@ -39,7 +39,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
     }
 
-    public SeqUploader createUploader(long seqrun_id, SeqReaderI reader) {
+    public SeqUploader createUploader(long seqrun_id, SeqReaderI<DNASequenceI> reader) {
         return new SeqUploader(getWebResource(), seqrun_id, reader);
     }
 
