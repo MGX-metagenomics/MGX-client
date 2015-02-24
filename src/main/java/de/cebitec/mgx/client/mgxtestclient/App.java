@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.mgxtestclient;
 
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
+import de.cebitec.gpms.rest.RESTMembershipI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -252,9 +253,9 @@ public class App {
             System.err.println("login failed");
             System.exit(1);
         }
-        Iterator<MembershipI> mIter = gpms.getMemberships();
+        Iterator<RESTMembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
-            MembershipI m = mIter.next();
+            RESTMembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
                 master = new MGXDTOMaster(gpms, m);
                 break; // just use the first project we find
