@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client;
 
-import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.core.ProjectI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.gpms.rest.RESTMasterI;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
 public class MGXDTOMaster {
 
     private final RESTMasterI restmaster;
-    private final MembershipI membership;
+    private final RESTMembershipI membership;
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private final Map<Class, AccessBase> accessors;
     private final String resource;
@@ -40,7 +39,7 @@ public class MGXDTOMaster {
         resource = new StringBuilder(gpms.getBaseURI()).append(mbr.getProject().getName()).toString();
     }
 
-    public MembershipI getMembership() {
+    public RESTMembershipI getMembership() {
         return membership;
     }
 

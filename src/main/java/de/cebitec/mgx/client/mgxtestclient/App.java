@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
-import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.gpms.rest.RESTMembershipI;
 import de.cebitec.mgx.client.MGXDTOMaster;
@@ -12,10 +11,16 @@ import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.restgpms.GPMS;
+import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import java.io.Console;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class App {
 
@@ -148,7 +153,7 @@ public class App {
                     System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
 
                     // upload sequence data
-                    SeqReaderI reader = SeqReaderFactory.getReader(args[argpos]);
+                    SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(args[argpos]);
                     master.Sequence().sendSequences(seqrun_id, reader);
                 }
             }
