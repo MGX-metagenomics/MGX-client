@@ -1,6 +1,6 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
-import de.cebitec.gpms.core.MembershipI;
+import de.cebitec.gpms.rest.RESTMembershipI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.restgpms.GPMS;
 import java.io.File;
@@ -42,9 +42,9 @@ public class TestMaster {
         if (!gpms.login("mgx_unittestRO", "gut-isM5iNt")) {
             fail(gpms.getError());
         }
-        Iterator<MembershipI> mIter = gpms.getMemberships();
+        Iterator<RESTMembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
-            MembershipI m = mIter.next();
+            RESTMembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRO = new MGXDTOMaster(gpms, m);
                 break;
@@ -77,9 +77,9 @@ public class TestMaster {
         if (!gpms.login("mgx_unittestRW", "hL0amo3oLae")) {
             fail(gpms.getError());
         }
-        Iterator<MembershipI> mIter = gpms.getMemberships();
+        Iterator<RESTMembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
-            MembershipI m = mIter.next();
+            RESTMembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRW = new MGXDTOMaster(gpms, m);
                 break;
