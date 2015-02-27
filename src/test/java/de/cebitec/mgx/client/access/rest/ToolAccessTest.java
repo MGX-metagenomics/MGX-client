@@ -139,6 +139,8 @@ public class ToolAccessTest {
         } catch (MGXServerException | MGXClientException ex) {
             failed = true;
         }
+        // read-only access is not allowed to delete anything, thus
+        // deleting a tool has to fail
         assertTrue(failed);
     }
 
