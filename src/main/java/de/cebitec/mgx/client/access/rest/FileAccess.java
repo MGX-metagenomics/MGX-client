@@ -27,8 +27,8 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
             throw new MGXClientException("Invalid path: " + baseDir);
         }
         baseDir = baseDir.replace("/", "|");
-        String resolve = r.resolve(FileDTOList.class, "fetchall");
-        return this.get(resolve + baseDir, FileDTOList.class).getFileList().iterator();
+        String[] resolve = r.resolve(FileDTOList.class, "fetchall", baseDir);
+        return this.get(FileDTOList.class, resolve).getFileList().iterator();
     }
 
     @Override
@@ -41,8 +41,8 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
             throw new MGXClientException("Invalid path: " + dto.getName());
         }
         String path = dto.getName().replace("/", "|");
-        String resolve = r.resolve(FileDTO.class, "delete");
-        return UUID.fromString(this.delete(resolve + path));
+        String[] resolve = r.resolve(FileDTO.class, "delete", path);
+        return UUID.fromString(this.delete(resolve));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
     public FileUploader createUploader(File localFile, String remotePath) throws MGXClientException {
         if (!localFile.exists() || !localFile.canRead()) {
-            throw new MGXClientException("Cannot access local file: "+ localFile.getAbsolutePath());
+            throw new MGXClientException("Cannot access local file: " + localFile.getAbsolutePath());
         }
         if (!remotePath.startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + remotePath);

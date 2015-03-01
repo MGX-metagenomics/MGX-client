@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTOList> {
 
     public Iterator<ObservationDTO> ByRead(long seqId) throws MGXServerException, MGXClientException {
-        return get(r.resolve(ObservationDTO.class, "byRead") + seqId, ObservationDTOList.class).getObservationList().iterator();
+        return get(ObservationDTOList.class, r.resolve(ObservationDTO.class, "byRead", String.valueOf(seqId))).getObservationList().iterator();
     }
 
     @Override

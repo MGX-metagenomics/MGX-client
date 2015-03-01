@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +56,7 @@ public class FileUploader extends UploadBase {
         String session_uuid;
         try {
             session_uuid = initTransfer();
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException | UnsupportedEncodingException ex) {
             abortTransfer(ex.getMessage(), total_elements_sent);
             return false;
         }
@@ -94,7 +96,7 @@ public class FileUploader extends UploadBase {
         }
         cb.callback(total_elements_sent);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
-        
+
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
@@ -106,9 +108,10 @@ public class FileUploader extends UploadBase {
         return true;
     }
 
-    private String initTransfer() throws MGXServerException {
+    private String initTransfer() throws MGXServerException, UnsupportedEncodingException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/initUpload/" + remoteName).accept("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res;
+        res = wr.path("File").path("initUpload").path(URLEncoder.encode(remoteName, "UTF-8")).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -118,14 +121,14 @@ public class FileUploader extends UploadBase {
     private void sendChunk(final byte[] data, String session_uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         BytesDTO rawData = BytesDTO.newBuilder().setData(ByteString.copyFrom(data)).build();
-        ClientResponse res = wr.path("/File/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
+        ClientResponse res = wr.path("File").path("add").path(session_uuid).type("application/x-protobuf").post(ClientResponse.class, rawData);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/closeUpload/" + uuid).get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("closeUpload").path(uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
     }

@@ -19,9 +19,9 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
 
     public Iterator<DNAExtractDTO> BySample(long sample_id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(DNAExtractDTO.class, "bySample") + sample_id, DNAExtractDTOList.class).getExtractList().iterator();
+        return get(DNAExtractDTOList.class, r.resolve(DNAExtractDTO.class, "bySample", String.valueOf(sample_id))).getExtractList().iterator();
     }
-    
+
     @Override
     public DNAExtractDTO fetch(long id) throws MGXServerException, MGXClientException {
         return super.fetch(id, DNAExtractDTO.class);
@@ -31,12 +31,12 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     public long create(DNAExtractDTO d) throws MGXServerException, MGXClientException {
         return super.create(d, DNAExtractDTO.class);
     }
-    
+
     @Override
     public void update(DNAExtractDTO d) throws MGXServerException, MGXClientException {
         super.update(d, DNAExtractDTO.class);
     }
-    
+
     @Override
     public UUID delete(long id) throws MGXServerException, MGXClientException {
         return super.delete(id, DNAExtractDTO.class);

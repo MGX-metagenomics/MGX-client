@@ -19,12 +19,12 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
     public static final String SEQ_PLATFORMS = "seq_platforms";
 
     public Collection<TermDTO> byCategory(String cat) throws MGXServerException, MGXClientException {
-        return get("/Term/byCategory/" + cat, TermDTOList.class).getTermList();
+        return get(TermDTOList.class, "Term", "byCategory", cat).getTermList();
     }
 
     @Override
     public TermDTO fetch(long id) throws MGXServerException, MGXClientException {
-        return get("/Term/fetch/" + id, TermDTO.class);
+        return get(TermDTO.class, "Term", "fetch", String.valueOf(id));
     }
 
     @Override

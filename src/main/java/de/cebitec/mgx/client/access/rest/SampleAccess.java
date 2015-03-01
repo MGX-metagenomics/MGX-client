@@ -24,7 +24,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
 
     public Iterator<SampleDTO> ByHabitat(long habitat_id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(SampleDTO.class, "byHabitat") + habitat_id, SampleDTOList.class).getSampleList().iterator();
+        return get(SampleDTOList.class, r.resolve(SampleDTO.class, "byHabitat", String.valueOf(habitat_id))).getSampleList().iterator();
     }
 
     @Override

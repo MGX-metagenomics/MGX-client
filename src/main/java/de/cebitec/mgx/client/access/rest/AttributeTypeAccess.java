@@ -14,7 +14,7 @@ import java.util.UUID;
 public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeTypeDTOList> {
 
     public Iterator<AttributeTypeDTO> BySeqRun(long seqrunId) throws MGXServerException, MGXClientException {
-        return get("/AttributeType/BySeqRun/" + seqrunId, AttributeTypeDTOList.class).getAttributeTypeList().iterator();
+        return get(AttributeTypeDTOList.class, "AttributeType", "BySeqRun", String.valueOf(seqrunId)).getAttributeTypeList().iterator();
     }
 
     @Override
@@ -43,6 +43,6 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     public Iterator<AttributeTypeDTO> ByJob(long job_id) throws MGXServerException {
-        return get("/AttributeType/ByJob/" + job_id, AttributeTypeDTOList.class).getAttributeTypeList().iterator();
+        return get(AttributeTypeDTOList.class, "AttributeType", "ByJob", String.valueOf(job_id)).getAttributeTypeList().iterator();
     }
 }

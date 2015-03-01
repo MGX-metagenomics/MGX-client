@@ -8,6 +8,8 @@ import de.cebitec.mgx.dto.dto.MGXString;
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  *
@@ -34,7 +36,7 @@ public class FileDownloader extends DownloadBase {
         String session_uuid;
         try {
             session_uuid = initDownload();
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException | UnsupportedEncodingException ex) {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
@@ -87,9 +89,9 @@ public class FileDownloader extends DownloadBase {
         return true;
     }
 
-    protected String initDownload() throws MGXServerException {
+    protected String initDownload() throws MGXServerException, UnsupportedEncodingException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/initDownload/" + serverFname).accept("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("initDownload").path(URLEncoder.encode(serverFname, "UTF-8")).accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -98,7 +100,7 @@ public class FileDownloader extends DownloadBase {
 
     protected void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/closeDownload/" + uuid).get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("closeDownload").path(uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
@@ -106,7 +108,7 @@ public class FileDownloader extends DownloadBase {
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/get/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("get").path(session_uuid).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         BytesDTO entity = res.<BytesDTO>getEntity(BytesDTO.class);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);

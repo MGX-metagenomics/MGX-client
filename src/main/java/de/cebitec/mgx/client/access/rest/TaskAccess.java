@@ -12,9 +12,9 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class TaskAccess extends AccessBase<TaskDTO, TaskDTOList> {
-    
+
     public TaskDTO get(UUID taskId) throws MGXServerException, MGXClientException {
-        return get("/Task/get/" + taskId, TaskDTO.class);
+        return get(TaskDTO.class, "Task", "get", String.valueOf(taskId));
     }
 
     @Override

@@ -88,7 +88,7 @@ public class PluginDumpDownloader extends DownloadBase {
 
     protected String initDownload() throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/initPluginDownload/").accept("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("initPluginDownload").accept("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -97,20 +97,21 @@ public class PluginDumpDownloader extends DownloadBase {
 
     protected void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/closeDownload/" + uuid).get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("closeDownload").path(uuid).get(ClientResponse.class);
         catchException(res);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("/File/get/" + session_uuid).type("application/x-protobuf").get(ClientResponse.class);
+        ClientResponse res = wr.path("File").path("get").path(session_uuid).type("application/x-protobuf").get(ClientResponse.class);
         catchException(res);
         BytesDTO entity = res.<BytesDTO>getEntity(BytesDTO.class);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }
 
+    @Override
     public long getProgress() {
         return total_elements;
     }

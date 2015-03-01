@@ -28,11 +28,11 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     }
 
     public Iterator<MappingDTO> BySeqRun(long id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(MappingDTO.class, "bySeqRun") + id, MappingDTOList.class).getMappingList().iterator();
+        return get(MappingDTOList.class, r.resolve(MappingDTO.class, "bySeqRun", String.valueOf(id))).getMappingList().iterator();
     }
 
     public Iterator<MappingDTO> ByReference(long id) throws MGXServerException, MGXClientException {
-        return get(r.resolve(MappingDTO.class, "byReference") + id, MappingDTOList.class).getMappingList().iterator();
+        return get(MappingDTOList.class, r.resolve(MappingDTOList.class, "byReference", String.valueOf(id))).getMappingList().iterator();
     }
 
     @Override
@@ -57,21 +57,22 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     }
 
     public UUID openMapping(long id) throws MGXServerException {
-        return UUID.fromString(super.get("Mapping/openMapping/" + id, MGXString.class).getValue());
+        return UUID.fromString(super.get(MGXString.class, "Mapping", "openMapping", String.valueOf(id)).getValue());
     }
 
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXServerException, MGXClientException {
-        return super.get("Mapping/byReferenceInterval/" + uuid + "/" + from + "/" + to, MappedSequenceDTOList.class).getMappedSequenceList().iterator();
+        return super.get(MappedSequenceDTOList.class, "Mapping", "byReferenceInterval", uuid.toString(), String.valueOf(from), String.valueOf(to))
+                .getMappedSequenceList().iterator();
     }
-    
+
     public long getMaxCoverage(UUID uuid) throws MGXServerException {
-        return super.get("Mapping/getMaxCoverage/" + uuid, MGXLong.class).getValue();
+        return super.get(MGXLong.class, "Mapping", "getMaxCoverage", uuid.toString()).getValue();
     }
 
     public void closeMapping(UUID uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = getWebResource().path("Mapping/closeMapping/" + uuid).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
+            ClientResponse res = getWebResource().path("Mapping").path("closeMapping").path(uuid.toString()).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
             catchException(res);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {

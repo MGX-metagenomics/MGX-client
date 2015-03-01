@@ -11,8 +11,10 @@ import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
@@ -21,11 +23,11 @@ import javax.net.ssl.SSLHandshakeException;
  *
  * @author sjaenick
  */
-public abstract class RESTMethods {
+public abstract class RESTMethods  {
 
+    protected final static String PROTOBUF_TYPE = "application/x-protobuf";
     private Client client;
     private URI resource;
-    protected final static String PROTOBUF_TYPE = "application/x-protobuf";
 
     public final void setClient(Client c, String res) {
         client = c;
@@ -39,7 +41,6 @@ public abstract class RESTMethods {
     protected final WebResource getWebResource() {
         return client.resource(resource);
     }
-
     /**
      *
      * @param <U>
@@ -49,42 +50,42 @@ public abstract class RESTMethods {
      * @return
      * @throws MGXServerException
      */
-    protected final <U> U put(final String path, Object obj, Class<U> c) throws MGXServerException {
+    protected final <U> U put(Object obj, Class<U> c, final String... path) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).put(ClientResponse.class, obj);
+            ClientResponse res = buildPath(path).put(ClientResponse.class, obj);
             catchException(res);
             return res.<U>getEntity(c);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return put(path, obj, c); // retry
+                return put(obj, c, path); // retry
             } else {
                 throw ex; // rethrow
             }
         }
     }
 
-    protected final <U> U get(final String path, Class<U> c) throws MGXServerException {
+    protected final <U> U get(Class<U> c, final String... path) throws MGXServerException {
         //System.err.println("GET uri: " +getWebResource().path(path).getURI().toASCIIString());
-        assert !EventQueue.isDispatchThread(); 
+        assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
+            ClientResponse res = buildPath(path).get(ClientResponse.class);
             catchException(res);
             return res.<U>getEntity(c);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return get(path, c); // retry
+                return get(c, path); // retry
             } else {
                 throw ex; // rethrow
             }
         }
     }
 
-    protected final String delete(final String path) throws MGXServerException {
+    protected final String delete(final String... path) throws MGXServerException {
         //System.err.println("DELETE uri: " +getWebResource().path(path).getURI().toASCIIString());
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).delete(ClientResponse.class);
+            ClientResponse res = buildPath(path).delete(ClientResponse.class);
             catchException(res);
             return res.<MGXString>getEntity(MGXString.class).getValue();
         } catch (ClientHandlerException ex) {
@@ -96,17 +97,29 @@ public abstract class RESTMethods {
         }
     }
 
-    protected final <U> void post(final String path, U obj) throws MGXServerException {
+    protected final <U> void post(U obj, final String... path) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = getWebResource().path(path).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).post(ClientResponse.class, obj);
+            ClientResponse res = buildPath(path).post(ClientResponse.class, obj);
             catchException(res);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                post(path, obj);
+                post(obj, path);
             } else {
                 throw ex; // rethrow
             }
+        }
+    }
+
+    private WebResource.Builder buildPath(String... pathComponents) {
+        WebResource wr = getWebResource();
+        try {
+            for (String s : pathComponents) {
+                wr = wr.path(URLEncoder.encode(s, "UTF-8"));
+            }
+            return wr.type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE);
+        } catch (UnsupportedEncodingException ex) {
+            throw new ClientHandlerException(ex);
         }
     }
 

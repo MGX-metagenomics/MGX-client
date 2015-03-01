@@ -23,19 +23,20 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     public boolean verify(long jobId) throws MGXServerException {
-        return get("/Job/verify/" + jobId, MGXBoolean.class).getValue();
+        return get(MGXBoolean.class, "Job", "verify", String.valueOf(jobId)).getValue();
+        //return get("/Job/verify/" + jobId, MGXBoolean.class).getValue();
     }
 
     public boolean execute(long jobId) throws MGXServerException {
-        return get("/Job/execute/" + jobId, MGXBoolean.class).getValue();
+        return get(MGXBoolean.class, "Job", "execute", String.valueOf(jobId)).getValue();
     }
 
     public boolean cancel(long jobId) throws MGXServerException {
-        return get("/Job/cancel/" + jobId, MGXBoolean.class).getValue();
+        return get(MGXBoolean.class, "Job", "cancel", String.valueOf(jobId)).getValue();
     }
 
-    public UUID restart(long job_id) throws MGXServerException, MGXClientException {
-        return UUID.fromString(get("/Job/restart/" + job_id, MGXString.class).getValue());
+    public UUID restart(long jobId) throws MGXServerException, MGXClientException {
+        return UUID.fromString(get(MGXString.class, "Job", "restart", String.valueOf(jobId)).getValue());
     }
 
     @Override
@@ -44,8 +45,8 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     @Override
-    public JobDTO fetch(long job_id) throws MGXServerException, MGXClientException {
-        return super.fetch(job_id, JobDTO.class);
+    public JobDTO fetch(long jobId) throws MGXServerException, MGXClientException {
+        return super.fetch(jobId, JobDTO.class);
     }
 
     @Override
@@ -59,22 +60,22 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXServerException {
-        return get("/Job/ByAttributeTypeAndSeqRun/" + atype_id + "/" + seqrun_id, JobDTOList.class).getJobList();
+        return get(JobDTOList.class, "Job", "ByAttributeTypeAndSeqRun", String.valueOf(atype_id), String.valueOf(seqrun_id)).getJobList();
     }
 
     public Iterable<JobDTO> BySeqRun(long seqrun_id) throws MGXServerException {
-        return get("/Job/BySeqRun/" + seqrun_id, JobDTOList.class).getJobList();
+        return get(JobDTOList.class, "Job", "BySeqRun", String.valueOf(seqrun_id)).getJobList();
     }
 
     public Iterable<JobParameterDTO> getParameters(long job_id) throws MGXServerException {
-        return get("/Job/getParameters/" + job_id, JobParameterListDTO.class).getParameterList();
+        return get(JobParameterListDTO.class, "Job", "getParameters", String.valueOf(job_id)).getParameterList();
     }
 
     public void setParameters(long job_id, JobParameterListDTO paramValues) throws MGXServerException {
-        post("/Job/setParameters/" + job_id, paramValues);
+        post(paramValues, "Job", "setParameters", String.valueOf(job_id));
     }
 
     public MGXString getError(long job_id) throws MGXServerException {
-        return get("/Job/GetError/" + job_id, MGXString.class);
+        return get(MGXString.class, "Job", "GetError", String.valueOf(job_id));
     }
 }

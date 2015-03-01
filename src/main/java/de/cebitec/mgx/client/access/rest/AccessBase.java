@@ -32,8 +32,8 @@ public abstract class AccessBase<T, U> extends RESTMethods {
         if (dto == null) {
             throw new MGXClientException("Cannot create null object.");
         }
-        String resolve = r.resolve(c, "create");
-        long id = put(resolve, dto, MGXLong.class).getValue();
+        String[] resolve = r.resolve(c, "create");
+        long id = put(dto, MGXLong.class, resolve).getValue();
         return id;
     }
 
@@ -41,46 +41,28 @@ public abstract class AccessBase<T, U> extends RESTMethods {
         if (dto == null) {
             throw new MGXClientException("Cannot update with null object.");
         }
-        String resolve = r.resolve(c, "update");
-        post(resolve, dto);
+        String[] resolve = r.resolve(c, "update");
+        post(dto, resolve);
     }
 
     protected final T fetch(long id, Class<T> c) throws MGXServerException, MGXClientException {
         if (id == -1) {
             throw new MGXClientException("Cannot fetch object with invalid identifier.");
         }
-        String resolve = r.resolve(c, "fetch");
-        return get(resolve + id, c);
+        String[] resolve = r.resolve(c, "fetch", String.valueOf(id));
+        return get(c, resolve);
     }
 
     protected U fetchlist(Class<U> c) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(c, "fetchall");
-        return this.<U>get(resolve, c);
+        String[] resolve = r.resolve(c, "fetchall");
+        return this.<U>get(c, resolve);
     }
 
     protected final UUID delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
         if (id == -1) {
             throw new MGXClientException("Cannot delete object with invalid identifier.");
         }
-        String resolve = r.resolve(c, "delete");
-        return UUID.fromString(delete(resolve + id));
+        String s = delete(r.resolve(c, "delete", String.valueOf(id)));
+        return UUID.fromString(s);
     }
-//    /*
-//     * from http://snippets.dzone.com/posts/show/91
-//     */
-//    protected static String join(Iterable< ? extends Object> pColl, String separator) {
-//        Iterator< ? extends Object> oIter;
-//        if (pColl == null || (!(oIter = pColl.iterator()).hasNext())) {
-//            return "";
-//        }
-//        StringBuilder oBuilder = new StringBuilder(String.valueOf(oIter.next()));
-//        while (oIter.hasNext()) {
-//            oBuilder.append(separator).append(oIter.next());
-//        }
-//        return oBuilder.toString();
-//    }
-//
-//    protected static List<String> split(String message, String separator) {
-//        return new ArrayList<String>(Arrays.asList(message.split(separator)));
-//    }
 }

@@ -25,6 +25,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.TermDTOList;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,17 +96,27 @@ public class RESTPathResolver {
     public static String mPath(String c) {
         return methodmappings.get(c);
     }
+    
+    public final String[] resolve(Class c, String methodName, String... opts) throws MGXClientException {
+        String[] s = resolve(c, methodName);
+        if (opts != null && opts.length > 0) {
+            s = Arrays.copyOf(s, s.length + opts.length);
+            System.arraycopy(opts, 0, s, 2, opts.length);
+        }
+        return s;
+    }
 
-    public final String resolve(Class c, String m) throws MGXClientException {
+    public final String[] resolve(Class c, String methodName) throws MGXClientException {
         if (!objmappings.containsKey(c)) {
-            throw new MGXClientException("Missing REST object mapping path for class " + c.getName() + "/" + m);
+            throw new MGXClientException("Missing REST object mapping path for class " + c.getName() + "/" + methodName);
         }
 
-        if (!methodmappings.containsKey(m)) {
-            throw new MGXClientException("Missing REST method mapping for class " + c.getName() + ", method call " + m);
+        if (!methodmappings.containsKey(methodName)) {
+            throw new MGXClientException("Missing REST method mapping for class " + c.getName() + ", method call " + methodName);
         }
 
-        return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
+        return new String[]{objmappings.get(c), methodmappings.get(methodName)};
+        //return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }
 
     public static RESTPathResolver getInstance() {

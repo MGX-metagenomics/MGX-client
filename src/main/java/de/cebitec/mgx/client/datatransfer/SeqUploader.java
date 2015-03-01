@@ -59,12 +59,10 @@ public class SeqUploader extends UploadBase {
                 continue;
             }
 
-                            
-
             SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
                     .setName(new String(nextElement.getName()))
                     .setSequence(new String(nextElement.getSequence()));
-            
+
             if (nextElement instanceof DNAQualitySequenceI) {
                 DNAQualitySequenceI q = (DNAQualitySequenceI) nextElement;
                 seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(q.getQuality()));
@@ -113,7 +111,7 @@ public class SeqUploader extends UploadBase {
 
     private String initTransfer(long seqrun_id) throws MGXServerException {
         try {
-            ClientResponse res = wr.path("/Sequence/initUpload/" + seqrun_id + "/" + reader.hasQuality())
+            ClientResponse res = wr.path("Sequence").path("initUpload").path(String.valueOf(seqrun_id)).path(String.valueOf(reader.hasQuality()))
                     .accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
@@ -130,7 +128,7 @@ public class SeqUploader extends UploadBase {
 
     private void finishTransfer(String uuid) throws MGXServerException {
         try {
-            ClientResponse res = wr.path("/Sequence/closeUpload/" + uuid).get(ClientResponse.class);
+            ClientResponse res = wr.path("Sequence").path("closeUpload").path(uuid).get(ClientResponse.class);
             catchException(res);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
@@ -145,7 +143,7 @@ public class SeqUploader extends UploadBase {
 
     private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
         try {
-            ClientResponse res = wr.path("/Sequence/add/" + session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
+            ClientResponse res = wr.path("Sequence").path("add").path(session_uuid).type("application/x-protobuf").post(ClientResponse.class, seqList);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         } catch (ClientHandlerException ex) {

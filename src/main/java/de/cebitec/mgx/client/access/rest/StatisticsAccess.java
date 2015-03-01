@@ -23,7 +23,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         for (Number n : data) {
             b.addLong(n.longValue());
         }
-        return put("Statistics/Rarefaction", b.build(), PointDTOList.class).getPointList().iterator();
+        return put(b.build(), PointDTOList.class, "Statistics", "Rarefaction").getPointList().iterator();
     }
 
     public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXServerException, MGXClientException {
@@ -33,7 +33,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         if (aggloMethod == null) {
             throw new MGXClientException("Null agglomeration method");
         }
-        return put("Statistics/Clustering/" + distMethod + "/" + aggloMethod, dto, MGXString.class).getValue();
+        return put(dto, MGXString.class, "Statistics", "Clustering", distMethod, aggloMethod).getValue();
     }
 
     public PCAResultDTO PCA(MGXMatrixDTO dto, int pc1, int pc2) throws MGXServerException, MGXClientException {
@@ -49,14 +49,14 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         if (dto.getRowCount() < 2) {
             throw new MGXClientException("Number of datasets too small.");
         }
-        return put("Statistics/PCA/" + pc1 + "/" + pc2 + "/", dto, PCAResultDTO.class);
+        return put(dto, PCAResultDTO.class, "Statistics", "PCA", String.valueOf(pc1), String.valueOf(pc2));
     }
 
     public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
         if (dto.getRowCount() < 3) {
             throw new MGXClientException("Number of datasets too small.");
         }
-        return put("Statistics/PCoA/", dto, PointDTOList.class);
+        return put(dto, PointDTOList.class, "Statistics", "PCoA");
     }
 
     @Override

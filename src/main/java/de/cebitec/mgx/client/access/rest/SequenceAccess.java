@@ -53,12 +53,12 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     public SequenceDTOList fetchSeqData(Set<Long> ids) throws MGXServerException, MGXClientException {
-        String resolve = r.resolve(SequenceDTOList.class, "fetchall");
+        String resolve[] = r.resolve(SequenceDTOList.class, "fetchall");
         Builder b = MGXLongList.newBuilder();
         for (Long id : ids) {
             b.addLong(id);
         }
-        return super.<SequenceDTOList>put(resolve, b.build(), SequenceDTOList.class);
+        return super.<SequenceDTOList>put(b.build(), SequenceDTOList.class, resolve);
     }
 
     public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {

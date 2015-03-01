@@ -195,7 +195,7 @@ public class ReferenceUploader extends UploadBase {
     private String initTransfer(long ref_id) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = wr.path("/Reference/init/" + ref_id).accept("application/x-protobuf").get(ClientResponse.class);
+            ClientResponse res = wr.path("Reference").path("init").path(String.valueOf(ref_id)).accept("application/x-protobuf").get(ClientResponse.class);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
@@ -216,7 +216,7 @@ public class ReferenceUploader extends UploadBase {
                 .setLength(length)
                 .build();
         try {
-            ClientResponse res = wr.path("/Reference/create/").accept("application/x-protobuf")
+            ClientResponse res = wr.path("Reference").path("create").accept("application/x-protobuf")
                     .put(ClientResponse.class, ref);
             catchException(res);
             return res.<MGXLong>getEntity(MGXLong.class).getValue();
@@ -233,7 +233,7 @@ public class ReferenceUploader extends UploadBase {
     protected void abortTransfer(String reason, long total) {
         if (reference_id != -1) {
             try {
-                ClientResponse res = wr.path("/Reference/delete/" + reference_id).accept("application/x-protobuf")
+                ClientResponse res = wr.path("Reference").path("delete").path(String.valueOf(reference_id)).accept("application/x-protobuf")
                         .delete(ClientResponse.class);
                 try {
                     catchException(res);
@@ -258,7 +258,7 @@ public class ReferenceUploader extends UploadBase {
             data.addRegion(r);
         }
         try {
-            ClientResponse res = wr.path("/Reference/addRegions/" + session_uuid).accept("application/x-protobuf")
+            ClientResponse res = wr.path("Reference").path("addRegions").path(session_uuid).accept("application/x-protobuf")
                     .put(ClientResponse.class, data.build());
             catchException(res);
         } catch (ClientHandlerException ex) {
@@ -277,13 +277,13 @@ public class ReferenceUploader extends UploadBase {
         for (int i = 0; i < length; i += 10000) {
             String chunk = dna.substring(i, Math.min(length, i + 10000));
             try {
-                ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
+                ClientResponse res = wr.path("Reference").path("addSequence").path(session_uuid).accept("application/x-protobuf")
                         .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
                 catchException(res);
             } catch (ClientHandlerException ex) {
                 if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                     // retry
-                    ClientResponse res = wr.path("/Reference/addSequence/" + session_uuid).accept("application/x-protobuf")
+                    ClientResponse res = wr.path("Reference").path("addSequence").path(session_uuid).accept("application/x-protobuf")
                             .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
                     catchException(res);
                 } else {
@@ -296,7 +296,7 @@ public class ReferenceUploader extends UploadBase {
     private void finishTransfer(String uuid) throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = wr.path("/Reference/close/" + uuid).get(ClientResponse.class);
+            ClientResponse res = wr.path("Reference").path("close").path(uuid).get(ClientResponse.class);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
         } catch (ClientHandlerException ex) {

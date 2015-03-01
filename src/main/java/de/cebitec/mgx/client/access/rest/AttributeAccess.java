@@ -23,15 +23,15 @@ import java.util.UUID;
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
 
     public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
-        return get("/Attribute/BySeqRun/" + seqrunId, AttributeDTOList.class).getAttributeList().iterator();
+        return get(AttributeDTOList.class, "Attribute", "BySeqRun", String.valueOf(seqrunId)).getAttributeList().iterator();
     }
 
     public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXServerException {
-        return get("/Attribute/getDistribution/" + attrType_id + "/" + job_id, AttributeDistribution.class);
+        return get(AttributeDistribution.class, "Attribute", "getDistribution", String.valueOf(attrType_id), String.valueOf(job_id));
     }
 
     public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXServerException {
-        return get("/Attribute/getHierarchy/" + attrType_id + "/" + job_id, AttributeDistribution.class);
+        return get(AttributeDistribution.class, "Attribute", "getHierarchy", String.valueOf(attrType_id), String.valueOf(job_id));
     }
 
     public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXServerException {
@@ -44,7 +44,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
                 .append('/')
                 .append(jobid2)
                 .toString();
-        return get(path, AttributeCorrelation.class);
+        return get(AttributeCorrelation.class, path);
     }
 
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
@@ -81,13 +81,13 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
     public Iterator<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
         List<SequenceDTO> ret = new ArrayList<>();
-        SequenceDTOList reply = put("/Attribute/search/", req, SequenceDTOList.class);
+        SequenceDTOList reply = put(req, SequenceDTOList.class, "Attribute", "search");
         ret.addAll(reply.getSeqList());
         //Logger.getGlobal().log(Level.INFO, "got "+ret.size()+" seqs");
 
         while (!reply.getComplete()) {
             String uuid = reply.getUuid();
-            reply = get("/Attribute/continueSearch/" + uuid, SequenceDTOList.class);
+            reply = get(SequenceDTOList.class, "Attribute", "continueSearch", uuid, toString());
             //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
             ret.addAll(reply.getSeqList());
         }
@@ -96,7 +96,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
     public Iterator<String> find(SearchRequestDTO req) throws MGXServerException, MGXClientException {
         List<String> ret = new ArrayList<>();
-        MGXStringList reply = put("/Attribute/find/", req, MGXStringList.class);
+        MGXStringList reply = put(req, MGXStringList.class, "Attribute", "find");
         for (MGXString ms : reply.getStringList()) {
             ret.add(ms.getValue());
         }

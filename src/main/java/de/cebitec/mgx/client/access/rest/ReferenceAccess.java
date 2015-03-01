@@ -35,7 +35,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public long installGlobalReference(long id) throws MGXServerException {
-        return get("/Reference/installGlobalReference/" + id, MGXLong.class).getValue();
+        return get(MGXLong.class, "Reference", "installGlobalReference", String.valueOf(id)).getValue();
     }
 
     @Override
@@ -49,15 +49,15 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public Iterator<ReferenceDTO> listGlobalReferences() throws MGXServerException {
-        return get("/Reference/listGlobalReferences", ReferenceDTOList.class).getReferenceList().iterator();
+        return get(ReferenceDTOList.class, "Reference", "listGlobalReferences").getReferenceList().iterator();
     }
 
     public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXClientException, MGXServerException {
-        return get("/Reference/byReferenceInterval/" + id + "/" + from + "/" + to, RegionDTOList.class).getRegionList().iterator();
+        return get(RegionDTOList.class, "Reference", "byReferenceInterval", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getRegionList().iterator();
     }
 
     public String getSequence(long id, int from, int to) throws MGXClientException, MGXServerException {
-        return get("/Reference/getSequence/" + id + "/" + from + "/" + to, MGXString.class).getValue().toLowerCase();
+        return get(MGXString.class, "Reference", "getSequence", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getValue().toLowerCase();
     }
 
     public ReferenceUploader createUploader(File localFile) {

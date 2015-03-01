@@ -30,7 +30,7 @@ public class SeqByAttributeDownloader extends SeqDownloader {
     protected String initTransfer() throws MGXServerException {
         assert !EventQueue.isDispatchThread();
         try {
-            ClientResponse res = wr.path("/Sequence/initDownloadforAttributes/").accept("application/x-protobuf").post(ClientResponse.class, attrs);
+            ClientResponse res = wr.path("Sequence").path("initDownloadforAttributes").accept("application/x-protobuf").post(ClientResponse.class, attrs);
             catchException(res);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
