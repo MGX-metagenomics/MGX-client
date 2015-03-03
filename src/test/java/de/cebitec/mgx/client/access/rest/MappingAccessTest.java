@@ -5,11 +5,13 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.access.rest.util.MapFetcher;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappingDTO;
+import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,37 +20,34 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
+import static org.ops4j.pax.exam.CoreOptions.bundle;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
+@RunWith(PaxExam.class)
 public class MappingAccessTest {
 
-    public MappingAccessTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    @Configuration
+    public static Option[] configuration() {
+        return options(
+                junitBundles(),
+                MGXOptions.clientBundles(),
+                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+                bundle("reference:file:target/classes")
+        );
     }
 
     @Test
@@ -208,16 +207,16 @@ public class MappingAccessTest {
         }
         assertNotNull(uuid);
         CountDownLatch latch = new CountDownLatch(1);
-        List<Fetcher> l = new ArrayList<>();
+        List<MapFetcher> l = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            Fetcher f = new Fetcher(latch, master, uuid);
+            MapFetcher f = new MapFetcher(latch, master, uuid);
             l.add(f);
             f.execute();
         }
 
         latch.countDown();
 
-        for (Fetcher f : l) {
+        for (MapFetcher f : l) {
             Iterator<MappedSequenceDTO> i = null;
             try {
                 i = f.get();
@@ -233,39 +232,4 @@ public class MappingAccessTest {
         }
     }
 
-    private class Fetcher extends SwingWorker<Iterator<MappedSequenceDTO>, Void> {
-
-        private final CountDownLatch latch;
-        private final MGXDTOMaster master;
-        private final UUID session;
-
-        public Fetcher(CountDownLatch latch, MGXDTOMaster master, UUID session) {
-            this.latch = latch;
-            this.master = master;
-            this.session = session;
-        }
-
-        @Override
-        protected Iterator<MappedSequenceDTO> doInBackground() throws Exception {
-            latch.await();
-            return master.Mapping().byReferenceInterval(session, 0, 500000);
-        }
-    }
-//
-//    @Test
-//    public void testByReference() throws Exception {
-//        System.out.println("ByReference");
-//        Iterator<MappingDTO> it = master.Mapping().ByReference(1);
-//        assertNotNull(it);
-//        Set<MappingDTO> data = new HashSet<>();
-//        while (it.hasNext()) {
-//            data.add(it.next());
-//        }
-//        assertEquals(0, data.size());
-//    }
-//
-//    @Test
-//    public void testFetch() throws Exception {
-//        System.out.println("fetch");
-//    }
 }

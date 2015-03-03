@@ -9,36 +9,39 @@ import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
+import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
+import static org.ops4j.pax.exam.CoreOptions.bundle;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
+@RunWith(PaxExam.class)
 public class ReferenceAccessTest {
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    @Configuration
+    public static Option[] configuration() {
+        return options(
+                junitBundles(),
+                MGXOptions.clientBundles(),
+                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+                bundle("reference:file:target/classes")
+        );
     }
 
     @Test
@@ -49,25 +52,6 @@ public class ReferenceAccessTest {
         try {
             iter = master.Reference().listGlobalReferences();
         } catch (MGXServerException ex) {
-            fail(ex.getMessage());
-        }
-        assertNotNull(iter);
-        int refCnt = 0;
-        while (iter.hasNext()) {
-            iter.next();
-            refCnt++;
-        }
-        assertEquals(2, refCnt);
-    }
-
-    @Test
-    public void testFetchall() {
-        System.out.println("testFetchall");
-        MGXDTOMaster master = TestMaster.getRO();
-        Iterator<ReferenceDTO> iter = null;
-        try {
-            iter = master.Reference().fetchall();
-        } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -96,6 +80,25 @@ public class ReferenceAccessTest {
             cnt++;
         }
         assertEquals(87, cnt);
+    }
+
+    @Test
+    public void testFetchall() {
+        System.out.println("testFetchall");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<ReferenceDTO> iter = null;
+        try {
+            iter = master.Reference().fetchall();
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        int refCnt = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            refCnt++;
+        }
+        assertEquals(2, refCnt);
     }
 
     @Test

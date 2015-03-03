@@ -11,8 +11,8 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import de.cebitec.mgx.osgiutils.MGXOptions;
+import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,36 +26,32 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
+import static org.ops4j.pax.exam.CoreOptions.bundle;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
+@RunWith(PaxExam.class)
 public class FileAccessTest {
 
-    public FileAccessTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    @Configuration
+    public static Option[] configuration() {
+        return options(
+                junitBundles(),
+                MGXOptions.clientBundles(),
+                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+                bundle("reference:file:target/classes")
+        );
     }
 
     @Test
@@ -532,26 +528,5 @@ public class FileAccessTest {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
-    }
-
-    private static class PropCounter implements PropertyChangeListener {
-
-        private int cnt = 0;
-        private PropertyChangeEvent last = null;
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            System.err.println("    " + evt.getPropertyName() + ": " + evt.getNewValue());
-            last = evt;
-            cnt++;
-        }
-
-        public int getCount() {
-            return cnt;
-        }
-
-        public PropertyChangeEvent getLastEvent() {
-            return last;
-        }
     }
 }
