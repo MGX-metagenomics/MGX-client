@@ -211,7 +211,8 @@ public class MappingAccessTest {
         for (int i = 0; i < 5; i++) {
             MapFetcher f = new MapFetcher(latch, master, uuid);
             l.add(f);
-            f.execute();
+            new Thread(f).start();
+            //f.execute();
         }
 
         latch.countDown();
