@@ -21,10 +21,12 @@ import de.cebitec.mgx.seqstorage.FastaWriter;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
+import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -157,59 +159,71 @@ public class SeqRunAccessTest {
     }
 
     @Test
-    public void testDownload() throws Exception {
+    public void testDownload() throws IOException {
         System.out.println("testDownload");
         File tmpFile = File.createTempFile("down", "xx");
-        final SeqWriterI<DNASequenceI> writer = new FastaWriter(tmpFile.getAbsolutePath());
+        try {
+            final SeqWriterI<DNASequenceI> writer = new FastaWriter(tmpFile.getAbsolutePath());
 
-        MGXDTOMaster master = TestMaster.getRO();
+            MGXDTOMaster master = TestMaster.getRO();
 
-        SeqRunDTO sr1 = master.SeqRun().fetch(1);
-        PropCounter pc = new PropCounter();
-        final SeqDownloader downloader = master.Sequence().createDownloader(sr1.getId(), writer, true);
-        downloader.addPropertyChangeListener(pc);
-        boolean success = downloader.download();
+            SeqRunDTO sr1 = master.SeqRun().fetch(1);
+            PropCounter pc = new PropCounter();
+            final SeqDownloader downloader = master.Sequence().createDownloader(sr1.getId(), writer, true);
+            downloader.addPropertyChangeListener(pc);
+            boolean success = downloader.download();
 
-        assertTrue(success);
-        assertNotNull(pc.getLastEvent());
-        assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
+            assertTrue(success);
+            assertNotNull(pc.getLastEvent());
+            assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
 
-        long cnt = 0;
-        SeqReaderI reader = new FastaReader(tmpFile.getAbsolutePath(), false);
-        while (reader.hasMoreElements()) {
-            reader.nextElement();
-            cnt++;
+            long cnt = 0;
+            SeqReaderI reader = new FastaReader(tmpFile.getAbsolutePath(), false);
+            while (reader.hasMoreElements()) {
+                reader.nextElement();
+                cnt++;
+            }
+            reader.close();
+            assertEquals(sr1.getNumSequences(), cnt);
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        } finally {
+            tmpFile.delete();
         }
-        reader.close();
-        assertEquals(sr1.getNumSequences(), cnt);
-        tmpFile.delete();
     }
 
     @Test
-    public void testUploadFail() throws Exception {
+    public void testUploadFail() throws IOException {
         // upload as guest should fail
         System.out.println("testUploadFail");
         File tmpFile = File.createTempFile("down", "xx");
-        FileWriter fw = new FileWriter(tmpFile);
-        fw.write(">seq1\nAAAAAAAA\n");
-        fw.close();
 
-        SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
-        assertNotNull(reader);
+        try {
+            FileWriter fw = new FileWriter(tmpFile);
+            fw.write(">seq1\nAAAAAAAA\n");
+            fw.close();
 
-        MGXDTOMaster master = TestMaster.getRO();
+            SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
+            assertNotNull(reader);
 
-        PropCounter pc = new PropCounter();
-        SeqUploader up = master.Sequence().createUploader(999999, reader);
-        up.addPropertyChangeListener(pc);
-        boolean success = up.upload();
+            MGXDTOMaster master = TestMaster.getRO();
 
-        tmpFile.delete();
+            PropCounter pc = new PropCounter();
+            SeqUploader up = master.Sequence().createUploader(999999, reader);
+            up.addPropertyChangeListener(pc);
+            boolean success = up.upload();
 
-        assertFalse(success);
-        assertTrue(up.getErrorMessage().contains("access denied"));
-        assertNotNull(pc.getLastEvent());
-        assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
+            tmpFile.delete();
+
+            assertFalse(success);
+            assertTrue(up.getErrorMessage().contains("access denied"));
+            assertNotNull(pc.getLastEvent());
+            assertEquals(TransferBase.TRANSFER_FAILED, pc.getLastEvent().getPropertyName());
+        } catch (IOException | SeqStoreException ex) {
+            fail(ex.getMessage());
+        } finally {
+            tmpFile.delete();
+        }
     }
 
     @Test
