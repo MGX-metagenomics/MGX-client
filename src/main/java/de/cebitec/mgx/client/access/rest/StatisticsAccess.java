@@ -18,10 +18,10 @@ import java.util.UUID;
  */
 public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
 
-    public Iterator<PointDTO> Rarefaction(Collection<Number> data) throws MGXServerException, MGXClientException {
+    public Iterator<PointDTO> Rarefaction(Collection<Long> data) throws MGXServerException, MGXClientException {
         MGXLongList.Builder b = MGXLongList.newBuilder();
-        for (Number n : data) {
-            b.addLong(n.longValue());
+        for (Long n : data) {
+            b.addLong(n);
         }
         return put(b.build(), PointDTOList.class, "Statistics", "Rarefaction").getPointList().iterator();
     }

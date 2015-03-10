@@ -116,7 +116,7 @@ public class App {
             runs.add(runiter.next().getName());
         }
 
-        long extract_id = 8; // new metagenomes, overlapped
+        long extract_id = 4; // new metagenomes, overlapped
 //        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
 //        while (iter.hasNext()) {
 //            extract_id = iter.next().getId();

@@ -60,13 +60,13 @@ public class StatisticsAccessTest {
     @Test
     public void testRarefaction() throws Exception {
         System.out.println("testRarefaction");
-        Collection<Number> data = new LinkedList<>();
-        data.add(1);
-        data.add(2);
-        data.add(3);
-        data.add(3);
-        data.add(4);
-        data.add(5);
+        Collection<Long> data = new LinkedList<>();
+        data.add(1L);
+        data.add(2L);
+        data.add(3L);
+        data.add(3L);
+        data.add(4L);
+        data.add(5L);
         Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
         assertNotNull(iter);
 
@@ -102,9 +102,9 @@ public class StatisticsAccessTest {
     @Test
     public void testRarefaction2() throws Exception {
         System.out.println("testRarefaction2");
-        Collection<Number> data = new LinkedList<>();
-        data.add(1000);
-        data.add(501);
+        Collection<Long> data = new LinkedList<>();
+        data.add(1000L);
+        data.add(501L);
         Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
         assertNotNull(iter);
 
