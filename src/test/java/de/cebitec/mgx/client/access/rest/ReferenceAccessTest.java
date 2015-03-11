@@ -16,6 +16,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -115,6 +116,46 @@ public class ReferenceAccessTest {
             assertNotEquals(-1, refId);
 
             m.Reference().delete(refId);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testInstallGlobal() {
+        System.out.println("testInstallGlobal");
+        MGXDTOMaster m = TestMaster.getRW();
+
+        long installedId = -1;
+        try {
+
+            boolean found = false;
+            Iterator<ReferenceDTO> iterGlobal = m.Reference().listGlobalReferences();
+            while (iterGlobal.hasNext()) {
+                ReferenceDTO ref = iterGlobal.next();
+                if (ref.getId() == 3) {
+                    found = true;
+                }
+            }
+            assertTrue(found);
+
+            installedId = m.Reference().installGlobalReference(3);
+        } catch (MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotEquals(-1, installedId);
+
+        // delete it again
+        try {
+            UUID uuid = m.Reference().delete(installedId);
+            assertNotNull(uuid);
+            TaskState state = m.Task().get(uuid).getState();
+            while (!state.equals(TaskState.FINISHED)) {
+                state = m.Task().get(uuid).getState();
+                if (state.equals(TaskState.FAILED)) {
+                    fail();
+                }
+            }
         } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
