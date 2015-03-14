@@ -88,18 +88,6 @@ public class ToolAccessTest {
         }
         assertEquals(1, cnt);
     }
-//
-//    @Test
-//    public void testGetAvailableParameters_dtoToolDTO() throws Exception {
-//        System.out.println("getAvailableParameters");
-//        dto.ToolDTO dto = null;
-//        ToolAccess instance = new ToolAccess();
-//        Iterable expResult = null;
-//        Iterable result = instance.getAvailableParameters(dto);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
 
     @Test
     public void testFetchall() throws Exception {
