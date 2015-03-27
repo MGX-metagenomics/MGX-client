@@ -330,4 +330,40 @@ public class SeqRunAccessTest {
             assertNotEquals(Float.NaN, f);
         }
     }
+
+    @Test
+    public void testRegressionEmptySeqRun() throws Exception {
+        System.out.println("testRegressionEmptySeqRun");
+        MGXDTOMaster m = TestMaster.getRW();
+
+        SeqRunDTO sr = SeqRunDTO.newBuilder()
+                .setExtractId(1)
+                .setName("Unittest-Run")
+                .setSequencingMethod(m.Term().fetch(12))
+                .setSequencingTechnology(m.Term().fetch(1))
+                .setSubmittedToInsdc(false)
+                .build();
+
+        long run_id = m.SeqRun().create(sr);
+        assertNotEquals(-1, run_id);
+
+        List<QCResultDTO> qc = null;
+
+        try {
+            qc = m.SeqRun().getQC(run_id);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        } finally {
+            UUID taskId = m.SeqRun().delete(run_id);
+            TaskState ts = m.Task().get(taskId).getState();
+            while (ts != TaskState.FINISHED) {
+                Thread.sleep(500);
+                ts = m.Task().get(taskId).getState();
+            }
+            assertEquals(ts, TaskState.FINISHED);
+        }
+
+        assertNotNull(qc);
+        assertEquals("SeqRun without sequences should have returned zero QC reports", 0, qc.size());
+    }
 }
