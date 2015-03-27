@@ -12,6 +12,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
+import de.cebitec.mgx.sequence.SeqStoreException;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
@@ -51,40 +52,47 @@ public class SeqUploader extends UploadBase {
         cb.callback(total_elements);
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         seqListBuilder.setComplete(true);
-        while (reader.hasMoreElements()) {
-            DNASequenceI nextElement = reader.nextElement();
 
-            // ignore empty sequences
-            if (nextElement.getSequence().length == 0) {
-                continue;
-            }
+        try {
+            while (reader.hasMoreElements()) {
+                DNASequenceI nextElement = reader.nextElement();
 
-            SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
-                    .setName(new String(nextElement.getName()))
-                    .setSequence(new String(nextElement.getSequence()));
-
-            if (nextElement instanceof DNAQualitySequenceI) {
-                DNAQualitySequenceI q = (DNAQualitySequenceI) nextElement;
-                seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(q.getQuality()));
-            }
-            seqListBuilder.addSeq(seqbuilder.build());
-            current_num_elements++;
-
-            if (current_num_elements >= chunk_size) {
-                total_elements += current_num_elements;
-                cb.callback(total_elements);
-                try {
-                    sendChunk(seqListBuilder.build(), session_uuid);
-                    cb.callback(total_elements);
-                } catch (MGXServerException ex) {
-                    abortTransfer(ex.getMessage(), total_elements);
-                    return false;
+                // ignore empty sequences
+                if (nextElement.getSequence().length == 0) {
+                    continue;
                 }
-                current_num_elements = 0;
-                seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
-                seqListBuilder.setComplete(true);
+
+                SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
+                        .setName(new String(nextElement.getName()))
+                        .setSequence(new String(nextElement.getSequence()));
+
+                if (nextElement instanceof DNAQualitySequenceI) {
+                    DNAQualitySequenceI q = (DNAQualitySequenceI) nextElement;
+                    seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(q.getQuality()));
+                }
+                seqListBuilder.addSeq(seqbuilder.build());
+                current_num_elements++;
+
+                if (current_num_elements >= chunk_size) {
+                    total_elements += current_num_elements;
+                    cb.callback(total_elements);
+                    try {
+                        sendChunk(seqListBuilder.build(), session_uuid);
+                        cb.callback(total_elements);
+                    } catch (MGXServerException ex) {
+                        abortTransfer(ex.getMessage(), total_elements);
+                        return false;
+                    }
+                    current_num_elements = 0;
+                    seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+                    seqListBuilder.setComplete(true);
+                }
             }
+        } catch (SeqStoreException ex) {
+            abortTransfer(ex.getMessage(), total_elements);
+            return false;
         }
+
         if (current_num_elements > 0) {
             total_elements += current_num_elements;
             try {
