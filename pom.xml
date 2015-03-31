@@ -11,13 +11,6 @@
     <name>MGX-client-api</name>
     <url>http://maven.apache.org</url>
     
-    <pluginRepositories>
-        <pluginRepository>
-            <id>apache.snapshots</id>
-            <url>https://repository.apache.org/content/repositories/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <exam.version>4.4.0</exam.version>
@@ -26,19 +19,6 @@
     
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.ws.commons.axiom</groupId>
-                <artifactId>paxexam-maven-plugin</artifactId>
-                <version>1.2.15-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-link-files</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
