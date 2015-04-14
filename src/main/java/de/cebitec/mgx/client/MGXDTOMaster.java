@@ -5,6 +5,7 @@ import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.gpms.rest.RESTMembershipI;
 import de.cebitec.mgx.client.access.rest.*;
+import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -26,7 +27,7 @@ public class MGXDTOMaster {
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private final Map<Class, AccessBase> accessors;
     private final String resource;
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this);
 
     public MGXDTOMaster(GPMSClientI gpms, RESTMembershipI mbr) {
         restmaster = gpms.createMaster(mbr);
