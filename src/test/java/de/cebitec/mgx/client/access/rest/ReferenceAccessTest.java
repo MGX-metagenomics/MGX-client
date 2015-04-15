@@ -126,7 +126,7 @@ public class ReferenceAccessTest {
         System.out.println("testInstallGlobal");
         MGXDTOMaster m = TestMaster.getRW();
 
-        long installedId = -1;
+        String refName = null;
         try {
 
             boolean found = false;
@@ -135,19 +135,47 @@ public class ReferenceAccessTest {
                 ReferenceDTO ref = iterGlobal.next();
                 if (ref.getId() == 3) {
                     found = true;
+                    refName = ref.getName();
                 }
             }
             assertTrue(found);
 
-            installedId = m.Reference().installGlobalReference(3);
-        } catch (MGXServerException ex) {
+            UUID taskId = m.Reference().installGlobalReference(3);
+
+            TaskDTO task = m.Task().get(taskId);
+            assertNotNull(task);
+            while ((task.getState() != TaskState.FINISHED) || (task.getState() != TaskState.FAILED)) {
+                System.err.println(" --> " + task.getState());
+                Thread.sleep(1000);
+                if ((task.getState() == TaskState.FINISHED) || (task.getState() == TaskState.FAILED)) {
+                    break;
+                } else {
+                    task = m.Task().get(taskId);
+                }
+            }
+        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
             fail(ex.getMessage());
         }
-        assertNotEquals(-1, installedId);
 
+        long projRefId = -1;
+        boolean installSuccess = false;
+        try {
+            Iterator<ReferenceDTO> iterProj = m.Reference().fetchall();
+            while (iterProj.hasNext()) {
+                ReferenceDTO ref = iterProj.next();
+                if (ref.getName().equals(refName)) {
+                    installSuccess = true;
+                    projRefId = ref.getId();
+                }
+            }
+            assertTrue(installSuccess);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        
         // delete it again
         try {
-            UUID uuid = m.Reference().delete(installedId);
+            UUID uuid = m.Reference().delete(projRefId);
             assertNotNull(uuid);
             TaskState state = m.Task().get(uuid).getState();
             while (!state.equals(TaskState.FINISHED)) {
