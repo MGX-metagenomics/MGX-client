@@ -157,6 +157,15 @@ public class ToolAccessTest {
     }
 
     @Test
+    public void testFetchXML() throws Exception {
+        System.out.println("fetchXML");
+        MGXDTOMaster master = TestMaster.getRO();
+        String xmlData = master.Tool().getXMLDefinition(1);
+        assertNotNull(xmlData);
+        assertTrue(xmlData.startsWith("<?xml version"));
+    }
+
+    @Test
     public void testCreate() {
         System.out.println("create");
         MGXDTOMaster master = TestMaster.getRO();

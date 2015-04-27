@@ -78,6 +78,7 @@ public class RESTPathResolver {
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
         methodmappings.put("byJob", "byJob");
+        methodmappings.put("getXML", "getXML");
         methodmappings.put("byCategory", "byCategory");
         methodmappings.put("byRead", "byRead");
         methodmappings.put("byReference", "byReference");
@@ -96,7 +97,7 @@ public class RESTPathResolver {
     public static String mPath(String c) {
         return methodmappings.get(c);
     }
-    
+
     public final String[] resolve(Class c, String methodName, String... opts) throws MGXClientException {
         String[] s = resolve(c, methodName);
         if (opts != null && opts.length > 0) {

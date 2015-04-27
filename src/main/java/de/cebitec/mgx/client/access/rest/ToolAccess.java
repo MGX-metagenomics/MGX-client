@@ -6,6 +6,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.MGXLong;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.util.Iterator;
@@ -64,5 +65,9 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     
     public ToolDTO ByJob(long job_id) throws MGXServerException, MGXClientException {
         return get(ToolDTO.class, r.resolve(ToolDTO.class, "byJob", String.valueOf(job_id)));
+    }
+
+    public String getXMLDefinition(long tool_id) throws MGXServerException, MGXClientException {
+        return get(MGXString.class, r.resolve(ToolDTO.class, "getXML", String.valueOf(tool_id))).getValue();
     }
 }
