@@ -114,7 +114,7 @@ public class ToolAccessTest {
             cnt++;
             it.next();
         }
-        assertEquals(26, cnt);
+        assertEquals(27, cnt);
     }
 
     @Test
