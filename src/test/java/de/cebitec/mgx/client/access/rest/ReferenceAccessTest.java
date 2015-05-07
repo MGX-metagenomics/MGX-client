@@ -13,6 +13,8 @@ import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -172,6 +174,15 @@ public class ReferenceAccessTest {
         } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
+        
+        String seqData = null;
+        try {
+            seqData = m.Reference().getSequence(projRefId, 0, 9);
+        } catch (MGXClientException | MGXServerException ex) {
+            fail(ex.getMessage());
+        }
+        
+        assertNotNull(seqData);
         
         // delete it again
         try {
