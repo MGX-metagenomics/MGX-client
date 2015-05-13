@@ -51,7 +51,7 @@ public abstract class RESTMethods  {
      * @throws MGXServerException
      */
     protected final <U> U put(Object obj, Class<U> c, final String... path) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
+        //assert !EventQueue.isDispatchThread();
         try {
             ClientResponse res = buildPath(path).put(ClientResponse.class, obj);
             catchException(res);
@@ -67,7 +67,7 @@ public abstract class RESTMethods  {
 
     protected final <U> U get(Class<U> c, final String... path) throws MGXServerException {
         //System.err.println("GET uri: " +getWebResource().path(path).getURI().toASCIIString());
-        assert !EventQueue.isDispatchThread();
+        //assert !EventQueue.isDispatchThread();
         try {
             ClientResponse res = buildPath(path).get(ClientResponse.class);
             catchException(res);
@@ -83,7 +83,7 @@ public abstract class RESTMethods  {
 
     protected final String delete(final String... path) throws MGXServerException {
         //System.err.println("DELETE uri: " +getWebResource().path(path).getURI().toASCIIString());
-        assert !EventQueue.isDispatchThread();
+        //assert !EventQueue.isDispatchThread();
         try {
             ClientResponse res = buildPath(path).delete(ClientResponse.class);
             catchException(res);
@@ -98,7 +98,7 @@ public abstract class RESTMethods  {
     }
 
     protected final <U> void post(U obj, final String... path) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
+        //assert !EventQueue.isDispatchThread();
         try {
             ClientResponse res = buildPath(path).post(ClientResponse.class, obj);
             catchException(res);
