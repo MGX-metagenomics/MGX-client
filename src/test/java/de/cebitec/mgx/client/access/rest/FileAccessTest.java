@@ -316,6 +316,65 @@ public class FileAccessTest {
     }
 
     @Test
+    public synchronized void testUploadEmptyFile() throws IOException {
+        System.out.println("testUploadEmptyFile");
+        MGXDTOMaster m = TestMaster.getRW();
+        if (m == null) {
+            System.err.println("  private test, skipped");
+            return;
+        }
+
+        // create empty file
+        File f = File.createTempFile("UploadEmpty", "xx");
+        assertTrue(f.exists());
+
+        String targetName = FileAccess.ROOT + "UploadEmpty.txt";
+
+        FileUploader up = null;
+        try {
+            up = m.File().createUploader(f, targetName);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+
+        assertNotNull(up);
+
+        boolean success = up.upload();
+
+        if (success) {
+            // cleanup
+            FileDTO dto = FileDTO.newBuilder()
+                    .setName(targetName)
+                    .setIsDirectory(false)
+                    .setSize(0)
+                    .build();
+            UUID taskId;
+            try {
+                taskId = m.File().delete(dto);
+                TaskDTO task = m.Task().get(taskId);
+                while ((task.getState() != TaskState.FINISHED) || (task.getState() != TaskState.FAILED)) {
+                    System.err.println(" --> " + task.getState());
+                    Thread.sleep(1000);
+                    if ((task.getState() == TaskState.FINISHED) || (task.getState() == TaskState.FAILED)) {
+                        break;
+                    } else {
+                        task = m.Task().get(taskId);
+                    }
+                }
+            } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+                fail(ex.getMessage());
+            }
+
+        }
+        if (!success) {
+            fail(up.getErrorMessage());
+        }
+
+        long fileSize = f.length();
+        f.delete(); // delete local file
+    }
+
+    @Test
     public synchronized void testUploadSameName() throws IOException {
         System.out.println("testUploadSameName");
         MGXDTOMaster m = TestMaster.getRW();
