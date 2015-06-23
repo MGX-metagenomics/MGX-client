@@ -90,6 +90,19 @@ public class JobAccessTest {
     }
 
     @Test
+    public void testCancel() {
+        System.out.println("testCancelGuest");
+        MGXDTOMaster master = TestMaster.getRO();
+        boolean failed = false;
+        try {
+            master.Job().cancel(666);
+        } catch (MGXServerException ex) {
+            failed = ex.getMessage().contains("access denied");
+        }
+        assertTrue(failed);
+    }
+
+    @Test
     public void testCreateJob() {
         System.out.println("createJob");
         MGXDTOMaster m = TestMaster.getRW();
