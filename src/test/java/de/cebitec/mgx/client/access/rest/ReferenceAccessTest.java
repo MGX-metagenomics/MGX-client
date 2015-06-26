@@ -174,16 +174,16 @@ public class ReferenceAccessTest {
         } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
-        
+
         String seqData = null;
         try {
             seqData = m.Reference().getSequence(projRefId, 0, 9);
         } catch (MGXClientException | MGXServerException ex) {
             fail(ex.getMessage());
         }
-        
+
         assertNotNull(seqData);
-        
+
         // delete it again
         try {
             UUID uuid = m.Reference().delete(projRefId);
@@ -299,6 +299,42 @@ public class ReferenceAccessTest {
         assertNotNull(seq);
         assertEquals("ttgtgcacac", seq);
     }
+
+//    @Test
+//    public void testUploadGBKRegression() {
+//        System.out.println("testUploadGBKRegression");
+//        MGXDTOMaster m = TestMaster.getPrivate("MGX_Mammoth");
+//
+//        File f = new File("/vol/biodb/ncbi_genomes/Bacteria/Variovorax_paradoxus_B4_uid218005/NC_022234.gbk");
+//        if (!f.exists()) {
+//            fail();
+//        }
+//        ReferenceUploader up = m.Reference().createUploader(f);
+//        assertNotNull(up);
+//        boolean success = up.upload();
+//        if (!success) {
+//            fail(up.getErrorMessage());
+//        }
+//
+//        assertEquals(1, up.getReferenceIDs().size());
+//        long refId = up.getReferenceIDs().get(0);
+//
+//        // delete it again
+//        try {
+//            UUID uuid = m.Reference().delete(refId);
+//            assertNotNull(uuid);
+//            TaskState state = m.Task().get(uuid).getState();
+//            while (!state.equals(TaskState.FINISHED)) {
+//                state = m.Task().get(uuid).getState();
+//                if (state.equals(TaskState.FAILED)) {
+//                    fail();
+//                }
+//            }
+//        } catch (MGXServerException | MGXClientException ex) {
+//            fail(ex.getMessage());
+//        }
+//        
+//    }
 
 //    @Test
 //    public void testUploadGBKRegression() {

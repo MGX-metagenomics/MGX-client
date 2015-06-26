@@ -43,9 +43,9 @@ public class SequenceAccessTest {
     public void testCreateUploaderForInvalidID() {
         System.out.println("createUploaderForInvalidID");
         MGXDTOMaster master = TestMaster.getRW();
-        SeqReaderI<DNASequenceI> reader = null;
+        SeqReaderI<? extends DNASequenceI> reader = null;
         try {
-            reader = SeqReaderFactory.getReader("src/test/resources/sample.fas");
+            reader = SeqReaderFactory.<DNASequenceI>getReader("src/test/resources/sample.fas");
         } catch (SeqStoreException ex) {
             fail(ex.getMessage());
         }
