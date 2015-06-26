@@ -116,7 +116,7 @@ public class App {
             runs.add(runiter.next().getName());
         }
 
-        long extract_id = 4; // new metagenomes, overlapped
+        long extract_id = 9; // new metagenomes, overlapped
 //        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
 //        while (iter.hasNext()) {
 //            extract_id = iter.next().getId();
@@ -126,7 +126,7 @@ public class App {
 
         for (int argpos = 1; argpos < args.length; argpos++) {
             String fname = new File(args[argpos]).getName();
-            fname = fname.replaceAll(".fastq", "");
+            fname = fname.replaceAll(".fastq.trimmed", "");
 
             if (runs.contains(fname)) {
                 System.err.println("skipping " + fname + ", already present");
@@ -149,7 +149,7 @@ public class App {
                     System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
 
                     // upload sequence data
-                    SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(args[argpos]);
+                    SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(args[argpos]);
                     master.Sequence().sendSequences(seqrun_id, reader);
                 }
             }

@@ -203,7 +203,7 @@ public class SeqRunAccessTest {
             fw.write(">seq1\nAAAAAAAA\n");
             fw.close();
 
-            SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
+            SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(tmpFile.getAbsolutePath());
             assertNotNull(reader);
 
             MGXDTOMaster master = TestMaster.getRO();
@@ -235,7 +235,7 @@ public class SeqRunAccessTest {
         fw.write(">seq1\nAAAAAAAA\n");
         fw.close();
 
-        SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
+        SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(tmpFile.getAbsolutePath());
         assertNotNull(reader);
 
         PropCounter pc = new PropCounter();
@@ -275,7 +275,7 @@ public class SeqRunAccessTest {
         fw.write(">seq1\nAAAAAAAA\n");
         fw.close();
 
-        SeqReaderI<DNASequenceI> reader = SeqReaderFactory.getReader(tmpFile.getAbsolutePath());
+        SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(tmpFile.getAbsolutePath());
         assertNotNull(reader);
 
         PropCounter pc = new PropCounter();
