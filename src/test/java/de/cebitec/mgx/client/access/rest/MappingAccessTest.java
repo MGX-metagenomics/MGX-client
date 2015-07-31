@@ -166,7 +166,7 @@ public class MappingAccessTest {
         assertNotNull(testms);
         assertEquals(23010, testms.getStart());
         assertEquals(22867, testms.getStop());
-        assertEquals(71, testms.getIdentity());
+        assertEquals(71, testms.getIdentity(), 0.9);
     }
 
     @Test
