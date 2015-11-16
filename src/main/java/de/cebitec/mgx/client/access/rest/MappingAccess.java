@@ -70,7 +70,7 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     }
 
     public void closeMapping(UUID uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
+        //assert !EventQueue.isDispatchThread();
         try {
             ClientResponse res = getWebResource().path("Mapping").path("closeMapping").path(uuid.toString()).type(PROTOBUF_TYPE).accept(PROTOBUF_TYPE).get(ClientResponse.class);
             catchException(res);
