@@ -11,6 +11,7 @@ import de.cebitec.mgx.seqstorage.DNASequence;
 import de.cebitec.mgx.seqstorage.QualityDNASequence;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
+import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
 import java.io.IOException;
@@ -72,27 +73,34 @@ public class SeqDownloader extends DownloadBase {
             // empty sequence list indicates end of download
             need_refetch = chunk.getSeqCount() > 0;
 
-            for (SequenceDTO dto : chunk.getSeqList()) {
-                DNASequenceI seq;
-                if (dto.hasQuality()) {
-                    DNAQualitySequenceI qseq = new QualityDNASequence();
-                    qseq.setQuality(dto.getQuality().toByteArray());
-                    seq = qseq;
-                } else {
-                    seq = new DNASequence();
+            try {
+                for (SequenceDTO dto : chunk.getSeqList()) {
+                    DNASequenceI seq;
+                    if (dto.hasQuality()) {
+                        DNAQualitySequenceI qseq = new QualityDNASequence();
+                        qseq.setQuality(dto.getQuality().toByteArray());
+                        seq = qseq;
+                    } else {
+                        seq = new DNASequence();
+                    }
+                    if (dto.hasId()) {
+                        seq.setId(dto.getId());
+                    }
+                    seq.setName(dto.getName().getBytes());
+                    seq.setSequence(dto.getSequence().getBytes());
+                    try {
+                        writer.addSequence(seq);
+                    } catch (IOException ex) {
+                        abortTransfer(ex.getMessage(), total_elements + current_num_elements);
+                        return false;
+                    }
+                    current_num_elements++;
                 }
-                if (dto.hasId()) {
-                    seq.setId(dto.getId());
-                }
-                seq.setName(dto.getName().getBytes());
-                seq.setSequence(dto.getSequence().getBytes());
-                try {
-                    writer.addSequence(seq);
-                } catch (IOException ex) {
-                    abortTransfer(ex.getMessage(), total_elements + current_num_elements);
-                    return false;
-                }
-                current_num_elements++;
+
+            } catch (SeqStoreException sse) {
+                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, sse);
+                abortTransfer(sse.getMessage(), total_elements);
+                return false;
             }
             total_elements += current_num_elements;
             cb.callback(total_elements);
