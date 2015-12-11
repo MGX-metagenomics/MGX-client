@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import org.junit.After;
@@ -56,7 +55,7 @@ public class XMLValidatorTest {
     public void testIsValid() throws IOException {
         System.out.println("testIsValid");
         boolean ret = testValid("src/test/resources/invalid.xml");
-        assertEquals(false, ret);
+        assertEquals("Graph without node named mgx should not be valid", false, ret);
     }
 
     @Test
