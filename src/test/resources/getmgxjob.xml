@@ -1,1 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><graph description="" name="xx" service="MGX"><composites/><nodes><node id="132" name="" type="Conveyor.MGX.GetMGXJob" x="140" y="112"><configuration_items/><typeParameters/></node><node id="134" name="" type="Conveyor.Core.Discard" x="177" y="282"><configuration_items/><typeParameters/></node></nodes><links><link from_connector="output" from_node="132" to_connector="input" to_node="134"/></links></graph>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><graph description="" name="xx" service="MGX">
+    <composites/>
+    <nodes>
+        <node id="132" name="" type="Conveyor.MGX.GetMGXJob" x="140" y="112">
+            <configuration_items/>
+            <typeParameters/>
+        </node>
+        <node id="134" name="" type="Conveyor.Core.Discard" x="177" y="282">
+            <configuration_items/>
+            <typeParameters/>
+        </node>
+    </nodes>
+    <links>
+        <link from_connector="output" from_node="132" to_connector="input" to_node="134"/>
+    </links>
+</graph>
