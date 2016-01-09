@@ -297,7 +297,7 @@ public class ReferenceAccessTest {
             fail(ex.getMessage());
         }
         assertNotNull(seq);
-        assertEquals("ttgtgcacac", seq);
+        assertEquals("TTGTGCACAC", seq);
     }
 
 //    @Test
