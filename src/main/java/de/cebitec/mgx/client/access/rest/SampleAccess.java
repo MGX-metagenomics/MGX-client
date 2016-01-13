@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.SampleDTO;
@@ -13,6 +14,10 @@ import java.util.UUID;
  */
 public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
 
+    public SampleAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
+    
     @Override
     public Iterator<SampleDTO> fetchall() throws MGXServerException, MGXClientException {
         return fetchlist(SampleDTOList.class).getSampleList().iterator();

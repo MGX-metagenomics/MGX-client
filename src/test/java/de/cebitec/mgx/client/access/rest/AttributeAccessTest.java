@@ -27,7 +27,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sj
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class AttributeAccessTest {
 
     @Configuration

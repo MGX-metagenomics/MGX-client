@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
@@ -13,6 +14,10 @@ import java.util.UUID;
  */
 public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTOList> {
 
+    public ObservationAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
+    
     public Iterator<ObservationDTO> ByRead(long seqId) throws MGXServerException, MGXClientException {
         return get(ObservationDTOList.class, r.resolve(ObservationDTO.class, "byRead", String.valueOf(seqId))).getObservationList().iterator();
     }

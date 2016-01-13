@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.access.rest.util.XMLValidator;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -17,6 +18,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
+
+    public ToolAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
     
     public Iterable<JobParameterDTO> getAvailableParameters(long tool_id, boolean isGlobal) throws MGXServerException {
         return get(JobParameterListDTO.class, "Tool", "getAvailableParameters", String.valueOf(tool_id), String.valueOf(isGlobal)).getParameterList();

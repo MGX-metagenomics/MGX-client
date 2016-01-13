@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -17,6 +18,10 @@ import java.util.UUID;
  * @author belmann
  */
 public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> {
+
+    public ReferenceAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     @Override
     public Iterator<ReferenceDTO> fetchall() throws MGXServerException, MGXClientException {
@@ -56,10 +61,10 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public String getSequence(long id, int from, int to) throws MGXClientException, MGXServerException {
-        return get(MGXString.class, "Reference", "getSequence", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getValue().toLowerCase();
+        return get(MGXString.class, "Reference", "getSequence", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getValue().toUpperCase();
     }
 
     public ReferenceUploader createUploader(File localFile) {
-        return new ReferenceUploader(getWebResource(), localFile);
+        return new ReferenceUploader(getRESTAccess(), localFile);
     }
 }

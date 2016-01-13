@@ -1,11 +1,9 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
-import java.awt.EventQueue;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,13 +13,11 @@ import java.io.OutputStream;
  */
 public class PluginDumpDownloader extends DownloadBase {
 
-    protected final WebResource wr;
     protected long total_elements = 0;
     protected final OutputStream writer;
 
-    public PluginDumpDownloader(WebResource wr, OutputStream writer) {
-        super();
-        this.wr = wr;
+    public PluginDumpDownloader(RESTAccessI rab, OutputStream writer) {
+        super(rab);
         this.writer = writer;
     }
 
@@ -81,32 +77,24 @@ public class PluginDumpDownloader extends DownloadBase {
             abortTransfer(ex.getMessage(), total_elements);
             return false;
         }
-        
+
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
         return true;
     }
 
     protected String initDownload() throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("initPluginDownload").accept("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
+        MGXString session_uuid = super.get(MGXString.class, "File", "initPluginDownload");
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
 
     protected void finishTransfer(String uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("closeDownload").path(uuid).get(ClientResponse.class);
-        catchException(res);
+        super.get("File", "closeDownload", uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("get").path(session_uuid).type("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        BytesDTO entity = res.<BytesDTO>getEntity(BytesDTO.class);
+        BytesDTO entity = super.get(BytesDTO.class, "File", "get", session_uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }

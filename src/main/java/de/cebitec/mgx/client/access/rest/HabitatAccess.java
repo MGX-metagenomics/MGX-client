@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
@@ -12,6 +13,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
+
+    public HabitatAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     @Override
     public Iterator<HabitatDTO> fetchall() throws MGXServerException, MGXClientException {

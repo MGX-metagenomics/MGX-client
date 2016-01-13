@@ -1,18 +1,17 @@
 package de.cebitec.mgx.client;
 
+import de.cebitec.gpms.core.DataSourceI;
+import de.cebitec.gpms.core.DataSource_ApplicationServerI;
+import de.cebitec.gpms.core.MasterI;
 import de.cebitec.gpms.core.ProjectI;
-import de.cebitec.gpms.rest.GPMSClientI;
-import de.cebitec.gpms.rest.RESTMasterI;
-import de.cebitec.gpms.rest.RESTMembershipI;
+import de.cebitec.gpms.core.RoleI;
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.access.rest.*;
 import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
+import de.cebitec.mgx.restgpms.Jersey1RESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,140 +21,143 @@ import java.util.logging.Logger;
  */
 public class MGXDTOMaster {
 
-    private final RESTMasterI restmaster;
-    private final RESTMembershipI membership;
+    private final MasterI restmaster;
+    private final RoleI role;
+    private final String login;
+    private RESTAccessI restAccess;
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
-    private final Map<Class, AccessBase> accessors;
-    private final String resource;
-    private final PropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this);
+    private final PropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this, true);
 
-    public MGXDTOMaster(GPMSClientI gpms, RESTMembershipI mbr) {
-        restmaster = gpms.createMaster(mbr);
-        membership = mbr;
-        accessors = new HashMap<>();
-
-        restmaster.registerSerializer(de.cebitec.mgx.protobuf.serializer.PBReader.class);
-        restmaster.registerSerializer(de.cebitec.mgx.protobuf.serializer.PBWriter.class);
-
-        resource = new StringBuilder(gpms.getBaseURI()).append(mbr.getProject().getName()).toString();
-    }
-
-    public RESTMembershipI getMembership() {
-        return membership;
+    public MGXDTOMaster(MasterI restmaster) {
+        this.restmaster = restmaster;
+        this.role = restmaster.getRole();
+        this.login = restmaster.getUser().getLogin();
+        DataSource_ApplicationServerI appServer = null;
+        for (DataSourceI rds : restmaster.getProject().getDataSources()) {
+            if (rds instanceof DataSource_ApplicationServerI) {
+                appServer = (DataSource_ApplicationServerI) rds;
+                break;
+            }
+        }
+        if (appServer == null) {
+            throw new RuntimeException("No suitable REST application server found.");
+        }
+        restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, false);
     }
 
     public ProjectI getProject() {
         return restmaster.getProject();
     }
 
-    public String getLogin() {
-        return restmaster.getUser().getLogin();
+    public RoleI getRole() {
+        return role;
+    }
+
+    public final String getLogin() {
+        return login;
     }
 
     public HabitatAccess Habitat() {
-        return getAccessor(HabitatAccess.class);
+        return new HabitatAccess(restAccess);
     }
 
     public AttributeAccess Attribute() {
-        return getAccessor(AttributeAccess.class);
+        return new AttributeAccess(restAccess);
     }
 
     public AttributeTypeAccess AttributeType() {
-        return getAccessor(AttributeTypeAccess.class);
+        return new AttributeTypeAccess(restAccess);
     }
 
     public SampleAccess Sample() {
-        return getAccessor(SampleAccess.class);
+        return new SampleAccess(restAccess);
     }
 
     public DNAExtractAccess DNAExtract() {
-        return getAccessor(DNAExtractAccess.class);
+        return new DNAExtractAccess(restAccess);
     }
 
     public SeqRunAccess SeqRun() {
-        return getAccessor(SeqRunAccess.class);
+        return new SeqRunAccess(restAccess);
     }
 
     public ReferenceAccess Reference() {
-        return getAccessor(ReferenceAccess.class);
+        return new ReferenceAccess(restAccess);
     }
 
     public MappingAccess Mapping() {
-        return getAccessor(MappingAccess.class);
+        return new MappingAccess(restAccess);
     }
 
     public SequenceAccess Sequence() {
-        return getAccessor(SequenceAccess.class);
+        return new SequenceAccess(restAccess);
     }
 
     public ToolAccess Tool() {
-        return getAccessor(ToolAccess.class);
+        return new ToolAccess(restAccess);
     }
 
     public JobAccess Job() {
-        return getAccessor(JobAccess.class);
+        return new JobAccess(restAccess);
     }
 
     public ObservationAccess Observation() {
-        return getAccessor(ObservationAccess.class);
+        return new ObservationAccess(restAccess);
     }
 
     public FileAccess File() {
-        return getAccessor(FileAccess.class);
+        return new FileAccess(restAccess);
     }
 
     public TermAccess Term() {
-        return getAccessor(TermAccess.class);
+        return new TermAccess(restAccess);
     }
 
     public TaskAccess Task() {
-        return getAccessor(TaskAccess.class);
+        return new TaskAccess(restAccess);
     }
 
     public StatisticsAccess Statistics() {
-        return getAccessor(StatisticsAccess.class);
+        return new StatisticsAccess(restAccess);
     }
 
     void log(Level lvl, String msg) {
         logger.log(lvl, msg);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends AccessBase> T getAccessor(Class<T> clazz) {
-        if (!accessors.containsKey(clazz)) {
-            synchronized (accessors) {
-                if (!accessors.containsKey(clazz)) {
-                    accessors.put(clazz, createDAO(clazz));
-                }
-            }
-            //accessors.put(clazz, createDAO(clazz));
-        }
-        return (T) accessors.get(clazz);
-    }
-
-    private <T extends AccessBase> T createDAO(Class<T> clazz) {
-        try {
-            Constructor<T> ctor = clazz.getConstructor();
-            T instance = ctor.newInstance();
-//            instance.setWebResource(restmaster.getClient().resource(resource));
-            instance.setClient(restmaster.getClient(), resource);
-            return instance;
-        } catch (InstantiationException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        throw new UnsupportedOperationException("Could not create accessor for " + clazz);
-    }
-
+//    @SuppressWarnings("unchecked")
+//    private <T extends AccessBase> T getAccessor(Class<T> clazz) {
+//        if (!accessors.containsKey(clazz)) {
+//            synchronized (accessors) {
+//                if (!accessors.containsKey(clazz)) {
+//                    accessors.put(clazz, createDAO(clazz));
+//                }
+//            }
+//            //accessors.put(clazz, createDAO(clazz));
+//        }
+//        return (T) accessors.get(clazz);
+//    }
+//    private <T extends AccessBase> T createDAO(Class<T> clazz) {
+//        try {
+//            Constructor<T> ctor = clazz.getConstructor();
+//            T instance = ctor.newInstance(restmaster.call());
+//            //instance.setClient(restmaster.call(), resource);
+//            return instance;
+//        } catch (InstantiationException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        } catch (IllegalArgumentException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        } catch (InvocationTargetException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        } catch (NoSuchMethodException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        } catch (SecurityException ex) {
+//            logger.log(Level.SEVERE, null, ex);
+//        }
+//        throw new UnsupportedOperationException("Could not create accessor for " + clazz);
+//    }
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }

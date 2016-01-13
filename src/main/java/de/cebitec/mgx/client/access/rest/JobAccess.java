@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -16,6 +17,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
+
+    public JobAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     @Override
     public Iterator<JobDTO> fetchall() throws MGXServerException, MGXClientException {

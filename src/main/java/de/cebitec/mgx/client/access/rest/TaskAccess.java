@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.TaskDTO;
@@ -12,6 +13,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class TaskAccess extends AccessBase<TaskDTO, TaskDTOList> {
+
+    public TaskAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     public TaskDTO get(UUID taskId) throws MGXServerException, MGXClientException {
         return get(TaskDTO.class, "Task", "get", String.valueOf(taskId));

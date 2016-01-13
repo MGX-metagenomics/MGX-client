@@ -1,15 +1,12 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
 import de.cebitec.mgx.dto.dto.RegionDTOList;
-import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import javax.net.ssl.SSLHandshakeException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.biojava.bio.Annotation;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Feature;
@@ -35,16 +33,14 @@ import org.biojavax.bio.seq.RichSequenceIterator;
  */
 public class ReferenceUploader extends UploadBase {
 
-    private final WebResource wr;
     private final File localFile;
     private long total_elements_sent = 0;
     private final List<Long> generatedRefIDs = new ArrayList<>();
     private long reference_id = -1;
 
-    public ReferenceUploader(final WebResource wr, final File file) {
-        super();
+    public ReferenceUploader(RESTAccessI rab, final File file) {
+        super(rab);
         this.localFile = file;
-        this.wr = wr;
         int randomNess = (int) Math.round(Math.random() * 20);
         setChunkSize(42 + randomNess);
     }
@@ -69,7 +65,7 @@ public class ReferenceUploader extends UploadBase {
             if (first.toString().equals("L")) {
                 seqs = RichSequence.IOTools.readGenbankDNA(br, ns);
             } else if (first.toString().equals(">")) {
-                 seqs = RichSequence.IOTools.readFastaDNA(br, ns);
+                seqs = RichSequence.IOTools.readFastaDNA(br, ns);
             } else {
                 seqs = RichSequence.IOTools.readEMBLDNA(br, ns);
             }
@@ -193,118 +189,50 @@ public class ReferenceUploader extends UploadBase {
     }
 
     private String initTransfer(long ref_id) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        try {
-            ClientResponse res = wr.path("Reference").path("init").path(String.valueOf(ref_id)).accept("application/x-protobuf").get(ClientResponse.class);
-            catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
-            MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
-            return session_uuid.getValue();
-        } catch (ClientHandlerException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return initTransfer(ref_id); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+        MGXString session_uuid = super.get(MGXString.class, "Reference", "init", String.valueOf(ref_id));
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
+        return session_uuid.getValue();
     }
 
     private long createReference(String name, int length) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
         ReferenceDTO ref = ReferenceDTO.newBuilder()
                 .setName(name)
                 .setLength(length)
                 .build();
-        try {
-            ClientResponse res = wr.path("Reference").path("create").accept("application/x-protobuf")
-                    .put(ClientResponse.class, ref);
-            catchException(res);
-            return res.<MGXLong>getEntity(MGXLong.class).getValue();
-        } catch (ClientHandlerException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return createReference(name, length); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+        return super.put(ref, MGXLong.class, "Reference", "create").getValue();
     }
 
     @Override
     protected void abortTransfer(String reason, long total) {
         if (reference_id != -1) {
             try {
-                ClientResponse res = wr.path("Reference").path("delete").path(String.valueOf(reference_id)).accept("application/x-protobuf")
-                        .delete(ClientResponse.class);
-                try {
-                    catchException(res);
-                } catch (MGXServerException ex) {
-                    super.abortTransfer(ex.getMessage(), total);
-                }
-            } catch (ClientHandlerException ex) {
-                if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                    abortTransfer(reason, total);
-                } else {
-                    throw ex; // rethrow
-                }
+                super.delete("Reference", "delete", String.valueOf(reference_id));
+            } catch (MGXServerException ex) {
+                Logger.getLogger(ReferenceUploader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         super.abortTransfer(reason, total);
     }
 
     private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
         RegionDTOList.Builder data = RegionDTOList.newBuilder();
         for (RegionDTO r : regions) {
             data.addRegion(r);
         }
-        try {
-            ClientResponse res = wr.path("Reference").path("addRegions").path(session_uuid).accept("application/x-protobuf")
-                    .put(ClientResponse.class, data.build());
-            catchException(res);
-        } catch (ClientHandlerException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                sendRegions(regions, session_uuid); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+        super.put(data.build(), "Reference", "addRegions", session_uuid);
     }
 
     private void sendSequence(Sequence seq, String session_uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
         String dna = seq.seqString();
         int length = dna.length();
         for (int i = 0; i < length; i += 10000) {
             String chunk = dna.substring(i, Math.min(length, i + 10000));
-            try {
-                ClientResponse res = wr.path("Reference").path("addSequence").path(session_uuid).accept("application/x-protobuf")
-                        .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
-                catchException(res);
-            } catch (ClientHandlerException ex) {
-                if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                    // retry
-                    ClientResponse res = wr.path("Reference").path("addSequence").path(session_uuid).accept("application/x-protobuf")
-                            .put(ClientResponse.class, MGXString.newBuilder().setValue(chunk).build());
-                    catchException(res);
-                } else {
-                    throw ex; // rethrow
-                }
-            }
+            super.put(MGXString.newBuilder().setValue(chunk).build(), "Reference", "addSequence", session_uuid);
         }
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        try {
-            ClientResponse res = wr.path("Reference").path("close").path(uuid).get(ClientResponse.class);
-            catchException(res);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
-        } catch (ClientHandlerException ex) {
-            if (ex != null && ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                finishTransfer(uuid); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+        super.get("Reference", "close", uuid);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
     }
 }

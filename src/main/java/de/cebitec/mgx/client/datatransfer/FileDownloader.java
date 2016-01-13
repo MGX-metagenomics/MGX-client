@@ -1,11 +1,9 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
-import java.awt.EventQueue;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -17,14 +15,12 @@ import java.net.URLEncoder;
  */
 public class FileDownloader extends DownloadBase {
 
-    protected final WebResource wr;
     protected long total_elements = 0;
     protected final OutputStream writer;
     protected final String serverFname;
 
-    public FileDownloader(WebResource wr, String serverFname, OutputStream writer) {
-        super();
-        this.wr = wr;
+    public FileDownloader(RESTAccessI rab, String serverFname, OutputStream writer) {
+        super(rab);
         this.serverFname = serverFname;
         this.writer = writer;
     }
@@ -90,27 +86,19 @@ public class FileDownloader extends DownloadBase {
     }
 
     protected String initDownload() throws MGXServerException, UnsupportedEncodingException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("initDownload").path(URLEncoder.encode(serverFname, "UTF-8")).accept("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
+        MGXString session_uuid = super.get(MGXString.class, "File", "initDownload", URLEncoder.encode(serverFname, "UTF-8"));
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        MGXString session_uuid = res.<MGXString>getEntity(MGXString.class);
         return session_uuid.getValue();
     }
 
     protected void finishTransfer(String uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("closeDownload").path(uuid).get(ClientResponse.class);
-        catchException(res);
+        super.get("File", "closeDownload", uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
-        assert !EventQueue.isDispatchThread();
-        ClientResponse res = wr.path("File").path("get").path(session_uuid).type("application/x-protobuf").get(ClientResponse.class);
-        catchException(res);
-        BytesDTO entity = res.<BytesDTO>getEntity(BytesDTO.class);
+        BytesDTO entity = super.get(BytesDTO.class, "File", "get", session_uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }

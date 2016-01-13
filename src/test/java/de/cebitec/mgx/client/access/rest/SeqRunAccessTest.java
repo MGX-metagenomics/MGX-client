@@ -50,7 +50,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class SeqRunAccessTest {
 
     @Configuration

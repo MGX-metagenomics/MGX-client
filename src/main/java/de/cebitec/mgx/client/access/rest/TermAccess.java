@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.TermDTO;
@@ -18,6 +19,10 @@ public class TermAccess extends AccessBase<TermDTO, TermDTOList> {
     public static final String SEQ_METHODS = "seq_methods";
     public static final String SEQ_PLATFORMS = "seq_platforms";
 
+    public TermAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
+    
     public Collection<TermDTO> byCategory(String cat) throws MGXServerException, MGXClientException {
         return get(TermDTOList.class, "Term", "byCategory", cat).getTermList();
     }

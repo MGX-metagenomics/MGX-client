@@ -1,5 +1,7 @@
 package de.cebitec.mgx.client.datatransfer;
 
+import de.cebitec.gpms.rest.RESTAccessI;
+
 /**
  *
  * @author sj
@@ -11,6 +13,9 @@ public abstract class UploadBase extends TransferBase {
     protected static int DEFAULT_CHUNK_SIZE = 2048;
     protected int chunk_size = DEFAULT_CHUNK_SIZE;
 
+    public UploadBase(RESTAccessI rab) {
+        super(rab);
+    }
 
     public void setChunkSize(int i) {
         chunk_size = i;

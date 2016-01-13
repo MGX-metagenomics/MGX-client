@@ -1,6 +1,8 @@
 
 package de.cebitec.mgx.client.datatransfer;
 
+import de.cebitec.gpms.rest.RESTAccessI;
+
 /**
  *
  * @author sjaenick
@@ -9,6 +11,10 @@ public abstract class DownloadBase extends TransferBase {
     
     private CallbackI cb = null;
     private String error_message = "";
+
+    public DownloadBase(RESTAccessI rab) {
+        super(rab);
+    }
 
     protected void abortTransfer(String reason, long total) {
         setErrorMessage(reason);

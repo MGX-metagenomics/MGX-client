@@ -1,11 +1,12 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
+import de.cebitec.gpms.core.GPMSException;
+import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
-import de.cebitec.gpms.rest.RESTMembershipI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
-import de.cebitec.mgx.restgpms.GPMS;
+import de.cebitec.mgx.restgpms.GPMSClient;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
@@ -228,21 +229,21 @@ public class App {
 //        //master.Habitat().delete(hab_id);
     }
 
-    private static MGXDTOMaster getMaster(String username, char[] password, String pName) {
+    private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
         MGXDTOMaster master = null;
         // http://localhost:8080/MGX-maven-web/webresources/
         //GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
-        GPMSClientI gpms = new GPMS("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
+        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
         if (!gpms.login(username, new String(password))) {
             System.err.println("login failed");
             System.exit(1);
         }
-        Iterator<RESTMembershipI> mIter = gpms.getMemberships();
+        Iterator<MembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
-            RESTMembershipI m = mIter.next();
+            MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
-                master = new MGXDTOMaster(gpms, m);
+                master = new MGXDTOMaster(gpms.createMaster(m));
                 break; // just use the first project we find
             }
         }

@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
@@ -17,6 +18,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
+
+    public SeqRunAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     @Override
     public Iterator<SeqRunDTO> fetchall() throws MGXServerException, MGXClientException {

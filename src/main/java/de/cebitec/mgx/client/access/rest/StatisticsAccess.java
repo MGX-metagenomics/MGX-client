@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLongList;
@@ -17,6 +18,10 @@ import java.util.UUID;
  * @author sj
  */
 public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
+
+    public StatisticsAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     public Iterator<PointDTO> Rarefaction(Collection<Long> data) throws MGXServerException, MGXClientException {
         MGXLongList.Builder b = MGXLongList.newBuilder();

@@ -13,8 +13,6 @@ import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,7 +32,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class ReferenceAccessTest {
 
     @Configuration

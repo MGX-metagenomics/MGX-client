@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeCorrelation;
@@ -21,6 +22,10 @@ import java.util.UUID;
  * @author sjaenick
  */
 public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> {
+
+    public AttributeAccess(RESTAccessI restAccess) {
+        super(restAccess);
+    }
 
     public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
         return get(AttributeDTOList.class, "Attribute", "BySeqRun", String.valueOf(seqrunId)).getAttributeList().iterator();

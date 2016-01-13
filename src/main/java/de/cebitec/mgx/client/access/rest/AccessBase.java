@@ -1,9 +1,12 @@
 package de.cebitec.mgx.client.access.rest;
 
+import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.gpms.rest.RESTException;
 import de.cebitec.mgx.client.access.rest.util.RESTPathResolver;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
+import de.cebitec.mgx.dto.dto.MGXString;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -13,7 +16,17 @@ import java.util.UUID;
  * @param <T>
  * @param <U>
  */
-public abstract class AccessBase<T, U> extends RESTMethods {
+public abstract class AccessBase<T, U> {
+
+    private final RESTAccessI restAccess;
+
+    public AccessBase(RESTAccessI restAccess) {
+        this.restAccess = restAccess;
+    }
+
+    public final RESTAccessI getRESTAccess() {
+        return restAccess;
+    }
 
     public final static long INVALID_IDENTIFIER = -1;
     protected final static RESTPathResolver r = RESTPathResolver.getInstance();
@@ -33,7 +46,12 @@ public abstract class AccessBase<T, U> extends RESTMethods {
             throw new MGXClientException("Cannot create null object.");
         }
         String[] resolve = r.resolve(c, "create");
-        long id = put(dto, MGXLong.class, resolve).getValue();
+        long id;
+        try {
+            id = restAccess.put(dto, MGXLong.class, resolve).getValue();
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
         return id;
     }
 
@@ -42,7 +60,11 @@ public abstract class AccessBase<T, U> extends RESTMethods {
             throw new MGXClientException("Cannot update with null object.");
         }
         String[] resolve = r.resolve(c, "update");
-        post(dto, resolve);
+        try {
+            restAccess.post(dto, resolve);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
     }
 
     protected final T fetch(long id, Class<T> c) throws MGXServerException, MGXClientException {
@@ -50,19 +72,81 @@ public abstract class AccessBase<T, U> extends RESTMethods {
             throw new MGXClientException("Cannot fetch object with invalid identifier.");
         }
         String[] resolve = r.resolve(c, "fetch", String.valueOf(id));
-        return get(c, resolve);
+        try {
+            return restAccess.get(c, resolve);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
     }
 
     protected U fetchlist(Class<U> c) throws MGXServerException, MGXClientException {
         String[] resolve = r.resolve(c, "fetchall");
-        return this.<U>get(c, resolve);
+        try {
+            return restAccess.<U>get(c, resolve);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
     }
 
     protected final UUID delete(long id, Class<T> c) throws MGXServerException, MGXClientException {
         if (id == -1) {
             throw new MGXClientException("Cannot delete object with invalid identifier.");
         }
-        String s = delete(r.resolve(c, "delete", String.valueOf(id)));
+        String s;
+        try {
+            s = restAccess.delete(MGXString.class, r.resolve(c, "delete", String.valueOf(id))).getValue();
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
         return UUID.fromString(s);
     }
+
+    protected final <U> U put(Object obj, Class<U> c, String... path) throws MGXServerException {
+        try {
+            return restAccess.put(obj, c, path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
+    protected final void get(String... path) throws MGXServerException {
+        try {
+            restAccess.get(path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
+    protected final <U> U get(Class<U> c, String... path) throws MGXServerException {
+        try {
+            return restAccess.get(c, path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
+    protected final <U> U delete(Class<U> clazz, String... path) throws MGXServerException {
+        try {
+            return restAccess.delete(clazz, path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
+    protected final void delete(String... path) throws MGXServerException {
+        try {
+            restAccess.delete(path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
+    protected final <U> void post(U obj, String... path) throws MGXServerException {
+        try {
+            restAccess.post(obj, path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
 }
