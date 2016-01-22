@@ -24,14 +24,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
@@ -85,6 +83,22 @@ public class MappingAccessTest {
         UUID uuid = master.Mapping().openMapping(30);
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
+    }
+
+    @Test
+    public void testCloseInvalidSession() {
+        System.out.println("testCloseInvalidSession");
+        MGXDTOMaster master = TestMaster.getRO();
+        try {
+            master.Mapping().closeMapping(UUID.randomUUID());
+        } catch (MGXServerException ex) {
+            if (ex.getMessage().startsWith("No mapping session for")) {
+                // ok
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        fail("Closing a non-existing session should indicate a possible timeout.");
     }
 
     @Test
