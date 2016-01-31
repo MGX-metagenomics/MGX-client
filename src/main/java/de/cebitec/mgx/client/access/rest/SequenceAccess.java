@@ -57,7 +57,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return super.fetch(id, SequenceDTO.class);
     }
 
-    public SequenceDTOList fetchSeqData(Set<Long> ids) throws MGXServerException, MGXClientException {
+    public SequenceDTOList fetchSeqData(long[] ids) throws MGXServerException, MGXClientException {
         String resolve[] = r.resolve(SequenceDTOList.class, "fetchall");
         Builder b = MGXLongList.newBuilder();
         for (Long id : ids) {
