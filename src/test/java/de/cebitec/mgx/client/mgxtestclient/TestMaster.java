@@ -53,7 +53,7 @@ public class TestMaster {
         } catch (GPMSException ex) {
             fail(ex.getMessage());
         }
-        while (mIter.hasNext()) {
+        while (mIter != null && mIter.hasNext()) {
             MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRO = new MGXDTOMaster(gpms.createMaster(m));
@@ -86,7 +86,7 @@ public class TestMaster {
 
         GPMSClient gpms = new GPMSClient("MyServer", serverURI);
         try {
-            gpms.login("mgx_unittestRO", "gut-isM5iNt");
+            gpms.login("mgx_unittestRW", "hL0amo3oLae");
         } catch (GPMSException ex) {
             fail(ex.getMessage());
         }
@@ -96,7 +96,7 @@ public class TestMaster {
         } catch (GPMSException ex) {
             fail(ex.getMessage());
         }
-        while (mIter.hasNext()) {
+        while (mIter != null && mIter.hasNext()) {
             MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
                 masterRW = new MGXDTOMaster(gpms.createMaster(m));
