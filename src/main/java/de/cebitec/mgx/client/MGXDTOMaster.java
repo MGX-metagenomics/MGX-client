@@ -125,39 +125,6 @@ public class MGXDTOMaster {
         logger.log(lvl, msg);
     }
 
-//    @SuppressWarnings("unchecked")
-//    private <T extends AccessBase> T getAccessor(Class<T> clazz) {
-//        if (!accessors.containsKey(clazz)) {
-//            synchronized (accessors) {
-//                if (!accessors.containsKey(clazz)) {
-//                    accessors.put(clazz, createDAO(clazz));
-//                }
-//            }
-//            //accessors.put(clazz, createDAO(clazz));
-//        }
-//        return (T) accessors.get(clazz);
-//    }
-//    private <T extends AccessBase> T createDAO(Class<T> clazz) {
-//        try {
-//            Constructor<T> ctor = clazz.getConstructor();
-//            T instance = ctor.newInstance(restmaster.call());
-//            //instance.setClient(restmaster.call(), resource);
-//            return instance;
-//        } catch (InstantiationException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        } catch (IllegalArgumentException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        } catch (InvocationTargetException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        } catch (NoSuchMethodException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        } catch (SecurityException ex) {
-//            logger.log(Level.SEVERE, null, ex);
-//        }
-//        throw new UnsupportedOperationException("Could not create accessor for " + clazz);
-//    }
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
