@@ -21,6 +21,8 @@ import java.util.logging.Logger;
  */
 public class MGXDTOMaster {
 
+    public final static String PROP_LOGGEDIN = "mgxdtomaster_loggedInState";
+
     private final MasterI restmaster;
     private final RoleI role;
     private final String login;
@@ -42,6 +44,15 @@ public class MGXDTOMaster {
         if (appServer == null) {
             throw new RuntimeException("No suitable REST application server found.");
         }
+
+        restmaster.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals(MasterI.PROP_LOGGEDIN)) {
+                    pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, evt.getOldValue(), evt.getNewValue()));
+                }
+            }
+        });
         restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, false);
     }
 
@@ -133,19 +144,19 @@ public class MGXDTOMaster {
         pcs.removePropertyChangeListener(listener);
     }
 
-    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        pcs.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    private void firePropertyChange(String propertyName, int oldValue, int newValue) {
-        pcs.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    private void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-        pcs.firePropertyChange(propertyName, oldValue, newValue);
-    }
-
-    private void firePropertyChange(PropertyChangeEvent event) {
-        pcs.firePropertyChange(event);
-    }
+//    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+//        pcs.firePropertyChange(propertyName, oldValue, newValue);
+//    }
+//
+//    private void firePropertyChange(String propertyName, int oldValue, int newValue) {
+//        pcs.firePropertyChange(propertyName, oldValue, newValue);
+//    }
+//
+//    private void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
+//        pcs.firePropertyChange(propertyName, oldValue, newValue);
+//    }
+//
+//    private void firePropertyChange(PropertyChangeEvent event) {
+//        pcs.firePropertyChange(event);
+//    }
 }

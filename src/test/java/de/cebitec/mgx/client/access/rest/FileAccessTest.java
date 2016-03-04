@@ -340,6 +340,7 @@ public class FileAccessTest {
         assertNotNull(up);
 
         boolean success = up.upload();
+        assertTrue(success);
 
         if (success) {
             // cleanup
