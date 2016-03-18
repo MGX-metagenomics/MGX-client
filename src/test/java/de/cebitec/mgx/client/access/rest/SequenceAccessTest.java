@@ -26,7 +26,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-//@RunWith(PaxExam.class)
+@RunWith(PaxExam.class)
 public class SequenceAccessTest {
 
     @Configuration
@@ -50,7 +50,12 @@ public class SequenceAccessTest {
             fail(ex.getMessage());
         }
         assertNotNull(reader);
-        SeqUploader up = master.Sequence().createUploader(9999, reader);
+        SeqUploader up = null;
+        try {
+            up = master.Sequence().createUploader(9999, reader);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
         assertNotNull(up);
         long numElem = up.getProgress();
         assertEquals(0, numElem);

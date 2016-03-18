@@ -50,7 +50,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-//@RunWith(PaxExam.class)
+@RunWith(PaxExam.class)
 public class SeqRunAccessTest {
 
     @Configuration
@@ -209,7 +209,12 @@ public class SeqRunAccessTest {
             MGXDTOMaster master = TestMaster.getRO();
 
             PropCounter pc = new PropCounter();
-            SeqUploader up = master.Sequence().createUploader(999999, reader);
+            SeqUploader up = null;
+            try {
+                up = master.Sequence().createUploader(999999, reader);
+            } catch (MGXClientException ex) {
+                fail(ex.getMessage());
+            }
             up.addPropertyChangeListener(pc);
             boolean success = up.upload();
 

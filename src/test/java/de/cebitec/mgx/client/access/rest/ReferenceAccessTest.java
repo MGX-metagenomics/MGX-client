@@ -32,7 +32,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-//@RunWith(PaxExam.class)
+@RunWith(PaxExam.class)
 public class ReferenceAccessTest {
 
     @Configuration
@@ -52,7 +52,7 @@ public class ReferenceAccessTest {
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = master.Reference().listGlobalReferences();
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -230,7 +230,12 @@ public class ReferenceAccessTest {
         if (!f.exists()) {
             fail();
         }
-        ReferenceUploader up = m.Reference().createUploader(f);
+        ReferenceUploader up = null;
+        try {
+            up = m.Reference().createUploader(f);
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
         assertNotNull(up);
         boolean success = up.upload();
         if (!success) {
@@ -333,7 +338,6 @@ public class ReferenceAccessTest {
 //        }
 //        
 //    }
-
 //    @Test
 //    public void testUploadGBKRegression() {
 //        System.out.println("testUploadGBKRegression");

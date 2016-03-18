@@ -34,7 +34,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sj
  */
-//@RunWith(PaxExam.class)
+@RunWith(PaxExam.class)
 public class JobAccessTest {
 
     @Configuration
@@ -96,7 +96,7 @@ public class JobAccessTest {
         boolean failed = false;
         try {
             master.Job().cancel(666);
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException  | MGXClientException ex) {
             failed = ex.getMessage().contains("access denied");
         }
         assertTrue(failed);
@@ -159,7 +159,7 @@ public class JobAccessTest {
         boolean verified = false;
         try {
             verified = m.Job().verify(job_id);
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException  | MGXClientException ex) {
             fail(ex.getMessage());
         }
         assertTrue(verified);

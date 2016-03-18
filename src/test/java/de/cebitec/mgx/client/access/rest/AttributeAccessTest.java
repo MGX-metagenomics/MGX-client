@@ -27,7 +27,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sj
  */
-//@RunWith(PaxExam.class)
+@RunWith(PaxExam.class)
 public class AttributeAccessTest {
 
     @Configuration
@@ -66,7 +66,7 @@ public class AttributeAccessTest {
         AttributeDistribution dist = null;
         try {
             dist = master.Attribute().getDistribution(6, 3);
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(dist);
@@ -82,7 +82,7 @@ public class AttributeAccessTest {
 
         try {
             ad = master.Attribute().getHierarchy(6, 3);
-        } catch (MGXServerException ex) {
+        } catch (MGXServerException | MGXClientException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(ad);
