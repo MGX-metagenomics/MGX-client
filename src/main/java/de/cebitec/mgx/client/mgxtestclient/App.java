@@ -118,16 +118,13 @@ public class App {
         }
 
         long extract_id = 9; // new metagenomes, overlapped
-//        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
-//        while (iter.hasNext()) {
-//            extract_id = iter.next().getId();
-//        }
+
         TermDTO flx = master.Term().fetch(5); // miseq
         TermDTO wgs = master.Term().fetch(13); // pe
 
         for (int argpos = 1; argpos < args.length; argpos++) {
             String fname = new File(args[argpos]).getName();
-            fname = fname.replaceAll(".fastq.trimmed", "");
+            fname = fname.replaceAll(".fastq", "");
 
             if (runs.contains(fname)) {
                 System.err.println("skipping " + fname + ", already present");
