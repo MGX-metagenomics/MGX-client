@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.datatransfer;
 import com.google.protobuf.ByteString;
 import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -24,8 +25,8 @@ public class SeqUploader extends UploadBase {
     private final SeqReaderI<? extends DNASequenceI> reader;
     private long total_elements = 0;
 
-    public SeqUploader(RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
-        super(rab);
+    public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
+        super(dtomaster, rab);
         this.seqrun_id = seqrun_id;
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
@@ -42,7 +43,7 @@ public class SeqUploader extends UploadBase {
         try {
             session_uuid = initTransfer(seqrun_id);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -77,7 +78,7 @@ public class SeqUploader extends UploadBase {
                         sendChunk(seqListBuilder.build(), session_uuid);
                         cb.callback(total_elements);
                     } catch (MGXServerException ex) {
-                        abortTransfer(ex.getMessage(), total_elements);
+                        abortTransfer(ex.getMessage());
                         return false;
                     }
                     current_num_elements = 0;
@@ -86,7 +87,7 @@ public class SeqUploader extends UploadBase {
                 }
             }
         } catch (SeqStoreException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -95,7 +96,7 @@ public class SeqUploader extends UploadBase {
             try {
                 sendChunk(seqListBuilder.build(), session_uuid);
             } catch (MGXServerException ex) {
-                abortTransfer(ex.getMessage(), total_elements);
+                abortTransfer(ex.getMessage());
                 return false;
             }
             cb.callback(total_elements);
@@ -103,7 +104,7 @@ public class SeqUploader extends UploadBase {
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
         return true;

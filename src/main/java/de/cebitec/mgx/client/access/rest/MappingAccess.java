@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
@@ -18,6 +19,7 @@ import java.util.UUID;
  */
 public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
+    
     public MappingAccess(RESTAccessI restAccess) {
         super(restAccess);
     }

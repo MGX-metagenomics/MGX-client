@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -19,8 +20,11 @@ import java.util.UUID;
  */
 public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> {
 
-    public ReferenceAccess(RESTAccessI restAccess) {
+    private final MGXDTOMaster dtomaster;
+
+    public ReferenceAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     @Override
@@ -65,6 +69,6 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     public ReferenceUploader createUploader(File localFile) {
-        return new ReferenceUploader(getRESTAccess(), localFile);
+        return new ReferenceUploader(dtomaster, getRESTAccess(), localFile);
     }
 }

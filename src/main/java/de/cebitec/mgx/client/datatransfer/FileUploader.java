@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.datatransfer;
 
 import com.google.protobuf.ByteString;
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -27,8 +28,8 @@ public class FileUploader extends UploadBase {
     private InputStream in = null;
     private long total_elements_sent = 0;
 
-    public FileUploader(RESTAccessI rab, final File file, final String targetName) {
-        super(rab);
+    public FileUploader(MGXDTOMaster dtomaster, RESTAccessI rab, final File file, final String targetName) {
+        super(dtomaster, rab);
         this.localFile = file;
 
         String tmp = targetName;
@@ -53,7 +54,7 @@ public class FileUploader extends UploadBase {
         try {
             session_uuid = initTransfer();
         } catch (MGXServerException | UnsupportedEncodingException ex) {
-            abortTransfer(ex.getMessage(), total_elements_sent);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -65,7 +66,7 @@ public class FileUploader extends UploadBase {
                 FileInputStream fis = new FileInputStream(localFile);
                 in = new BufferedInputStream(fis);
             } catch (FileNotFoundException ex) {
-                abortTransfer(ex.getMessage(), total_elements_sent);
+                abortTransfer(ex.getMessage());
                 return false;
             }
         }
@@ -81,7 +82,7 @@ public class FileUploader extends UploadBase {
                 cb.callback(total_elements_sent);
             }
         } catch (MGXServerException | IOException ex) {
-            abortTransfer(ex.getMessage(), total_elements_sent);
+            abortTransfer(ex.getMessage());
             return false;
         } finally {
             try {
@@ -96,7 +97,7 @@ public class FileUploader extends UploadBase {
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage(), total_elements_sent);
+            abortTransfer(ex.getMessage());
             return false;
         }
 

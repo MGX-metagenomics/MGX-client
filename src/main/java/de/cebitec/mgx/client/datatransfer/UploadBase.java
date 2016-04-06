@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.datatransfer;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 
 /**
  *
@@ -9,12 +10,11 @@ import de.cebitec.gpms.rest.RESTAccessI;
 public abstract class UploadBase extends TransferBase {
 
     private CallbackI cb = null;
-    private String error_message = "";
     protected static int DEFAULT_CHUNK_SIZE = 2048;
     protected int chunk_size = DEFAULT_CHUNK_SIZE;
 
-    public UploadBase(RESTAccessI rab) {
-        super(rab);
+    public UploadBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
+        super(dtomaster, rab);
     }
 
     public void setChunkSize(int i) {
@@ -25,21 +25,10 @@ public abstract class UploadBase extends TransferBase {
         return chunk_size;
     }
 
-//    protected PropertyChangeSupport getPropertyChangeSupport() {
-//        return pcs;
-//    }
-
-    protected void abortTransfer(String reason, long total) {
+    @Override
+    protected void abortTransfer(String reason) {
         setErrorMessage(reason);
-        fireTaskChange(TransferBase.TRANSFER_FAILED, total);
-    }
-
-    public String getErrorMessage() {
-        return error_message;
-    }
-
-    protected void setErrorMessage(String msg) {
-        error_message = msg;
+        fireTaskChange(TransferBase.TRANSFER_FAILED, reason);
     }
 
     public void setProgressCallback(CallbackI cb) {

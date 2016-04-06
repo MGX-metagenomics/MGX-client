@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.datatransfer;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -13,9 +14,6 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
@@ -29,13 +27,13 @@ public class SeqDownloader extends DownloadBase {
     protected long total_elements = 0;
     private final boolean closeWriter;
 
-    public SeqDownloader(RESTAccessI rab, long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
-        this(rab, writer, closeWriter);
+    public SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        this(dtomaster, rab, writer, closeWriter);
         this.seqrun_id = seqrun_id;
     }
 
-    protected SeqDownloader(RESTAccessI rab, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
-        super(rab);
+    protected SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        super(dtomaster, rab);
         this.writer = writer;
         this.closeWriter = closeWriter;
     }
@@ -48,8 +46,8 @@ public class SeqDownloader extends DownloadBase {
         try {
             session_uuid = initTransfer();
         } catch (MGXServerException ex) {
-            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-            abortTransfer(ex.getMessage(), total_elements);
+            //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -62,8 +60,8 @@ public class SeqDownloader extends DownloadBase {
             try {
                 chunk = fetchChunk(session_uuid);
             } catch (MGXServerException ex) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                abortTransfer(ex.getMessage(), total_elements);
+                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                abortTransfer(ex.getMessage());
                 return false;
             }
 
@@ -85,18 +83,12 @@ public class SeqDownloader extends DownloadBase {
                     }
                     seq.setName(dto.getName().getBytes());
                     seq.setSequence(dto.getSequence().getBytes());
-                    try {
-                        writer.addSequence(seq);
-                    } catch (IOException ex) {
-                        abortTransfer(ex.getMessage(), total_elements + current_num_elements);
-                        return false;
-                    }
+                    writer.addSequence(seq);
                     current_num_elements++;
                 }
 
             } catch (SeqStoreException sse) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, sse);
-                abortTransfer(sse.getMessage(), total_elements);
+                abortTransfer(sse.getMessage());
                 return false;
             }
             total_elements += current_num_elements;
@@ -108,8 +100,8 @@ public class SeqDownloader extends DownloadBase {
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
-            Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-            abortTransfer(ex.getMessage(), total_elements);
+            //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -117,8 +109,7 @@ public class SeqDownloader extends DownloadBase {
             try {
                 writer.close();
             } catch (Exception ex) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                abortTransfer(ex.getMessage(), total_elements);
+                abortTransfer(ex.getMessage());
                 return false;
             }
         }
@@ -133,8 +124,8 @@ public class SeqDownloader extends DownloadBase {
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
-                return initTransfer();
+                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                return initTransfer(); // retry
             }
         }
         return null;
@@ -147,7 +138,7 @@ public class SeqDownloader extends DownloadBase {
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 finishTransfer(uuid);
             }
         }
@@ -161,7 +152,7 @@ public class SeqDownloader extends DownloadBase {
             return entity;
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 return fetchChunk(session_uuid);
             }
         }

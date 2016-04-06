@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.datatransfer;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.BytesDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -16,8 +17,8 @@ public class PluginDumpDownloader extends DownloadBase {
     protected long total_elements = 0;
     protected final OutputStream writer;
 
-    public PluginDumpDownloader(RESTAccessI rab, OutputStream writer) {
-        super(rab);
+    public PluginDumpDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, OutputStream writer) {
+        super(dtomaster, rab);
         this.writer = writer;
     }
 
@@ -29,7 +30,7 @@ public class PluginDumpDownloader extends DownloadBase {
         try {
             session_uuid = initDownload();
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -45,7 +46,7 @@ public class PluginDumpDownloader extends DownloadBase {
                     writer.close();
                 } catch (IOException ex1) {
                 }
-                abortTransfer(ex.getMessage(), total_elements);
+                abortTransfer(ex.getMessage());
                 return false;
             }
 
@@ -55,7 +56,7 @@ public class PluginDumpDownloader extends DownloadBase {
             try {
                 writer.write(chunk);
             } catch (IOException ex1) {
-                abortTransfer(ex1.getMessage(), total_elements + chunk.length);
+                abortTransfer(ex1.getMessage());
                 return false;
             }
             total_elements += chunk.length;
@@ -67,14 +68,14 @@ public class PluginDumpDownloader extends DownloadBase {
         try {
             finishTransfer(session_uuid);
         } catch (MGXServerException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
         try {
             writer.close();
         } catch (IOException ex) {
-            abortTransfer(ex.getMessage(), total_elements);
+            abortTransfer(ex.getMessage());
             return false;
         }
 

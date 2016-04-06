@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
@@ -22,9 +23,12 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
 
     public static final String ROOT = ".";
     public static final String separator = "|";
+    //
+    private final MGXDTOMaster dtomaster;
 
-    public FileAccess(RESTAccessI restAccess) {
+    public FileAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     public Iterator<FileDTO> fetchall(String baseDir) throws MGXServerException, MGXClientException {
@@ -88,17 +92,17 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         if (!remotePath.startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + remotePath);
         }
-        return new FileUploader(getRESTAccess(), localFile, remotePath);
+        return new FileUploader(dtomaster, getRESTAccess(), localFile, remotePath);
     }
 
     public FileDownloader createDownloader(String serverFname, OutputStream writer) throws MGXClientException {
         if (!serverFname.startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + serverFname);
         }
-        return new FileDownloader(getRESTAccess(), serverFname, writer);
+        return new FileDownloader(dtomaster, getRESTAccess(), serverFname, writer);
     }
 
     public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) throws MGXClientException {
-        return new PluginDumpDownloader(getRESTAccess(), writer);
+        return new PluginDumpDownloader(dtomaster, getRESTAccess(), writer);
     }
 }

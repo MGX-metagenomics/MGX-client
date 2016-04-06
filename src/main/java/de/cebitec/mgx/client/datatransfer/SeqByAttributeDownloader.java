@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.datatransfer;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -19,8 +20,8 @@ public class SeqByAttributeDownloader extends SeqDownloader {
 
     private final AttributeDTOList attrs;
 
-    public SeqByAttributeDownloader(RESTAccessI rab, AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
-        super(rab, writer, closeWriter);
+    public SeqByAttributeDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+        super(dtomaster, rab, writer, closeWriter);
         this.attrs = attrs;
     }
 

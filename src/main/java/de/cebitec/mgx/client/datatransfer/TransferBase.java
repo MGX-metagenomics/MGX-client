@@ -2,7 +2,9 @@ package de.cebitec.mgx.client.datatransfer;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.gpms.rest.RESTException;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -10,24 +12,50 @@ import java.beans.PropertyChangeSupport;
  *
  * @author sj
  */
-public abstract class TransferBase {
+public abstract class TransferBase implements PropertyChangeListener {
 
     private final RESTAccessI restAccess;
+    private final MGXDTOMaster dtomaster;
     private final PropertyChangeSupport pcs;
+    private volatile String error_message = null;
+    //
     public static final String NUM_ELEMENTS_TRANSFERRED = "numElementsTransferred";
     public static final String TRANSFER_FAILED = "transferFailed";
     public static final String TRANSFER_COMPLETED = "transferCompleted";
 
-    public TransferBase(RESTAccessI rab) {
+    public TransferBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
         this.restAccess = rab;
+        this.dtomaster = dtomaster;
         this.pcs = new PropertyChangeSupport(this);
+        dtomaster.addPropertyChangeListener(this);
     }
 
-//    protected void catchException(ClientResponse res) throws MGXServerException {
-//        RESTMethods.catchException(res);
-//    }
-    protected void fireTaskChange(String propName, long total_elements) {
-        pcs.firePropertyChange(propName, 0, total_elements);
+    @Override
+    public synchronized void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource().equals(dtomaster) && evt.getPropertyName().equals(MGXDTOMaster.PROP_LOGGEDIN)) {
+            Boolean newVal = (Boolean) evt.getNewValue();
+            if (!newVal) {
+                dtomaster.removePropertyChangeListener(this);
+                abortTransfer("Disconnected from server");
+            }
+        }
+    }
+
+    public final String getErrorMessage() {
+        return error_message;
+    }
+
+    protected final void setErrorMessage(String msg) {
+        // we only keep the first error message
+        if (error_message == null) {
+            error_message = msg;
+        }
+    }
+
+    protected abstract void abortTransfer(String reason);
+
+    protected void fireTaskChange(String propName, Object newVal) {
+        pcs.firePropertyChange(propName, 0, newVal);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener p) {
@@ -87,7 +115,7 @@ public abstract class TransferBase {
             throw new MGXServerException(ex.getMessage());
         }
     }
-    
+
     protected final <U> void post(U obj, String... path) throws MGXServerException {
         try {
             restAccess.post(obj, path);

@@ -26,7 +26,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
 
     public final static String PROP_LOGGEDIN = "mgxdtomaster_loggedInState";
 
-    private final RESTMasterI restmaster;
+    private RESTMasterI restmaster;
     private final RoleI role;
     private String login;
     private RESTAccessI restAccess;
@@ -52,12 +52,23 @@ public class MGXDTOMaster implements PropertyChangeListener {
         restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, false);
     }
 
-    public void logout() {
-        restmaster.logout();
+    public synchronized void close() {
+        if (restmaster != null) {
+            restmaster.removePropertyChangeListener(this);
+            pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, true, false));
+            restmaster.close();
+            restmaster = null;
+            login = null;
+            restAccess = null;
+        }
+    }
+    
+    public boolean isClosed() {
+        return restmaster == null;
     }
 
     public ProjectI getProject() {
-        return restmaster.getProject();
+        return restmaster != null ? restmaster.getProject() : null;
     }
 
     public RoleI getRole() {
@@ -69,7 +80,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
     }
 
     public final String getServerName() {
-        return restmaster.getServerName();
+        return restmaster != null ? restmaster.getServerName() : null;
     }
 
     public HabitatAccess Habitat() throws MGXClientException {
@@ -118,7 +129,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new ReferenceAccess(restAccess);
+        return new ReferenceAccess(this, restAccess);
     }
 
     public MappingAccess Mapping() throws MGXClientException {
@@ -132,7 +143,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new SequenceAccess(restAccess);
+        return new SequenceAccess(this, restAccess);
     }
 
     public ToolAccess Tool() throws MGXClientException {
@@ -160,7 +171,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new FileAccess(restAccess);
+        return new FileAccess(this, restAccess);
     }
 
     public TermAccess Term() throws MGXClientException {
@@ -191,10 +202,12 @@ public class MGXDTOMaster implements PropertyChangeListener {
     @Override
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         if (restmaster.equals(evt.getSource()) && evt.getPropertyName().equals(MasterI.PROP_LOGGEDIN)) {
-            restmaster.removePropertyChangeListener(this);
-            login = null;
-            restAccess = null;
-            pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, evt.getOldValue(), evt.getNewValue()));
+            if (evt.getNewValue() instanceof Boolean) {
+                Boolean newVal = (Boolean) evt.getNewValue();
+                if (!newVal) {
+                    close();
+                }
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.datatransfer;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -38,8 +39,8 @@ public class ReferenceUploader extends UploadBase {
     private final List<Long> generatedRefIDs = new ArrayList<>();
     private long reference_id = -1;
 
-    public ReferenceUploader(RESTAccessI rab, final File file) {
-        super(rab);
+    public ReferenceUploader(MGXDTOMaster dtomaster, RESTAccessI rab, final File file) {
+        super(dtomaster, rab);
         this.localFile = file;
         int randomNess = (int) Math.round(Math.random() * 20);
         setChunkSize(42 + randomNess);
@@ -70,7 +71,7 @@ public class ReferenceUploader extends UploadBase {
                 seqs = RichSequence.IOTools.readEMBLDNA(br, ns);
             }
         } catch (IOException ex) {
-            abortTransfer(ex.getMessage(), total_elements_sent);
+            abortTransfer(ex.getMessage());
             return false;
         }
 
@@ -80,7 +81,7 @@ public class ReferenceUploader extends UploadBase {
             try {
                 rs = seqs.nextRichSequence();
             } catch (NoSuchElementException | BioException ex) {
-                abortTransfer(ex.getMessage(), total_elements_sent);
+                abortTransfer(ex.getMessage());
                 return false;
             }
 
@@ -113,7 +114,7 @@ public class ReferenceUploader extends UploadBase {
                             sendSequence(elem.getSequence(), session_uuid);
                             sequenceSent = true;
                         } catch (MGXServerException ex) {
-                            abortTransfer(ex.getMessage(), total_elements_sent);
+                            abortTransfer(ex.getMessage());
                             return false;
                         }
                     }
@@ -145,7 +146,7 @@ public class ReferenceUploader extends UploadBase {
                         try {
                             sendRegions(regions, session_uuid);
                         } catch (MGXServerException ex) {
-                            abortTransfer(ex.getMessage(), total_elements_sent);
+                            abortTransfer(ex.getMessage());
                             return false;
                         }
                         total_elements_sent += regions.size();
@@ -160,7 +161,7 @@ public class ReferenceUploader extends UploadBase {
                 try {
                     sendRegions(regions, session_uuid);
                 } catch (MGXServerException ex) {
-                    abortTransfer(ex.getMessage(), total_elements_sent);
+                    abortTransfer(ex.getMessage());
                     return false;
                 }
                 total_elements_sent += regions.size();
@@ -171,7 +172,7 @@ public class ReferenceUploader extends UploadBase {
             try {
                 finishTransfer(session_uuid);
             } catch (MGXServerException ex) {
-                abortTransfer(ex.getMessage(), total_elements_sent);
+                abortTransfer(ex.getMessage());
                 return false;
             }
             cb.callback(total_elements_sent);
@@ -203,7 +204,7 @@ public class ReferenceUploader extends UploadBase {
     }
 
     @Override
-    protected void abortTransfer(String reason, long total) {
+    protected void abortTransfer(String reason) {
         if (reference_id != -1) {
             try {
                 super.delete("Reference", "delete", String.valueOf(reference_id));
@@ -211,7 +212,7 @@ public class ReferenceUploader extends UploadBase {
                 Logger.getLogger(ReferenceUploader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        super.abortTransfer(reason, total);
+        super.abortTransfer(reason);
     }
 
     private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {

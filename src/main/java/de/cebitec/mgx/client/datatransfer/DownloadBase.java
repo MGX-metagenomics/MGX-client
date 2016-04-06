@@ -1,39 +1,35 @@
-
 package de.cebitec.mgx.client.datatransfer;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 
 /**
  *
  * @author sjaenick
  */
 public abstract class DownloadBase extends TransferBase {
-    
+
     private CallbackI cb = null;
-    private String error_message = "";
+    private volatile boolean aborted = false;
 
-    public DownloadBase(RESTAccessI rab) {
-        super(rab);
+    public DownloadBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
+        super(dtomaster, rab);
     }
 
-    protected void abortTransfer(String reason, long total) {
-        setErrorMessage(reason);
-        fireTaskChange(TransferBase.TRANSFER_FAILED, 1);
+    @Override
+    protected final void abortTransfer(String reason) {
+        if (!aborted) {
+            aborted = true;
+            setErrorMessage(reason);
+            fireTaskChange(TransferBase.TRANSFER_FAILED, reason);
+        }
     }
 
-    public String getErrorMessage() {
-        return error_message;
-    }
-
-    protected void setErrorMessage(String msg) {
-        error_message = msg;
-    }
-
-    public void setProgressCallback(CallbackI cb) {
+    public final void setProgressCallback(CallbackI cb) {
         this.cb = cb;
     }
 
-    protected CallbackI getProgressCallback() {
+    protected final CallbackI getProgressCallback() {
         return cb != null ? cb
                 : new DownloadBase.NullCallBack();
     }
