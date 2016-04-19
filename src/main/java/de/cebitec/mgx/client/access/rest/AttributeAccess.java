@@ -31,6 +31,10 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         return get(AttributeDTOList.class, "Attribute", "BySeqRun", String.valueOf(seqrunId)).getAttributeList().iterator();
     }
 
+    public Iterator<AttributeDTO> ByJob(long jobId) throws MGXServerException {
+        return get(AttributeDTOList.class, "Attribute", "ByJob", String.valueOf(jobId)).getAttributeList().iterator();
+    }
+
     public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXServerException {
         return get(AttributeDistribution.class, "Attribute", "getDistribution", String.valueOf(attrType_id), String.valueOf(job_id));
     }
@@ -107,4 +111,5 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         }
         return ret.iterator();
     }
+
 }

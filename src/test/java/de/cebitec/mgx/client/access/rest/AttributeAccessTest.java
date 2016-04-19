@@ -138,4 +138,25 @@ public class AttributeAccessTest {
         }
         assertEquals(179, cnt);
     }
+
+    @Test
+    public void testByJob() {
+        System.out.println("testBySeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
+
+        Iterator<AttributeDTO> iter = null;
+        try {
+            iter = master.Attribute().ByJob(3);
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        int cnt = 0;
+        while (iter.hasNext()) {
+            AttributeDTO attr = iter.next();
+            cnt++;
+            System.err.println(attr.getValue());
+        }
+        assertEquals(30, cnt);
+    }
 }
