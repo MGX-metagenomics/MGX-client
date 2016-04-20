@@ -101,6 +101,14 @@ public abstract class AccessBase<T, U> {
         return UUID.fromString(s);
     }
 
+    protected final void put(Object obj, String... path) throws MGXServerException {
+        try {
+            restAccess.put(obj, path);
+        } catch (RESTException ex) {
+            throw new MGXServerException(ex.getMessage());
+        }
+    }
+
     protected final <U> U put(Object obj, Class<U> c, String... path) throws MGXServerException {
         try {
             return restAccess.put(obj, c, path);

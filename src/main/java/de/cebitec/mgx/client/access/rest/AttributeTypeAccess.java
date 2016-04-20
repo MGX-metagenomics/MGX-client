@@ -33,18 +33,18 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public long create(AttributeTypeDTO t) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public long create(AttributeTypeDTO dto) throws MGXServerException, MGXClientException {
+        return super.create(dto, AttributeTypeDTO.class);
     }
 
     @Override
-    public void update(AttributeTypeDTO t) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void update(AttributeTypeDTO dto) throws MGXServerException, MGXClientException {
+        super.update(dto, AttributeTypeDTO.class);
     }
 
     @Override
     public UUID delete(long id) throws MGXServerException, MGXClientException {
-        throw new UnsupportedOperationException("Not supported.");
+        return super.delete(id, AttributeTypeDTO.class);
     }
 
     public Iterator<AttributeTypeDTO> ByJob(long job_id) throws MGXServerException {
