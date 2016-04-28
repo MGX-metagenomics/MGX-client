@@ -13,7 +13,6 @@ import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
 import de.cebitec.mgx.restgpms.Jersey1RESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +30,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
     private String login;
     private RESTAccessI restAccess;
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
-    private final PropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this, true);
+    private final ParallelPropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this, true);
 
     public MGXDTOMaster(RESTMasterI restmaster) {
         this.restmaster = restmaster;
@@ -52,10 +51,11 @@ public class MGXDTOMaster implements PropertyChangeListener {
         restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, false);
     }
 
-    public synchronized void close() {
+    public void close() {
         if (restmaster != null) {
             restmaster.removePropertyChangeListener(this);
             pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, true, false));
+            pcs.close();
             restmaster.close();
             restmaster = null;
             login = null;
@@ -200,7 +200,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
     }
 
     @Override
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         if (restmaster.equals(evt.getSource()) && evt.getPropertyName().equals(MasterI.PROP_LOGGEDIN)) {
             if (evt.getNewValue() instanceof Boolean) {
                 Boolean newVal = (Boolean) evt.getNewValue();
