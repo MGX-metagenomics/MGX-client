@@ -33,7 +33,7 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
             throw new MGXClientException("Invalid tool XML data");
         }
         MGXString dto = MGXString.newBuilder().setValue(toolXml).build();
-        return put(dto, JobParameterListDTO.class, "Tool", "getAvailableParameters").getParameterList();
+        return put(dto, JobParameterListDTO.class, "Tool", "getParameters").getParameterList();
     }
 
 //    public Iterable<JobParameterDTO> getAvailableParameters(ToolDTO dto) throws MGXServerException, MGXClientException {
