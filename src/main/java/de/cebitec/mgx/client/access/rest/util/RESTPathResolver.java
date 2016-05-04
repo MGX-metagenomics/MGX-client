@@ -120,6 +120,13 @@ public class RESTPathResolver {
         //return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }
 
+    public final String resolveClass(Class c)throws MGXClientException  {
+        if (!objmappings.containsKey(c)) {
+            throw new MGXClientException("Missing REST object mapping path for class " + c.getName());
+        }
+        return objmappings.get(c);
+    }
+
     public static RESTPathResolver getInstance() {
         return instance;
     }

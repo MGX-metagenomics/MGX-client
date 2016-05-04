@@ -68,6 +68,13 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
         return super.<SequenceDTOList>put(b.build(), SequenceDTOList.class, resolve);
     }
+    
+    
+    public SequenceDTO byName(long runId, String seqName) throws MGXServerException, MGXClientException {
+        String resolve = r.resolveClass(SequenceDTO.class);
+        String[] path = new String[]{resolve, "byName", String.valueOf(runId), seqName};
+        return super.get(SequenceDTO.class, path);
+    }
 
     public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
         return new SeqByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
@@ -112,4 +119,5 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
         return oBuilder.toString();
     }
+
 }

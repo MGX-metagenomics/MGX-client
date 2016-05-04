@@ -85,7 +85,8 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
     @Override
     public UUID delete(long id) throws MGXServerException, MGXClientException {
-        return super.delete(id, AttributeDTO.class);
+        throw new MGXClientException("Attribute deletion is not supported. Delete the corresponding job instead.");
+        //return super.delete(id, AttributeDTO.class);
     }
 
     public Iterator<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
