@@ -37,13 +37,14 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public void create(long seqId, ObservationDTO dto) throws MGXServerException, MGXClientException {
+    public void create(long seqId, long attrId, ObservationDTO dto) throws MGXServerException, MGXClientException {
         if (dto == null) {
             throw new MGXClientException("Cannot create null object.");
         }
         String[] resolve = r.resolve(ObservationDTO.class, "create");
-        resolve = Arrays.copyOf(resolve, resolve.length + 1);
-        resolve[resolve.length - 1] = String.valueOf(seqId);
+        resolve = Arrays.copyOf(resolve, resolve.length + 2);
+        resolve[resolve.length - 2] = String.valueOf(seqId);
+        resolve[resolve.length - 1] = String.valueOf(attrId);
         put(dto, resolve);
     }
 
