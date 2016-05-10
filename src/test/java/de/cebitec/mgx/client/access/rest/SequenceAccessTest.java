@@ -26,7 +26,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class SequenceAccessTest {
 
     @Configuration
@@ -91,5 +91,34 @@ public class SequenceAccessTest {
             fail(ex.getMessage());
         }
         fail("Got data for invalid sequence ID");
+    }
+
+    @Test
+    public void testFetchInvalidName() {
+        System.out.println("testFetchInvalidName");
+        MGXDTOMaster master = TestMaster.getRW();
+        try {
+            SequenceDTO result = master.Sequence().byName(1, "doesNotExist");
+        } catch (MGXServerException ex) {
+            assertTrue(ex.getMessage() != null && ex.getMessage().contains("Not found"));
+            return; // ok
+        } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        fail("Got data for invalid sequence name");
+    }
+
+    @Test
+    public void testFetchValidName() {
+        System.out.println("testFetchValidName");
+        MGXDTOMaster master = TestMaster.getRW();
+        SequenceDTO result = null;
+        try {
+            result = master.Sequence().byName(1, "FI5LW4G01EJ7FZ");
+        } catch (MGXServerException | MGXClientException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(result);
+        assertEquals(23, result.getId());
     }
 }
