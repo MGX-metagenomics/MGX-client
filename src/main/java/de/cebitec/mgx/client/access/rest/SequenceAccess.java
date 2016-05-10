@@ -10,6 +10,7 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXLongList.Builder;
+import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
@@ -72,8 +73,9 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     
     public SequenceDTO byName(long runId, String seqName) throws MGXServerException, MGXClientException {
         String resolve = r.resolveClass(SequenceDTO.class);
-        String[] path = new String[]{resolve, "byName", String.valueOf(runId), seqName};
-        return super.get(SequenceDTO.class, path);
+        String[] path = new String[]{resolve, "byName", String.valueOf(runId)};
+        MGXString seqNameDTO = MGXString.newBuilder().setValue(seqName).build();
+        return super.put(seqNameDTO, SequenceDTO.class, path);
     }
 
     public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
