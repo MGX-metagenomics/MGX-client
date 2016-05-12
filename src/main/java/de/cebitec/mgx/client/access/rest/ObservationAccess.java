@@ -1,12 +1,8 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
-import de.cebitec.gpms.rest.RESTException;
-import static de.cebitec.mgx.client.access.rest.AccessBase.r;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXServerException;
-import de.cebitec.mgx.dto.dto;
-import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import java.util.Arrays;
