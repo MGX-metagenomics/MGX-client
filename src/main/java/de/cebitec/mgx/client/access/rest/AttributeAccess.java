@@ -44,16 +44,9 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXServerException {
-        String path = new StringBuilder("/Attribute/getCorrelation/")
-                .append(attrtypeId1)
-                .append('/')
-                .append(jobid1)
-                .append('/')
-                .append(attrtypeid2)
-                .append('/')
-                .append(jobid2)
-                .toString();
-        return get(AttributeCorrelation.class, path);
+        return get(AttributeCorrelation.class, "Attribute", "getCorrelation",
+                String.valueOf(attrtypeId1), String.valueOf(jobid1),
+                String.valueOf(attrtypeid2), String.valueOf(jobid2));
     }
 
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
