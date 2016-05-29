@@ -2,7 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import java.util.Arrays;
@@ -19,21 +19,21 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
         super(restAccess);
     }
 
-    public Iterator<ObservationDTO> ByRead(long seqId) throws MGXServerException, MGXClientException {
+    public Iterator<ObservationDTO> ByRead(long seqId) throws MGXDTOException {
         return get(ObservationDTOList.class, r.resolve(ObservationDTO.class, "byRead", String.valueOf(seqId))).getObservationList().iterator();
     }
 
     @Override
-    public ObservationDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public ObservationDTO fetch(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public Iterator<ObservationDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<ObservationDTO> fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public void create(long seqId, long attrId, ObservationDTO dto) throws MGXServerException, MGXClientException {
+    public void create(long seqId, long attrId, ObservationDTO dto) throws MGXDTOException {
         if (dto == null) {
             throw new MGXClientException("Cannot create null object.");
         }
@@ -45,17 +45,17 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     }
 
     @Override
-    public void update(ObservationDTO t) throws MGXServerException, MGXClientException {
+    public void update(ObservationDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public long create(ObservationDTO t) throws MGXServerException, MGXClientException {
+    public long create(ObservationDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 }

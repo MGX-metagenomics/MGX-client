@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
@@ -13,14 +14,12 @@ import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
@@ -87,7 +86,7 @@ public class SequenceAccessTest {
             SequenceDTO result = master.Sequence().fetch(999999);
         } catch (MGXServerException ex) {
             return; // ok
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail("Got data for invalid sequence ID");
@@ -102,7 +101,7 @@ public class SequenceAccessTest {
         } catch (MGXServerException ex) {
             assertTrue(ex.getMessage() != null && ex.getMessage().contains("Not found"));
             return; // ok
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail("Got data for invalid sequence name");
@@ -115,7 +114,7 @@ public class SequenceAccessTest {
         SequenceDTO result = null;
         try {
             result = master.Sequence().byName(1, "FI5LW4G01EJ7FZ");
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(result);

@@ -5,7 +5,7 @@ import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
 import de.cebitec.mgx.client.datatransfer.TransferBase;
-import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.FileDTO;
@@ -116,7 +116,7 @@ public class FileAccessTest {
                 .build();
         try {
             long create = master.File().create(newDir);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             if (ex.getMessage().trim().equals("Resource access denied.")) {
                 return;
             }
@@ -141,7 +141,7 @@ public class FileAccessTest {
         long create = 0;
         try {
             create = m.File().create(newDir);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -149,7 +149,7 @@ public class FileAccessTest {
         if (1 == create) {
             try {
                 m.File().delete(newDir);
-            } catch (MGXServerException | MGXClientException ex) {
+            } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
         }
@@ -172,7 +172,7 @@ public class FileAccessTest {
         long create = 0;
         try {
             create = m.File().create(newDir);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             if (ex.getMessage().trim().endsWith("dir1 already exists.")) {
                 return;
             }
@@ -183,7 +183,7 @@ public class FileAccessTest {
         if (1 == create) {
             try {
                 m.File().delete(newDir);
-            } catch (MGXServerException | MGXClientException ex) {
+            } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
         }
@@ -236,7 +236,7 @@ public class FileAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail("this should not happen");
@@ -266,7 +266,7 @@ public class FileAccessTest {
         FileUploader up = null;
         try {
             up = m.File().createUploader(f, targetName);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -299,7 +299,7 @@ public class FileAccessTest {
                         task = m.Task().get(taskId);
                     }
                 }
-            } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+            } catch (MGXDTOException | InterruptedException ex) {
                 fail(ex.getMessage());
             }
 
@@ -333,7 +333,7 @@ public class FileAccessTest {
         FileUploader up = null;
         try {
             up = m.File().createUploader(f, targetName);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -362,7 +362,7 @@ public class FileAccessTest {
                         task = m.Task().get(taskId);
                     }
                 }
-            } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+            } catch (MGXDTOException | InterruptedException ex) {
                 fail(ex.getMessage());
             }
 
@@ -397,7 +397,7 @@ public class FileAccessTest {
         FileUploader up = null;
         try {
             up = m.File().createUploader(f, targetName);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -433,7 +433,7 @@ public class FileAccessTest {
         FileDownloader down = null;
         try {
             down = m.File().createDownloader(serverFile, os);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(down);
@@ -479,7 +479,7 @@ public class FileAccessTest {
         FileDownloader down = null;
         try {
             down = m.File().createDownloader(serverFile, os);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(down);

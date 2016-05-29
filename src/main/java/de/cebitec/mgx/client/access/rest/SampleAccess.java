@@ -1,8 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
 import java.util.Iterator;
@@ -19,31 +18,31 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
     
     @Override
-    public Iterator<SampleDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<SampleDTO> fetchall() throws MGXDTOException {
         return fetchlist(SampleDTOList.class).getSampleList().iterator();
     }
 
     @Override
-    public SampleDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public SampleDTO fetch(long id) throws MGXDTOException {
         return super.fetch(id, SampleDTO.class);
     }
 
-    public Iterator<SampleDTO> ByHabitat(long habitat_id) throws MGXServerException, MGXClientException {
+    public Iterator<SampleDTO> ByHabitat(long habitat_id) throws MGXDTOException {
         return get(SampleDTOList.class, r.resolve(SampleDTO.class, "byHabitat", String.valueOf(habitat_id))).getSampleList().iterator();
     }
 
     @Override
-    public long create(SampleDTO s) throws MGXServerException, MGXClientException {
+    public long create(SampleDTO s) throws MGXDTOException {
         return super.create(s, SampleDTO.class);
     }
 
     @Override
-    public void update(SampleDTO d) throws MGXServerException, MGXClientException {
+    public void update(SampleDTO d) throws MGXDTOException {
         super.update(d, SampleDTO.class);
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         return super.delete(id, SampleDTO.class);
     }
 }

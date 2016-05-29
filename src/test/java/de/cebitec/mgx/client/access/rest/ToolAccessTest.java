@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
@@ -124,7 +125,7 @@ public class ToolAccessTest {
         boolean failed = false;
         try {
             master.Tool().delete(1);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             failed = true;
         }
         // read-only access is not allowed to delete anything, thus
@@ -143,6 +144,7 @@ public class ToolAccessTest {
             fail(ex.getMessage());
         } catch (MGXClientException ex) {
             failed = true;
+        } catch (MGXDTOException ex) {
         }
         assertTrue(failed);
     }
@@ -177,6 +179,7 @@ public class ToolAccessTest {
             fail(ex.getMessage());
         } catch (MGXClientException ex) {
             failed = true;
+        } catch (MGXDTOException ex) {
         }
         assertTrue(failed);
     }

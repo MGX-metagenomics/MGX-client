@@ -3,7 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.RegionDTO;
@@ -52,7 +52,7 @@ public class ReferenceAccessTest {
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = master.Reference().listGlobalReferences();
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -71,7 +71,7 @@ public class ReferenceAccessTest {
         Iterator<RegionDTO> iter = null;
         try {
             iter = master.Reference().byReferenceInterval(4, 0, 99999);
-        } catch (MGXClientException | MGXServerException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -90,7 +90,7 @@ public class ReferenceAccessTest {
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = master.Reference().fetchall();
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -116,7 +116,7 @@ public class ReferenceAccessTest {
             assertNotEquals(-1, refId);
 
             m.Reference().delete(refId);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
@@ -153,7 +153,7 @@ public class ReferenceAccessTest {
                     task = m.Task().get(taskId);
                 }
             }
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
             fail(ex.getMessage());
         }
 
@@ -169,14 +169,14 @@ public class ReferenceAccessTest {
                 }
             }
             assertTrue(installSuccess);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
         String seqData = null;
         try {
             seqData = m.Reference().getSequence(projRefId, 0, 9);
-        } catch (MGXClientException | MGXServerException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -193,7 +193,7 @@ public class ReferenceAccessTest {
                     fail();
                 }
             }
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
@@ -222,7 +222,7 @@ public class ReferenceAccessTest {
                     }
                 }
             }
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
             fail(ex.getMessage());
         }
 
@@ -254,7 +254,7 @@ public class ReferenceAccessTest {
                 cnt++;
             }
             assertEquals(3, cnt);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -269,7 +269,7 @@ public class ReferenceAccessTest {
                     fail();
                 }
             }
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -277,7 +277,7 @@ public class ReferenceAccessTest {
         Iterator<ReferenceDTO> iter = null;
         try {
             iter = m.Reference().fetchall();
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -296,7 +296,7 @@ public class ReferenceAccessTest {
         String seq = null;
         try {
             seq = master.Reference().getSequence(4, 0, 9);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(seq);
@@ -333,7 +333,7 @@ public class ReferenceAccessTest {
 //                    fail();
 //                }
 //            }
-//        } catch (MGXServerException | MGXClientException ex) {
+//        } catch (MGXDTOException ex) {
 //            fail(ex.getMessage());
 //        }
 //        
@@ -362,7 +362,7 @@ public class ReferenceAccessTest {
 //                    }
 //                }
 //            }
-//        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+//        } catch (MGXDTOException | InterruptedException ex) {
 //            fail(ex.getMessage());
 //        }
 //
@@ -389,7 +389,7 @@ public class ReferenceAccessTest {
 //                cnt++;
 //            }
 //            assertEquals(5, cnt);
-//        } catch (MGXServerException | MGXClientException ex) {
+//        } catch (MGXDTOException ex) {
 //            fail(ex.getMessage());
 //        }
 //
@@ -404,7 +404,7 @@ public class ReferenceAccessTest {
 //                    fail();
 //                }
 //            }
-//        } catch (MGXServerException | MGXClientException ex) {
+//        } catch (MGXDTOException ex) {
 //            fail(ex.getMessage());
 //        }
 //
@@ -412,7 +412,7 @@ public class ReferenceAccessTest {
 //        Iterator<ReferenceDTO> iter = null;
 //        try {
 //            iter = m.Reference().fetchall();
-//        } catch (MGXServerException | MGXClientException ex) {
+//        } catch (MGXDTOException ex) {
 //            fail(ex.getMessage());
 //        }
 //        assertNotNull(iter);

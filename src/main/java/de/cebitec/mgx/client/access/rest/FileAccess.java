@@ -6,7 +6,7 @@ import de.cebitec.mgx.client.datatransfer.FileDownloader;
 import de.cebitec.mgx.client.datatransfer.FileUploader;
 import de.cebitec.mgx.client.datatransfer.PluginDumpDownloader;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -31,7 +31,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         this.dtomaster = dtomaster;
     }
 
-    public Iterator<FileDTO> fetchall(String baseDir) throws MGXServerException, MGXClientException {
+    public Iterator<FileDTO> fetchall(String baseDir) throws MGXDTOException {
         if (!baseDir.startsWith(ROOT)) {
             throw new MGXClientException("Invalid path: " + baseDir);
         }
@@ -41,11 +41,11 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public UUID delete(FileDTO dto) throws MGXServerException, MGXClientException {
+    public UUID delete(FileDTO dto) throws MGXDTOException {
         if (!dto.getName().startsWith(ROOT)) {
             throw new MGXClientException("Invalid path: " + dto.getName());
         }
@@ -55,12 +55,12 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public FileDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public FileDTO fetch(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public long create(FileDTO t) throws MGXServerException, MGXClientException {
+    public long create(FileDTO t) throws MGXDTOException {
         if (!t.getName().startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + t.getName());
         }
@@ -76,16 +76,16 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public void update(FileDTO t) throws MGXServerException, MGXClientException {
+    public void update(FileDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public Iterator<FileDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<FileDTO> fetchall() throws MGXDTOException {
         return fetchall(".|");
     }
 
-    public FileUploader createUploader(File localFile, String remotePath) throws MGXClientException {
+    public FileUploader createUploader(File localFile, String remotePath) throws MGXDTOException {
         if (!localFile.exists() || !localFile.canRead()) {
             throw new MGXClientException("Cannot access local file: " + localFile.getAbsolutePath());
         }
@@ -95,14 +95,14 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         return new FileUploader(dtomaster, getRESTAccess(), localFile, remotePath);
     }
 
-    public FileDownloader createDownloader(String serverFname, OutputStream writer) throws MGXClientException {
+    public FileDownloader createDownloader(String serverFname, OutputStream writer) throws MGXDTOException {
         if (!serverFname.startsWith(ROOT)) {
             throw new MGXClientException("Invalid target path: " + serverFname);
         }
         return new FileDownloader(dtomaster, getRESTAccess(), serverFname, writer);
     }
 
-    public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) throws MGXClientException {
+    public PluginDumpDownloader createPluginDumpDownloader(OutputStream writer) throws MGXDTOException {
         return new PluginDumpDownloader(dtomaster, getRESTAccess(), writer);
     }
 }

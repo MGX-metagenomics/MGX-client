@@ -6,8 +6,7 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import java.util.Iterator;
 import java.util.UUID;
@@ -27,8 +26,7 @@ public class MapFetcher implements RunnableFuture<Iterator<MappedSequenceDTO>> {
     private final CountDownLatch processed = new CountDownLatch(1);
     private final MGXDTOMaster master;
     private final UUID session;
-    Iterator<MappedSequenceDTO> iter;
-    private boolean done = false;
+    private Iterator<MappedSequenceDTO> iter;
     private boolean cancelled = false;
     private Exception ex = null;
 
@@ -43,11 +41,10 @@ public class MapFetcher implements RunnableFuture<Iterator<MappedSequenceDTO>> {
         try {
             latch.await();
             iter = master.Mapping().byReferenceInterval(session, 0, 500000);
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
             this.ex = ex;
         } finally {
             processed.countDown();
-            done = true;
         }
     }
 

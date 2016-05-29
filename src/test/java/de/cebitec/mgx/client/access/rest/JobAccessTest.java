@@ -1,7 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -83,7 +83,7 @@ public class JobAccessTest {
         boolean failed = false;
         try {
             master.Job().delete(1);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             failed = true;
         }
         assertTrue(failed);
@@ -96,7 +96,7 @@ public class JobAccessTest {
         boolean failed = false;
         try {
             master.Job().cancel(666);
-        } catch (MGXServerException  | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             failed = ex.getMessage().contains("access denied");
         }
         assertTrue(failed);
@@ -115,7 +115,7 @@ public class JobAccessTest {
         long job_id = -1;
         try {
             job_id = m.Job().create(dto);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertTrue(job_id > 0);
@@ -130,7 +130,7 @@ public class JobAccessTest {
             if (t.getState().equals(TaskState.FAILED)) {
                 fail("Task failed.");
             }
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
             fail(ex.getMessage());
         }
     }
@@ -148,7 +148,7 @@ public class JobAccessTest {
         long job_id = -1;
         try {
             job_id = m.Job().create(dto);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertTrue(job_id > 0);
@@ -159,7 +159,7 @@ public class JobAccessTest {
         boolean verified = false;
         try {
             verified = m.Job().verify(job_id);
-        } catch (MGXServerException  | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertTrue(verified);
@@ -170,7 +170,7 @@ public class JobAccessTest {
         JobDTO job = null;
         try {
             job = m.Job().fetch(job_id);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(job);
@@ -187,7 +187,7 @@ public class JobAccessTest {
             if (t.getState().equals(TaskState.FAILED)) {
                 fail("Task failed.");
             }
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
             fail(ex.getMessage());
         }
     }
@@ -211,7 +211,7 @@ public class JobAccessTest {
             try {
                 job_id = m.Job().create(dto);
                 System.err.print(job_id + "..");
-            } catch (MGXServerException | MGXClientException ex) {
+            } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
             assertTrue(job_id > 0);
@@ -247,7 +247,7 @@ public class JobAccessTest {
                 if (t.getState().equals(TaskState.FAILED)) {
                     fail("Task failed.");
                 }
-            } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+            } catch (MGXDTOException | InterruptedException ex) {
                 fail(ex.getMessage());
             }
         }

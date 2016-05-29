@@ -1,8 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.AttributeCount;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
@@ -47,7 +46,7 @@ public class AttributeAccessTest {
         AttributeDTO attr = null;
         try {
             attr = master.Attribute().fetch(1);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(attr);
@@ -66,7 +65,7 @@ public class AttributeAccessTest {
         AttributeDistribution dist = null;
         try {
             dist = master.Attribute().getDistribution(6, 3);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(dist);
@@ -82,7 +81,7 @@ public class AttributeAccessTest {
 
         try {
             ad = master.Attribute().getHierarchy(6, 3);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(ad);
@@ -126,7 +125,7 @@ public class AttributeAccessTest {
         Iterator<String> iter = null;
         try {
             iter = master.Attribute().find(req);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -147,7 +146,7 @@ public class AttributeAccessTest {
         Iterator<AttributeDTO> iter = null;
         try {
             iter = master.Attribute().ByJob(3);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);

@@ -1,8 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import java.util.Iterator;
@@ -19,27 +18,27 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public Iterator<HabitatDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<HabitatDTO> fetchall() throws MGXDTOException {
         return fetchlist(HabitatDTOList.class).getHabitatList().iterator();
     }
 
     @Override
-    public long create(HabitatDTO dto) throws MGXServerException, MGXClientException {
+    public long create(HabitatDTO dto) throws MGXDTOException {
         return super.create(dto, HabitatDTO.class);
     }
     
     @Override
-    public HabitatDTO fetch (long id) throws MGXServerException, MGXClientException {
+    public HabitatDTO fetch (long id) throws MGXDTOException {
         return super.fetch(id, HabitatDTO.class);
     }
 
     @Override
-    public void update(HabitatDTO dto) throws MGXServerException, MGXClientException {
+    public void update(HabitatDTO dto) throws MGXDTOException {
         super.update(dto, HabitatDTO.class);
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         return super.delete(id, HabitatDTO.class);
     }
 }

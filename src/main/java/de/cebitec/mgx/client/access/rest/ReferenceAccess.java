@@ -3,8 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
@@ -28,43 +27,43 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     @Override
-    public Iterator<ReferenceDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<ReferenceDTO> fetchall() throws MGXDTOException {
         return fetchlist(ReferenceDTOList.class).getReferenceList().iterator();
     }
 
     @Override
-    public long create(ReferenceDTO sr) throws MGXServerException, MGXClientException {
+    public long create(ReferenceDTO sr) throws MGXDTOException {
         return super.create(sr, ReferenceDTO.class);
     }
 
     @Override
-    public void update(ReferenceDTO d) throws MGXServerException, MGXClientException {
+    public void update(ReferenceDTO d) throws MGXDTOException {
         super.update(d, ReferenceDTO.class);
     }
 
-    public UUID installGlobalReference(long id) throws MGXServerException {
+    public UUID installGlobalReference(long id) throws MGXDTOException {
         return UUID.fromString(get(MGXString.class, "Reference", "installGlobalReference", String.valueOf(id)).getValue());
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         return super.delete(id, ReferenceDTO.class);
     }
 
     @Override
-    public ReferenceDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public ReferenceDTO fetch(long id) throws MGXDTOException {
         return super.fetch(id, ReferenceDTO.class);
     }
 
-    public Iterator<ReferenceDTO> listGlobalReferences() throws MGXServerException {
+    public Iterator<ReferenceDTO> listGlobalReferences() throws MGXDTOException {
         return get(ReferenceDTOList.class, "Reference", "listGlobalReferences").getReferenceList().iterator();
     }
 
-    public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXClientException, MGXServerException {
+    public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXDTOException {
         return get(RegionDTOList.class, "Reference", "byReferenceInterval", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getRegionList().iterator();
     }
 
-    public String getSequence(long id, int from, int to) throws MGXClientException, MGXServerException {
+    public String getSequence(long id, int from, int to) throws MGXDTOException {
         return get(MGXString.class, "Reference", "getSequence", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getValue().toUpperCase();
     }
 

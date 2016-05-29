@@ -2,7 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -23,7 +23,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         super(restAccess);
     }
 
-    public Iterator<PointDTO> Rarefaction(Collection<Long> data) throws MGXServerException, MGXClientException {
+    public Iterator<PointDTO> Rarefaction(Collection<Long> data) throws MGXDTOException {
         MGXLongList.Builder b = MGXLongList.newBuilder();
         for (Long n : data) {
             b.addLong(n);
@@ -31,7 +31,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(b.build(), PointDTOList.class, "Statistics", "Rarefaction").getPointList().iterator();
     }
 
-    public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXServerException, MGXClientException {
+    public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXDTOException {
         if (distMethod == null) {
             throw new MGXClientException("Null distance method");
         }
@@ -41,7 +41,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(dto, MGXString.class, "Statistics", "Clustering", distMethod, aggloMethod).getValue();
     }
 
-    public PCAResultDTO PCA(MGXMatrixDTO dto, int pc1, int pc2) throws MGXServerException, MGXClientException {
+    public PCAResultDTO PCA(MGXMatrixDTO dto, int pc1, int pc2) throws MGXDTOException {
         if (pc1 < 1 || pc1 > 3) {
             throw new MGXClientException("Invalid principal component: " + pc1);
         }
@@ -57,7 +57,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(dto, PCAResultDTO.class, "Statistics", "PCA", String.valueOf(pc1), String.valueOf(pc2));
     }
 
-    public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXServerException, MGXClientException {
+    public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXDTOException {
         if (dto.getRowCount() < 3) {
             throw new MGXClientException("Number of datasets too small.");
         }
@@ -65,27 +65,27 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
     }
 
     @Override
-    public PointDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public PointDTO fetch(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public Iterator<PointDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<PointDTO> fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public long create(PointDTO t) throws MGXServerException, MGXClientException {
+    public long create(PointDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public void update(PointDTO t) throws MGXServerException, MGXClientException {
+    public void update(PointDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

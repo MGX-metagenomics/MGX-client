@@ -1,7 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MGXDoubleList;
@@ -167,7 +167,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail();
@@ -204,7 +204,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail();
@@ -240,7 +240,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail();
@@ -382,7 +382,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
@@ -419,7 +419,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail();
@@ -458,7 +458,7 @@ public class StatisticsAccessTest {
                 return;
             }
             fail(ex.getMessage());
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         fail();

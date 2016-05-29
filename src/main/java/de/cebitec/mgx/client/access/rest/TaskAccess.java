@@ -1,8 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
-import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTOList;
 import java.util.Iterator;
@@ -18,32 +17,32 @@ public class TaskAccess extends AccessBase<TaskDTO, TaskDTOList> {
         super(restAccess);
     }
 
-    public TaskDTO get(UUID taskId) throws MGXServerException, MGXClientException {
+    public TaskDTO get(UUID taskId) throws MGXDTOException {
         return get(TaskDTO.class, "Task", "get", String.valueOf(taskId));
     }
 
     @Override
-    public TaskDTO fetch(long id) throws MGXServerException, MGXClientException {
+    public TaskDTO fetch(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Iterator<TaskDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<TaskDTO> fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long create(TaskDTO t) throws MGXServerException, MGXClientException {
+    public long create(TaskDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void update(TaskDTO t) throws MGXServerException, MGXClientException {
+    public void update(TaskDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

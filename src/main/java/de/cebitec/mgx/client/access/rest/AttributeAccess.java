@@ -2,7 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.AttributeCorrelation;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
@@ -27,23 +27,23 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         super(restAccess);
     }
 
-    public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXServerException {
+    public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXDTOException {
         return get(AttributeDTOList.class, "Attribute", "BySeqRun", String.valueOf(seqrunId)).getAttributeList().iterator();
     }
 
-    public Iterator<AttributeDTO> ByJob(long jobId) throws MGXServerException {
+    public Iterator<AttributeDTO> ByJob(long jobId) throws MGXDTOException {
         return get(AttributeDTOList.class, "Attribute", "ByJob", String.valueOf(jobId)).getAttributeList().iterator();
     }
 
-    public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXServerException {
+    public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXDTOException {
         return get(AttributeDistribution.class, "Attribute", "getDistribution", String.valueOf(attrType_id), String.valueOf(job_id));
     }
 
-    public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXServerException {
+    public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXDTOException {
         return get(AttributeDistribution.class, "Attribute", "getHierarchy", String.valueOf(attrType_id), String.valueOf(job_id));
     }
 
-    public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXServerException {
+    public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXDTOException {
         return get(AttributeCorrelation.class, "Attribute", "getCorrelation",
                 String.valueOf(attrtypeId1), String.valueOf(jobid1),
                 String.valueOf(attrtypeid2), String.valueOf(jobid2));
@@ -57,32 +57,32 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 //        return get(uri, AttributeDistribution.class).getAttributecountList();
 //    }
     @Override
-    public AttributeDTO fetch(final long id) throws MGXServerException, MGXClientException {
+    public AttributeDTO fetch(final long id) throws MGXDTOException {
         return super.fetch(id, AttributeDTO.class);
     }
 
     @Override
-    public Iterator<AttributeDTO> fetchall() throws MGXServerException, MGXClientException {
+    public Iterator<AttributeDTO> fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public long create(AttributeDTO dto) throws MGXServerException, MGXClientException {
+    public long create(AttributeDTO dto) throws MGXDTOException {
         return super.create(dto, AttributeDTO.class);
     }
 
     @Override
-    public void update(AttributeDTO dto) throws MGXServerException, MGXClientException {
+    public void update(AttributeDTO dto) throws MGXDTOException {
         super.update(dto, AttributeDTO.class);
     }
 
     @Override
-    public UUID delete(long id) throws MGXServerException, MGXClientException {
+    public UUID delete(long id) throws MGXDTOException {
         throw new MGXClientException("Attribute deletion is not supported. Delete the corresponding job instead.");
         //return super.delete(id, AttributeDTO.class);
     }
 
-    public Iterator<SequenceDTO> search(SearchRequestDTO req) throws MGXServerException {
+    public Iterator<SequenceDTO> search(SearchRequestDTO req) throws MGXDTOException {
         List<SequenceDTO> ret = new ArrayList<>();
         SequenceDTOList reply = put(req, SequenceDTOList.class, "Attribute", "search");
         ret.addAll(reply.getSeqList());
@@ -97,7 +97,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         return ret.iterator();
     }
 
-    public Iterator<String> find(SearchRequestDTO req) throws MGXServerException, MGXClientException {
+    public Iterator<String> find(SearchRequestDTO req) throws MGXDTOException {
         List<String> ret = new ArrayList<>();
         MGXStringList reply = put(req, MGXStringList.class, "Attribute", "find");
         for (MGXString ms : reply.getStringList()) {

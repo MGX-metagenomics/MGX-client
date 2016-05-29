@@ -5,7 +5,7 @@ import de.cebitec.mgx.client.datatransfer.SeqDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
-import de.cebitec.mgx.client.exception.MGXServerException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.DataRowDTO;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
@@ -92,7 +92,7 @@ public class SeqRunAccessTest {
                     }
                 }
             }
-        } catch (MGXServerException | MGXClientException | InterruptedException ex) {
+        } catch (MGXDTOException | InterruptedException ex) {
         }
     }
 
@@ -103,7 +103,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         try {
             iter = master.SeqRun().fetchall();
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
@@ -122,7 +122,7 @@ public class SeqRunAccessTest {
         SeqRunDTO dto = null;
         try {
             dto = master.SeqRun().fetch(3);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(dto);
@@ -137,7 +137,7 @@ public class SeqRunAccessTest {
         List<JobAndAttributeTypes> jat = null;
         try {
             jat = master.SeqRun().getJobsAndAttributeTypes(1);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(jat);
@@ -306,13 +306,13 @@ public class SeqRunAccessTest {
     }
 
     @Test
-    public void testQC() throws MGXServerException, MGXClientException {
+    public void testQC() throws MGXDTOException {
         System.out.println("testQC");
         MGXDTOMaster master = TestMaster.getRO();
         SeqRunDTO dto = null;
         try {
             dto = master.SeqRun().fetch(1);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(dto);
@@ -356,7 +356,7 @@ public class SeqRunAccessTest {
 
         try {
             qc = m.SeqRun().getQC(run_id);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         } finally {
             UUID taskId = m.SeqRun().delete(run_id);

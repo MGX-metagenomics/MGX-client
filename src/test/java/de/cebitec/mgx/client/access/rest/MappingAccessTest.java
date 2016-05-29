@@ -7,6 +7,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.access.rest.util.MapFetcher;
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
@@ -93,7 +94,7 @@ public class MappingAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         try {
             master.Mapping().closeMapping(UUID.randomUUID());
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             if (ex.getMessage().startsWith("No mapping session for")) {
                 // ok
                 return;
@@ -115,6 +116,8 @@ public class MappingAccessTest {
             }
             fail(ex.getMessage());
         } catch (MGXClientException ex) {
+            fail(ex.getMessage());
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
@@ -192,13 +195,13 @@ public class MappingAccessTest {
         UUID uuid = null;
         try {
             uuid = master.Mapping().openMapping(30);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         long cov = -1;
         try {
             cov = master.Mapping().getMaxCoverage(uuid);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
 
@@ -206,7 +209,7 @@ public class MappingAccessTest {
 
         try {
             master.Mapping().closeMapping(uuid);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
@@ -218,7 +221,7 @@ public class MappingAccessTest {
         UUID uuid = null;
         try {
             uuid = master.Mapping().openMapping(30);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(uuid);
@@ -244,7 +247,7 @@ public class MappingAccessTest {
         }
         try {
             master.Mapping().closeMapping(uuid);
-        } catch (MGXServerException | MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
     }
