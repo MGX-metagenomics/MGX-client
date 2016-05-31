@@ -49,4 +49,5 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     public Iterator<AttributeTypeDTO> ByJob(long job_id) throws MGXDTOException {
         return get(AttributeTypeDTOList.class, "AttributeType", "ByJob", String.valueOf(job_id)).getAttributeTypeList().iterator();
     }
+
 }
