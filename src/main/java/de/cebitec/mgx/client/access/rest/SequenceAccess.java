@@ -92,6 +92,10 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
             throw new MGXServerException(dl.getErrorMessage());
         }
     }
+    
+    public Iterator<Long> fetchSequenceIDs(long attrId) throws MGXDTOException {
+        return get(MGXLongList.class, "Sequence", "fetchSequenceIDs", String.valueOf(attrId)).getLongList().iterator();
+    }
 
     @Override
     public Iterator<SequenceDTO> fetchall() throws MGXDTOException {
@@ -124,5 +128,6 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
         return oBuilder.toString();
     }
+
 
 }
