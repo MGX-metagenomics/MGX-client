@@ -62,7 +62,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return super.fetch(id, SequenceDTO.class);
     }
 
-    public SequenceDTOList fetchSeqData(long[] ids) throws MGXDTOException {
+    public SequenceDTOList fetchByIds(long[] ids) throws MGXDTOException {
         String[] resolve = r.resolve(SequenceDTOList.class, "fetchall");
         Builder b = MGXLongList.newBuilder();
         for (long id : ids) {
@@ -92,7 +92,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
             throw new MGXServerException(dl.getErrorMessage());
         }
     }
-    
+
     public Iterator<Long> fetchSequenceIDs(long attrId) throws MGXDTOException {
         return get(MGXLongList.class, "Sequence", "fetchSequenceIDs", String.valueOf(attrId)).getLongList().iterator();
     }
@@ -128,6 +128,5 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
         return oBuilder.toString();
     }
-
 
 }
