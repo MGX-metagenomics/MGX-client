@@ -63,7 +63,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     public SequenceDTOList fetchByIds(long[] ids) throws MGXDTOException {
-        String[] resolve = r.resolve(SequenceDTOList.class, "fetchall");
+        String[] resolve = r.resolve(SequenceDTOList.class, "fetchByIds");
         Builder b = MGXLongList.newBuilder();
         for (long id : ids) {
             if (id == -1) {

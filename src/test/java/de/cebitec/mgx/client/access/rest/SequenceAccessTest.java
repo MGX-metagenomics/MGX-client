@@ -7,11 +7,13 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.osgiutils.MGXOptions;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.ops4j.pax.exam.Configuration;
@@ -119,5 +121,26 @@ public class SequenceAccessTest {
         }
         assertNotNull(result);
         assertEquals(23, result.getId());
+    }
+
+    @Test
+    public void testFetchByIDs() {
+        System.out.println("testFetchByIDs");
+        MGXDTOMaster master = TestMaster.getRO();
+        SequenceDTOList result = null;
+        try {
+            result = master.Sequence().fetchByIds(new long[]{1, 2});
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(result);
+        List<SequenceDTO> seqList = result.getSeqList();
+        assertEquals(2, seqList.size());
+        SequenceDTO seq1 = seqList.get(0);
+        assertEquals("FI5LW4G01DZDXZ", seq1.getName());
+        assertEquals(63, seq1.getLength());
+        SequenceDTO seq2 = seqList.get(1);
+        assertEquals("FI5LW4G01AM15A", seq2.getName());
+        assertEquals(121, seq2.getLength());
     }
 }
