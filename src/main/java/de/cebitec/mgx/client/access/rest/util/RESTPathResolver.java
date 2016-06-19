@@ -22,6 +22,7 @@ import de.cebitec.mgx.dto.dto.SampleDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.TermDTOList;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
@@ -62,6 +63,7 @@ public class RESTPathResolver {
         objmappings.put(ToolDTOList.class, "Tool");
         objmappings.put(DNAExtractDTOList.class, "DNAExtract");
         objmappings.put(SeqRunDTOList.class, "SeqRun");
+        objmappings.put(SequenceDTOList.class, "Sequence");
         objmappings.put(FileDTOList.class, "File");
         objmappings.put(TermDTOList.class, "Term");
         objmappings.put(ReferenceDTOList.class, "Reference");
@@ -74,6 +76,7 @@ public class RESTPathResolver {
         methodmappings.put("fetchall", "fetchall");
         methodmappings.put("delete", "delete");
         //
+        methodmappings.put("fetchByIds", "fetchByIds");
         methodmappings.put("byHabitat", "byHabitat");
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
@@ -120,7 +123,7 @@ public class RESTPathResolver {
         //return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }
 
-    public final String resolveClass(Class c)throws MGXClientException  {
+    public final String resolveClass(Class c) throws MGXClientException {
         if (!objmappings.containsKey(c)) {
             throw new MGXClientException("Missing REST object mapping path for class " + c.getName());
         }
