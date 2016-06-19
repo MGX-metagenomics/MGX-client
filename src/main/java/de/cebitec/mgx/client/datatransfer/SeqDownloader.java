@@ -148,7 +148,6 @@ public class SeqDownloader extends DownloadBase {
         assert !EventQueue.isDispatchThread();
         try {
             SequenceDTOList entity = super.get(SequenceDTOList.class, "Sequence", "fetchSequences", session_uuid);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return entity;
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
