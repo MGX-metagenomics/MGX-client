@@ -96,7 +96,6 @@ public class PluginDumpDownloader extends DownloadBase {
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
         BytesDTO entity = super.get(BytesDTO.class, "File", "get", session_uuid);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }
 
