@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
+import de.cebitec.mgx.dto.dto.BulkObservationDTOList;
 import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import java.util.Arrays;
@@ -57,5 +58,13 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     @Override
     public long create(ObservationDTO t) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
+    }
+
+    public void createBulk(BulkObservationDTOList dto)throws MGXDTOException {
+         if (dto == null || dto.getBulkObservationCount() == 0) {
+            throw new MGXClientException("Cannot create null object.");
+        }
+        String[] resolve = r.resolve(BulkObservationDTOList.class, "createBulk");
+        put(dto, resolve);
     }
 }
