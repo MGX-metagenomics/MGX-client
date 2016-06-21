@@ -60,11 +60,21 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
         throw new UnsupportedOperationException("Not supported.");
     }
 
-    public void createBulk(BulkObservationDTOList dto)throws MGXDTOException {
-         if (dto == null || dto.getBulkObservationCount() == 0) {
-            throw new MGXClientException("Cannot create null object.");
+    public void createBulk(BulkObservationDTOList dto) throws MGXDTOException {
+        if (dto == null || dto.getBulkObservationCount() == 0) {
+            throw new MGXClientException("Cannot create empty observation set.");
         }
         String[] resolve = r.resolve(BulkObservationDTOList.class, "createBulk");
         put(dto, resolve);
+    }
+
+    public void delete(long seqId, long attrId, int start, int stop) throws MGXDTOException {
+        String[] resolve = r.resolve(ObservationDTO.class, "delete");
+        resolve = Arrays.copyOf(resolve, resolve.length + 4);
+        resolve[resolve.length - 4] = String.valueOf(seqId);
+        resolve[resolve.length - 3] = String.valueOf(attrId);
+        resolve[resolve.length - 2] = String.valueOf(start);
+        resolve[resolve.length - 1] = String.valueOf(stop);
+        delete(resolve);
     }
 }
