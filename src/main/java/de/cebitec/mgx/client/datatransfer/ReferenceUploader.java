@@ -85,7 +85,7 @@ public class ReferenceUploader extends UploadBase {
                 return false;
             }
 
-            String seqname = rs.getDescription().replaceAll("\n", " ");
+            String seqname = rs.getDescription() != null ? rs.getDescription().replaceAll("\n", " ") : "unnamed sequence";
             if (seqname.endsWith(", complete sequence.")) {
                 int trimPos = seqname.lastIndexOf(", complete sequence.");
                 seqname = seqname.substring(0, trimPos);
@@ -104,7 +104,7 @@ public class ReferenceUploader extends UploadBase {
             while (iter.hasNext()) {
                 RichFeature elem = (RichFeature) iter.next();
 
-                if (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA")) {
+                if (elem.getType() != null && (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA"))) {
                     if (!sequenceSent) {
                         try {
                             //String genomeSeq = elem.getSequence().seqString();
@@ -122,6 +122,7 @@ public class ReferenceUploader extends UploadBase {
                     Annotation annot = elem.getAnnotation();
                     RegionDTO.Builder region = RegionDTO.newBuilder();
                     region.setName((String) annot.getProperty("locus_tag"));
+                    region.setType(elem.getType());
                     if (annot.containsProperty("product")) {
                         region.setDescription((String) annot.getProperty("product"));
                     } else if (annot.containsProperty("function")) {
