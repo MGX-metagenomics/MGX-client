@@ -13,6 +13,7 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -143,4 +144,35 @@ public class SequenceAccessTest {
         assertEquals("FI5LW4G01AM15A", seq2.getName());
         assertEquals(121, seq2.getLength());
     }
+
+//    @Test
+//    public void testFetchByIDsListPerformance() {
+//        System.out.println("testFetchByIDsListPerformance");
+//        MGXDTOMaster master = TestMaster.getRO();
+//        long[] ids = new long[59482];
+//        for (int i = 0; i < 59482; i++) {
+//            ids[i] = i + 1;
+//        }
+//
+//        int from = 0;
+//        int size = 50_000;
+//        long[] chunk;
+//
+//        while (from + size < ids.length) {
+//            chunk = Arrays.copyOfRange(ids, from, from+size);
+//
+//            System.err.println("fetching interval " + chunk[0] + "-" + chunk[chunk.length-1]);
+//            SequenceDTOList result = null;
+//            try {
+//                result = master.Sequence().fetchByIds(chunk);
+//            } catch (MGXDTOException ex) {
+//                fail(ex.getMessage());
+//            }
+//            assertNotNull(result);
+//            assertEquals(chunk.length, result.getSeqCount());
+//            
+//            from += size;
+//        }
+//
+//    }
 }
