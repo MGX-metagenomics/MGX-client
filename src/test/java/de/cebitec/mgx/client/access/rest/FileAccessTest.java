@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -240,6 +242,51 @@ public class FileAccessTest {
             fail(ex.getMessage());
         }
         fail("this should not happen");
+    }
+
+    @Test
+    public synchronized void testDeleteDir() {
+        System.out.println("testDeleteDir");
+        MGXDTOMaster m = TestMaster.getRW();
+
+        FileDTO newDir = FileDTO.newBuilder()
+                .setName(FileAccess.ROOT + FileAccess.separator + "delMe")
+                .setIsDirectory(true)
+                .setSize(0)
+                .build();
+        long create = 0;
+        try {
+            create = m.File().create(newDir);
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, create); // success
+
+        //cleanup
+        if (1 == create) {
+            try {
+                UUID uuid = m.File().delete(newDir);
+                TaskDTO task = m.Task().get(uuid);
+                
+                int numRefreshes = 10;
+                System.err.println(" state is "+ task.getState());
+                while (numRefreshes > 0 && task.getState() != TaskState.FINISHED) {
+                    System.err.println(" state is "+ task.getState());
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FileAccessTest.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    task = m.Task().get(uuid);
+                    numRefreshes--;
+                }
+                
+                assertEquals("directory was not deleted within 200ms", TaskState.FINISHED, task.getState());
+            } catch (MGXDTOException ex) {
+                fail(ex.getMessage());
+            }
+        }
+
     }
 
     @Test
