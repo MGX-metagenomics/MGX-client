@@ -145,34 +145,34 @@ public class SequenceAccessTest {
         assertEquals(121, seq2.getLength());
     }
 
-//    @Test
-//    public void testFetchByIDsListPerformance() {
-//        System.out.println("testFetchByIDsListPerformance");
-//        MGXDTOMaster master = TestMaster.getRO();
-//        long[] ids = new long[59482];
-//        for (int i = 0; i < 59482; i++) {
-//            ids[i] = i + 1;
-//        }
-//
-//        int from = 0;
-//        int size = 50_000;
-//        long[] chunk;
-//
-//        while (from + size < ids.length) {
-//            chunk = Arrays.copyOfRange(ids, from, from+size);
-//
-//            System.err.println("fetching interval " + chunk[0] + "-" + chunk[chunk.length-1]);
-//            SequenceDTOList result = null;
-//            try {
-//                result = master.Sequence().fetchByIds(chunk);
-//            } catch (MGXDTOException ex) {
-//                fail(ex.getMessage());
-//            }
-//            assertNotNull(result);
-//            assertEquals(chunk.length, result.getSeqCount());
-//            
-//            from += size;
-//        }
-//
-//    }
+    @Test
+    public void testFetchByIDsListPerformance() {
+        System.out.println("testFetchByIDsListPerformance");
+        MGXDTOMaster master = TestMaster.getRO();
+        long[] ids = new long[59482];
+        for (int i = 0; i < 59482; i++) {
+            ids[i] = i + 1;
+        }
+
+        int from = 0;
+        int size = 10_000;
+        long[] chunk;
+
+        while (from < ids.length) {
+            chunk = Arrays.copyOfRange(ids, from, Math.min(from + size, ids.length));
+
+            System.err.println("  fetching interval " + chunk[0] + "-" + chunk[chunk.length-1]);
+            SequenceDTOList result = null;
+            try {
+                result = master.Sequence().fetchByIds(chunk);
+            } catch (MGXDTOException ex) {
+                fail(ex.getMessage());
+            }
+            assertNotNull(result);
+            assertEquals(chunk.length, result.getSeqCount());
+            
+            from += size;
+        }
+
+    }
 }
