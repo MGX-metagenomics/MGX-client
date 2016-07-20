@@ -31,7 +31,7 @@ public class SeqUploader extends UploadBase {
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
         int randomNess = (int) Math.round(Math.random() * 20);
-        setChunkSize(800 + randomNess);
+        super.setChunkSize(5800 + randomNess);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SeqUploader extends UploadBase {
                 seqListBuilder.addSeq(seqbuilder.build());
                 current_num_elements++;
 
-                if (current_num_elements >= chunk_size) {
+                if (current_num_elements >= getChunkSize()) {
                     total_elements += current_num_elements;
                     cb.callback(total_elements);
                     try {
@@ -115,7 +115,7 @@ public class SeqUploader extends UploadBase {
         return total_elements;
     }
 
-    private String initTransfer(long seqrun_id) throws MGXServerException {
+    private String initTransfer(final long seqrun_id) throws MGXServerException {
         try {
             MGXString session_uuid = super.get(MGXString.class, "Sequence", "initUpload", String.valueOf(seqrun_id), String.valueOf(reader.hasQuality()));
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
@@ -129,7 +129,7 @@ public class SeqUploader extends UploadBase {
         }
     }
 
-    private void finishTransfer(String uuid) throws MGXServerException {
+    private void finishTransfer(final String uuid) throws MGXServerException {
         try {
             super.get("Sequence", "closeUpload", uuid);
         } catch (ClientHandlerException ex) {
@@ -143,7 +143,7 @@ public class SeqUploader extends UploadBase {
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
-    private void sendChunk(SequenceDTOList seqList, String session_uuid) throws MGXServerException {
+    private void sendChunk(final SequenceDTOList seqList, final String session_uuid) throws MGXServerException {
         try {
             super.post(seqList, "Sequence", "add", session_uuid);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);

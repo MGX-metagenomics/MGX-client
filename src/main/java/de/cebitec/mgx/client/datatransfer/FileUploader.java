@@ -38,7 +38,7 @@ public class FileUploader extends UploadBase {
         }
         this.remoteName = tmp.replace("/", "|");
         int randomNess = (int) Math.round(Math.random() * 20);
-        setChunkSize(4096 + randomNess);
+        super.setChunkSize(1024 * 32 + randomNess);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class FileUploader extends UploadBase {
         }
 
         int bytesRead;
-        byte[] buf = new byte[chunk_size];
+        byte[] buf = new byte[getChunkSize()];
         try {
             while ((bytesRead = in.read(buf)) != -1) {
                 byte[] data = new byte[bytesRead];

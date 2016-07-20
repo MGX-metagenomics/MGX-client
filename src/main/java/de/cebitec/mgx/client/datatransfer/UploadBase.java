@@ -10,8 +10,8 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 public abstract class UploadBase extends TransferBase {
 
     private CallbackI cb = null;
-    protected static int DEFAULT_CHUNK_SIZE = 2048;
-    protected int chunk_size = DEFAULT_CHUNK_SIZE;
+    protected static final int DEFAULT_CHUNK_SIZE = 2048;
+    private int chunk_size = DEFAULT_CHUNK_SIZE;
 
     public UploadBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
         super(dtomaster, rab);
