@@ -29,6 +29,7 @@ public abstract class UploadBase extends TransferBase {
     protected void abortTransfer(String reason) {
         setErrorMessage(reason);
         fireTaskChange(TransferBase.TRANSFER_FAILED, reason);
+        super.dispose();
     }
 
     public void setProgressCallback(CallbackI cb) {

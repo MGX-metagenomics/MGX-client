@@ -117,7 +117,7 @@ public class App {
             runs.add(runiter.next().getName());
         }
 
-        long extract_id = 9; // new metagenomes, overlapped
+        long extract_id = 1; // new metagenomes, overlapped
 
         TermDTO flx = master.Term().fetch(5); // miseq
         TermDTO wgs = master.Term().fetch(13); // pe
@@ -231,7 +231,7 @@ public class App {
         MGXDTOMaster master = null;
         // http://localhost:8080/MGX-maven-web/webresources/
         //GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
-        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
+        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/");
         if (!gpms.login(username, new String(password))) {
             System.err.println("login failed");
             System.exit(1);

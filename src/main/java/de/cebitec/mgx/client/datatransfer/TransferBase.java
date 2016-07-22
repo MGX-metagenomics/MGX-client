@@ -17,8 +17,10 @@ public abstract class TransferBase implements PropertyChangeListener {
     private final RESTAccessI restAccess;
     private final MGXDTOMaster dtomaster;
     private final PropertyChangeSupport pcs;
+    private boolean disposed = false;
     private volatile String error_message = null;
     //
+    public static final String MESSAGE = "TransferBase_message";
     public static final String NUM_ELEMENTS_TRANSFERRED = "numElementsTransferred";
     public static final String TRANSFER_FAILED = "transferFailed";
     public static final String TRANSFER_COMPLETED = "transferCompleted";
@@ -38,6 +40,13 @@ public abstract class TransferBase implements PropertyChangeListener {
                 dtomaster.removePropertyChangeListener(this);
                 abortTransfer("Disconnected from server");
             }
+        }
+    }
+
+    protected synchronized final void dispose() {
+        if (!disposed) {
+            dtomaster.removePropertyChangeListener(this);
+            disposed = true;
         }
     }
 

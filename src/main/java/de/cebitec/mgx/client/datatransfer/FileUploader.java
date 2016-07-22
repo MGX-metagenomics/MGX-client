@@ -42,12 +42,12 @@ public class FileUploader extends UploadBase {
     }
 
     @Override
-    public long getProgress() {
+    public final long getProgress() {
         return total_elements_sent;
     }
 
     @Override
-    public boolean upload() {
+    public final boolean upload() {
         CallbackI cb = getProgressCallback();
 
         String session_uuid;

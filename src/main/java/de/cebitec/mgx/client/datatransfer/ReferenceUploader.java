@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import org.biojava.bio.Annotation;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Feature;
-import org.biojava.bio.seq.Sequence;
 import org.biojavax.Namespace;
 import org.biojavax.RichObjectFactory;
 import org.biojavax.bio.seq.RichFeature;
@@ -43,7 +42,7 @@ public class ReferenceUploader extends UploadBase {
         super(dtomaster, rab);
         this.localFile = file;
         int randomNess = (int) Math.round(Math.random() * 20);
-        setChunkSize(42 + randomNess);
+        super.setChunkSize(42 + randomNess);
     }
 
     @Override
@@ -53,9 +52,9 @@ public class ReferenceUploader extends UploadBase {
 
     @Override
     public boolean upload() {
-        CallbackI cb = getProgressCallback();
+        //CallbackI cb = getProgressCallback();
 
-        RichSequenceIterator seqs = null;
+        RichSequenceIterator seqIter;
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(localFile));
@@ -63,29 +62,40 @@ public class ReferenceUploader extends UploadBase {
             br.mark(10);
             Character first = (char) br.read();
             br.reset();
-            if (first.toString().equals("L")) {
-                seqs = RichSequence.IOTools.readGenbankDNA(br, ns);
-            } else if (first.toString().equals(">")) {
-                seqs = RichSequence.IOTools.readFastaDNA(br, ns);
-            } else {
-                seqs = RichSequence.IOTools.readEMBLDNA(br, ns);
+            switch (first.toString()) {
+                case "L":
+                    seqIter = RichSequence.IOTools.readGenbankDNA(br, ns);
+                    break;
+                case ">":
+                    seqIter = RichSequence.IOTools.readFastaDNA(br, ns);
+                    break;
+                case "I": // ID
+                    seqIter = RichSequence.IOTools.readEMBLDNA(br, ns);
+                    break;
+                default:
+                    setErrorMessage("Unknown sequence format.");
+                    br.close();
+                    return false;
             }
         } catch (IOException ex) {
             abortTransfer(ex.getMessage());
             return false;
         }
 
-        while (seqs.hasNext()) {
+        while (seqIter.hasNext()) {
 
-            RichSequence rs;
+            RichSequence seq;
             try {
-                rs = seqs.nextRichSequence();
+                seq = seqIter.nextRichSequence();
             } catch (NoSuchElementException | BioException ex) {
                 abortTransfer(ex.getMessage());
                 return false;
             }
 
-            String seqname = rs.getDescription() != null ? rs.getDescription().replaceAll("\n", " ") : "unnamed sequence";
+            //
+            // trim down sequence name
+            //
+            String seqname = seq.getDescription() != null ? seq.getDescription().replaceAll("\n", " ") : "unnamed sequence";
             if (seqname.endsWith(", complete sequence.")) {
                 int trimPos = seqname.lastIndexOf(", complete sequence.");
                 seqname = seqname.substring(0, trimPos);
@@ -94,43 +104,44 @@ public class ReferenceUploader extends UploadBase {
                 int trimPos = seqname.lastIndexOf(", complete genome.");
                 seqname = seqname.substring(0, trimPos);
             }
+            fireTaskChange(MESSAGE, "Processing " + seqname);
 
-            boolean sequenceSent = false;
+            //
+            // create reference object and transfer sequence data
+            //
+            String session_uuid;
+            try {
+                reference_id = createReference(seqname, seq.length());
+                generatedRefIDs.add(reference_id);
+                session_uuid = initTransfer(reference_id);
+                sendSequence(seq.seqString(), session_uuid);
+            } catch (MGXServerException ex) {
+                abortTransfer(ex.getMessage());
+                return false;
+            }
+
+            //
+            // transfer subregions
+            //
+            Iterator<Feature> iter = seq.features();
             List<RegionDTO> regions = new ArrayList<>();
-
-            String session_uuid = null;
-
-            Iterator<Feature> iter = rs.features();
             while (iter.hasNext()) {
                 RichFeature elem = (RichFeature) iter.next();
 
                 if (elem.getType() != null && (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA"))) {
-                    if (!sequenceSent) {
-                        try {
-                            //String genomeSeq = elem.getSequence().seqString();
-                            reference_id = createReference(seqname, elem.getSequence().length());
-                            generatedRefIDs.add(reference_id);
-                            session_uuid = initTransfer(reference_id);
-                            sendSequence(elem.getSequence(), session_uuid);
-                            sequenceSent = true;
-                        } catch (MGXServerException ex) {
-                            abortTransfer(ex.getMessage());
-                            return false;
-                        }
-                    }
-
                     Annotation annot = elem.getAnnotation();
                     RegionDTO.Builder region = RegionDTO.newBuilder();
-                    region.setName((String) annot.getProperty("locus_tag"));
+                    region.setName(annot.getProperty("locus_tag").toString());
                     region.setType(elem.getType());
                     if (annot.containsProperty("product")) {
-                        region.setDescription((String) annot.getProperty("product"));
+                        region.setDescription(annot.getProperty("product").toString());
                     } else if (annot.containsProperty("function")) {
-                        region.setDescription((String) annot.getProperty("function"));
+                        region.setDescription(annot.getProperty("function").toString());
                     } else {
                         region.setDescription("");
                     }
 
+                    // 0-based start/stop coordinates
                     int abs_start, abs_stop;
                     if (elem.getStrand().getValue() == 1) {
                         abs_start = elem.getLocation().getMin() - 1;
@@ -143,6 +154,8 @@ public class ReferenceUploader extends UploadBase {
                     region.setStop(abs_stop);
 
                     regions.add(region.build());
+
+                    // send region chunk
                     if (regions.size() >= getChunkSize()) {
                         try {
                             sendRegions(regions, session_uuid);
@@ -151,8 +164,9 @@ public class ReferenceUploader extends UploadBase {
                             return false;
                         }
                         total_elements_sent += regions.size();
-                        cb.callback(total_elements_sent);
                         regions.clear();
+                        //cb.callback(total_elements_sent);
+                        fireTaskChange(MESSAGE, total_elements_sent + " regions sent.");
                     }
                 }
             }
@@ -166,8 +180,9 @@ public class ReferenceUploader extends UploadBase {
                     return false;
                 }
                 total_elements_sent += regions.size();
-                cb.callback(total_elements_sent);
+                //cb.callback(total_elements_sent);
                 regions.clear();
+                fireTaskChange(MESSAGE, total_elements_sent + " regions sent.");
             }
 
             try {
@@ -176,7 +191,8 @@ public class ReferenceUploader extends UploadBase {
                 abortTransfer(ex.getMessage());
                 return false;
             }
-            cb.callback(total_elements_sent);
+            //cb.callback(total_elements_sent);
+            fireTaskChange(MESSAGE, "Imported " + seqname);
         }
         try {
             br.close();
@@ -224,17 +240,19 @@ public class ReferenceUploader extends UploadBase {
         super.put(data.build(), "Reference", "addRegions", session_uuid);
     }
 
-    private void sendSequence(Sequence seq, String session_uuid) throws MGXServerException {
-        String dna = seq.seqString();
+    private void sendSequence(String dna, String session_uuid) throws MGXServerException {
         int length = dna.length();
         for (int i = 0; i < length; i += 10000) {
+            fireTaskChange(MESSAGE, String.valueOf(i) + "bp sent..");
             String chunk = dna.substring(i, Math.min(length, i + 10000));
             super.put(MGXString.newBuilder().setValue(chunk).build(), "Reference", "addSequence", session_uuid);
         }
+        fireTaskChange(MESSAGE, String.valueOf(length) + "bp sent..");
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
         super.get("Reference", "close", uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
+        super.dispose();
     }
 }
