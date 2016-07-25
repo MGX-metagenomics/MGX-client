@@ -120,5 +120,6 @@ public class FileUploader extends UploadBase {
     private void finishTransfer(String uuid) throws MGXServerException {
         super.get("File", "closeUpload", uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
+        super.dispose();
     }
 }

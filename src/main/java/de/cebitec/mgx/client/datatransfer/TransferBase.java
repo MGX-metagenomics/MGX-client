@@ -33,7 +33,7 @@ public abstract class TransferBase implements PropertyChangeListener {
     }
 
     @Override
-    public synchronized void propertyChange(PropertyChangeEvent evt) {
+    public final synchronized void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource().equals(dtomaster) && evt.getPropertyName().equals(MGXDTOMaster.PROP_LOGGEDIN)) {
             Boolean newVal = (Boolean) evt.getNewValue();
             if (!newVal) {
