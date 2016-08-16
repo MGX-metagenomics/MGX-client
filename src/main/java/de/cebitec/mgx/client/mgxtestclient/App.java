@@ -26,7 +26,7 @@ public class App {
         String pName = args[0];
 
         Console con = System.console();
-        String username = "sjaenick"; //con.readLine("Username: ");
+        String username = "pblumenk"; //con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
         MGXDTOMaster master = getMaster(username, password, pName);
