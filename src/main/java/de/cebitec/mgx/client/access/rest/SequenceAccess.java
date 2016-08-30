@@ -63,6 +63,9 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     public SequenceDTOList fetchByIds(long[] ids) throws MGXDTOException {
+        if (ids == null || ids.length == 0) {
+            throw new MGXClientException("Empty/null list of sequence IDs.");
+        }
         String[] resolve = r.resolve(SequenceDTOList.class, "fetchByIds");
         Builder b = MGXLongList.newBuilder();
         for (long id : ids) {
