@@ -54,6 +54,8 @@ public class AttributeAccessTest {
         assertEquals("50.8", attr.getValue());
         assertTrue(attr.hasAttributeTypeId());
         assertEquals(1, attr.getAttributeTypeId());
+        assertTrue(attr.hasJobid());
+        assertEquals(1, attr.getJobid());
     }
 
     @Test
@@ -145,7 +147,7 @@ public class AttributeAccessTest {
 
         Iterator<AttributeDTO> iter = null;
         try {
-            iter = master.Attribute().ByJob(3);
+            iter = master.Attribute().byJob(3);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
