@@ -20,7 +20,7 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
         super(restAccess);
     }
 
-    public Iterator<ObservationDTO> ByRead(long seqId) throws MGXDTOException {
+    public Iterator<ObservationDTO> byRead(long seqId) throws MGXDTOException {
         return get(ObservationDTOList.class, r.resolve(ObservationDTO.class, "byRead", String.valueOf(seqId))).getObservationList().iterator();
     }
 

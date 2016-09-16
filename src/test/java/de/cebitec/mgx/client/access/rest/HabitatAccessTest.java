@@ -48,10 +48,13 @@ public class HabitatAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<HabitatDTO> iter = master.Habitat().fetchall();
         assertNotNull(iter);
-        assertTrue(iter.hasNext());
-        HabitatDTO habitat = iter.next();
-        assertNotNull(habitat);
-        assertFalse(iter.hasNext());
+        int cnt = 0;
+        while (iter.hasNext()) {
+            HabitatDTO hab = iter.next();
+            assertNotNull(hab);
+            cnt++;
+        }
+        assertEquals(2, cnt);
     }
 
     @Test
@@ -69,10 +72,25 @@ public class HabitatAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         HabitatDTO habitat = null;
         try {
-            habitat = master.Habitat().fetch(2);
+            habitat = master.Habitat().fetch(100);
         } catch (MGXDTOException ex) {
-            assertEquals("No object of type Habitat for ID 2.", ex.getMessage());
+            assertEquals("No object of type Habitat for ID 100.", ex.getMessage());
         }
         assertNull(habitat);
+    }
+
+    @Test
+    public void testDeleteInvalid() throws Exception {
+        System.out.println("testDeleteInvalid");
+        MGXDTOMaster master = TestMaster.getRW();
+        try {
+            master.Habitat().delete(100);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type Habitat for ID 100")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        fail("deleting a non-existing habitat should produce an error");
     }
 }

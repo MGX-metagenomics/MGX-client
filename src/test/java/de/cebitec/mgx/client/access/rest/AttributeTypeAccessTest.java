@@ -37,7 +37,7 @@ public class AttributeTypeAccessTest {
     public void testBySeqRun() throws Exception {
         System.out.println("BySeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<AttributeTypeDTO> types = master.AttributeType().BySeqRun(1);
+        Iterator<AttributeTypeDTO> types = master.AttributeType().bySeqRun(1);
         assertNotNull(types);
         int cnt = 0;
         while (types.hasNext()) {
@@ -77,7 +77,7 @@ public class AttributeTypeAccessTest {
     public void testByJob() throws Exception {
         System.out.println("ByJob");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<AttributeTypeDTO> types = master.AttributeType().ByJob(3);
+        Iterator<AttributeTypeDTO> types = master.AttributeType().byJob(3);
         assertNotNull(types);
         int cnt = 0;
         while (types.hasNext()) {

@@ -17,7 +17,6 @@ import java.util.UUID;
  */
 public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
-    
     public MappingAccess(RESTAccessI restAccess) {
         super(restAccess);
     }
@@ -27,12 +26,16 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
         return fetchlist(MappingDTOList.class).getMappingList().iterator();
     }
 
-    public Iterator<MappingDTO> BySeqRun(long id) throws MGXDTOException {
+    public Iterator<MappingDTO> bySeqRun(long id) throws MGXDTOException {
         return get(MappingDTOList.class, r.resolve(MappingDTO.class, "bySeqRun", String.valueOf(id))).getMappingList().iterator();
     }
 
-    public Iterator<MappingDTO> ByReference(long id) throws MGXDTOException {
+    public Iterator<MappingDTO> byReference(long id) throws MGXDTOException {
         return get(MappingDTOList.class, r.resolve(MappingDTOList.class, "byReference", String.valueOf(id))).getMappingList().iterator();
+    }
+
+    public Iterator<MappingDTO> byJob(long id) throws MGXDTOException {
+        return get(MappingDTOList.class, r.resolve(MappingDTOList.class, "byJob", String.valueOf(id))).getMappingList().iterator();
     }
 
     @Override
@@ -72,4 +75,5 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     public void closeMapping(UUID uuid) throws MGXDTOException {
         super.get("Mapping", "closeMapping", uuid.toString());
     }
+
 }

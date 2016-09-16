@@ -63,11 +63,11 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
         return super.delete(id, JobDTO.class);
     }
 
-    public Iterable<JobDTO> ByAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXDTOException {
+    public Iterable<JobDTO> byAttributeTypeAndSeqRun(long atype_id, long seqrun_id) throws MGXDTOException {
         return get(JobDTOList.class, "Job", "ByAttributeTypeAndSeqRun", String.valueOf(atype_id), String.valueOf(seqrun_id)).getJobList();
     }
 
-    public Iterable<JobDTO> BySeqRun(long seqrun_id) throws MGXDTOException {
+    public Iterable<JobDTO> bySeqRun(long seqrun_id) throws MGXDTOException {
         return get(JobDTOList.class, "Job", "BySeqRun", String.valueOf(seqrun_id)).getJobList();
     }
 

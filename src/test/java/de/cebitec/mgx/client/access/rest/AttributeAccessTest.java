@@ -87,11 +87,16 @@ public class AttributeAccessTest {
             fail(ex.getMessage());
         }
         assertNotNull(ad);
-        assertEquals(7, ad.getAttributeTypeCount());
-        assertEquals(30, ad.getAttributeCountsCount());
 
         List<AttributeTypeDTO> attributeTypeList = ad.getAttributeTypeList();
         assertNotNull(attributeTypeList);
+//        for (AttributeTypeDTO  at : attributeTypeList) {
+//            System.err.println(at.getName());
+//        }
+
+        assertEquals(7, ad.getAttributeTypeCount());
+        assertEquals(30, ad.getAttributeCountsCount());
+
 
         int roots = 0;
         long total = 0;

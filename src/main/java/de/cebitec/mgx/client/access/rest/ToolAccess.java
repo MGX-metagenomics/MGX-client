@@ -77,7 +77,7 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         super.update(t, ToolDTO.class);
     }
 
-    public ToolDTO ByJob(long job_id) throws MGXDTOException {
+    public ToolDTO byJob(long job_id) throws MGXDTOException {
         return get(ToolDTO.class, r.resolve(ToolDTO.class, "byJob", String.valueOf(job_id)));
     }
 
