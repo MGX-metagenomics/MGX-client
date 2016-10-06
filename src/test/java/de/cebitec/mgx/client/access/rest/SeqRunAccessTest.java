@@ -371,4 +371,19 @@ public class SeqRunAccessTest {
         assertNotNull(qc);
         assertEquals("SeqRun without sequences should have returned zero QC reports", 0, qc.size());
     }
+
+    @Test
+    public void testDeleteInvalid() {
+        System.out.println("testDeleteInvalid");
+        MGXDTOMaster master = TestMaster.getRW();
+        try {
+            master.SeqRun().delete(100);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type SeqRun for ID 100")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        fail("deleting a non-existing seqrun should produce an error");
+    }
 }

@@ -27,15 +27,15 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         super(restAccess);
     }
 
-    public Iterator<AttributeDTO> BySeqRun(final long seqrunId) throws MGXDTOException {
+    public Iterator<AttributeDTO> bySeqRun(final long seqrunId) throws MGXDTOException {
         return get(AttributeDTOList.class, "Attribute", "BySeqRun", String.valueOf(seqrunId)).getAttributeList().iterator();
     }
 
-    public Iterator<AttributeDTO> ByJob(long jobId) throws MGXDTOException {
+    public Iterator<AttributeDTO> byJob(final long jobId) throws MGXDTOException {
         return get(AttributeDTOList.class, "Attribute", "ByJob", String.valueOf(jobId)).getAttributeList().iterator();
     }
 
-    public AttributeDistribution getDistribution(final long attrType_id, long job_id) throws MGXDTOException {
+    public AttributeDistribution getDistribution(final long attrType_id, final long job_id) throws MGXDTOException {
         return get(AttributeDistribution.class, "Attribute", "getDistribution", String.valueOf(attrType_id), String.valueOf(job_id));
     }
 
@@ -77,7 +77,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public UUID delete(long id) throws MGXDTOException {
+    public UUID delete(final long id) throws MGXDTOException {
         throw new MGXClientException("Attribute deletion is not supported. Delete the corresponding job instead.");
         //return super.delete(id, AttributeDTO.class);
     }

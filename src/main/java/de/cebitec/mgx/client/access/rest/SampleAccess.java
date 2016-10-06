@@ -27,7 +27,7 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
         return super.fetch(id, SampleDTO.class);
     }
 
-    public Iterator<SampleDTO> ByHabitat(long habitat_id) throws MGXDTOException {
+    public Iterator<SampleDTO> byHabitat(long habitat_id) throws MGXDTOException {
         return get(SampleDTOList.class, r.resolve(SampleDTO.class, "byHabitat", String.valueOf(habitat_id))).getSampleList().iterator();
     }
 

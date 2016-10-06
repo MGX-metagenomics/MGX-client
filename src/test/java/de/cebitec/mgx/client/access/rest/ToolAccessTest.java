@@ -188,7 +188,7 @@ public class ToolAccessTest {
     public void testByJob() throws Exception {
         System.out.println("ByJob");
         MGXDTOMaster master = TestMaster.getRO();
-        ToolDTO t = master.Tool().ByJob(1);
+        ToolDTO t = master.Tool().byJob(1);
         assertNotNull(t);
         assertNotNull(t.getName());
     }

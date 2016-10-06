@@ -100,9 +100,12 @@ public class ReferenceUploader extends UploadBase {
                 int trimPos = seqname.lastIndexOf(", complete sequence.");
                 seqname = seqname.substring(0, trimPos);
             }
-            if (seqname.endsWith(", complete genome.")) {
-                int trimPos = seqname.lastIndexOf(", complete genome.");
+            if (seqname.endsWith(" complete genome.")) {
+                int trimPos = seqname.lastIndexOf(" complete genome.");
                 seqname = seqname.substring(0, trimPos);
+            }
+            if (seqname.endsWith(".") || seqname.endsWith(",")) {
+                seqname = seqname.substring(0, seqname.length() - 1);
             }
             fireTaskChange(MESSAGE, "Processing " + seqname);
 
@@ -111,7 +114,7 @@ public class ReferenceUploader extends UploadBase {
             //
             String session_uuid;
             try {
-                reference_id = createReference(seqname, seq.length());
+                reference_id = createReference(seqname.trim(), seq.length());
                 generatedRefIDs.add(reference_id);
                 session_uuid = initTransfer(reference_id);
                 sendSequence(seq.seqString(), session_uuid);

@@ -34,7 +34,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class ReferenceAccessTest {
 
     @Configuration
@@ -140,7 +140,7 @@ public class ReferenceAccessTest {
                     refName = ref.getName();
                 }
             }
-            assertTrue(found);
+            assertTrue("reference id 3 was not present in the global repository", found);
 
             UUID taskId = m.Reference().installGlobalReference(3);
 
@@ -202,7 +202,7 @@ public class ReferenceAccessTest {
 
     @Test
     public void testUploadGBK() {
-        System.out.println("testUpload");
+        System.out.println("testUploadGBK");
         MGXDTOMaster m = TestMaster.getRW();
 
         try {
@@ -230,7 +230,7 @@ public class ReferenceAccessTest {
 
         File f = new File("src/test/resources/NC_017106.gbk");
         if (!f.exists()) {
-            fail();
+            fail("Cannot read test input");
         }
         ReferenceUploader up = null;
         try {

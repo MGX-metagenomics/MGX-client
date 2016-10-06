@@ -14,11 +14,14 @@ import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -74,6 +77,8 @@ public class JobAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         JobDTO job = master.Job().fetch(1);
         assertNotNull(job);
+        assertEquals("Thu Jun 20 15:19:18 CEST 2013", new Date(1000L * job.getStartDate()).toString());
+        assertEquals("Thu Jun 20 15:20:01 CEST 2013", new Date(1000L * job.getFinishDate()).toString());
     }
 
     @Test
@@ -87,6 +92,21 @@ public class JobAccessTest {
             failed = true;
         }
         assertTrue(failed);
+    }
+
+    @Test
+    public void testDeleteInvalid() throws Exception {
+        System.out.println("testDeleteInvalid");
+        MGXDTOMaster master = TestMaster.getRW();
+        try {
+            master.Job().delete(999999999);
+        } catch (MGXDTOException ex) {
+            System.err.println(ex.getMessage());
+            if (ex.getMessage().contains("No object of type Job for ID 999999999")) {
+                return;
+            }
+        }
+        fail("deleting a non-existing job should produce an error");
     }
 
     @Test
@@ -255,13 +275,19 @@ public class JobAccessTest {
     }
 
     @Test
-    public void testBySeqRun() throws Exception {
+    public void testBySeqRun() {
         System.out.println("BySeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterable<JobDTO> jobs = master.Job().BySeqRun(1);
+        Iterable<JobDTO> jobs = null;
+        try {
+            jobs = master.Job().bySeqRun(1);
+        } catch (MGXDTOException ex) {
+            Logger.getLogger(JobAccessTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         assertNotNull(jobs);
         int cnt = 0;
         for (JobDTO j : jobs) {
+            System.err.println("Job " + j.getId() + " has " + j.getParameters().getParameterCount() + " parameters.");
             cnt++;
             if (j.hasParameters()) {
                 List<JobParameterDTO> params = j.getParameters().getParameterList();
@@ -275,16 +301,18 @@ public class JobAccessTest {
     }
 
     @Test
-    public void testByNonExistingSeqRun() throws Exception {
+    public void testByNonExistingSeqRun() {
         System.out.println("testByNonExistingSeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterable<JobDTO> jobs = master.Job().BySeqRun(1000);
-        assertNotNull(jobs);
-        int cnt = 0;
-        for (JobDTO j : jobs) {
-            cnt++;
+        try {
+            master.Job().bySeqRun(1000);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type SeqRun for ID 1000.")) {
+                return;
+            }
+            fail(ex.getMessage());
         }
-        assertEquals(0, cnt);
+        fail("seqrun with id 1000 does not exist, an exception should have been thrown");
     }
 
     @Test
@@ -314,9 +342,17 @@ public class JobAccessTest {
     public void testParams() throws Exception {
         System.out.println("testParams");
         MGXDTOMaster master = TestMaster.getRO();
-        JobDTO job = master.Job().fetch(124);
-        ToolDTO tool = master.Tool().ByJob(job.getId());
-        assertEquals("bowtie2", tool.getName());
+        Iterator<JobDTO> iter = master.Job().fetchall();
+        JobDTO job = null;
+        while (iter.hasNext()) {
+            JobDTO curJob = iter.next();
+            ToolDTO tool = master.Tool().byJob(curJob.getId());
+            if ("bowtie2".equals(tool.getName())) {
+                job = curJob;
+                break;
+            }
+        }
+        assertNotNull(job);
         JobParameterListDTO params = job.getParameters();
         assertNotNull(params);
         assertEquals(1, params.getParameterCount());

@@ -48,7 +48,7 @@ public class FileUploader extends UploadBase {
 
     @Override
     public final boolean upload() {
-        CallbackI cb = getProgressCallback();
+//        CallbackI cb = getProgressCallback();
 
         String session_uuid;
         try {
@@ -58,7 +58,7 @@ public class FileUploader extends UploadBase {
             return false;
         }
 
-        cb.callback(total_elements_sent);
+//        cb.callback(total_elements_sent);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
 
         if (in == null) {
@@ -79,7 +79,7 @@ public class FileUploader extends UploadBase {
                 System.arraycopy(buf, 0, data, 0, bytesRead);
                 total_elements_sent += bytesRead;
                 sendChunk(data, session_uuid);
-                cb.callback(total_elements_sent);
+//                cb.callback(total_elements_sent);
             }
         } catch (MGXServerException | IOException ex) {
             abortTransfer(ex.getMessage());
@@ -91,7 +91,7 @@ public class FileUploader extends UploadBase {
                 Logger.getLogger(FileUploader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        cb.callback(total_elements_sent);
+//        cb.callback(total_elements_sent);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
 
         try {

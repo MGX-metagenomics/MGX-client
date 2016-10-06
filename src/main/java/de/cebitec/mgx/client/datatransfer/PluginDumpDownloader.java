@@ -24,7 +24,7 @@ public class PluginDumpDownloader extends DownloadBase {
 
     @Override
     public boolean download() {
-        CallbackI cb = getProgressCallback();
+//        CallbackI cb = getProgressCallback();
 
         String session_uuid;
         try {
@@ -34,7 +34,7 @@ public class PluginDumpDownloader extends DownloadBase {
             return false;
         }
 
-        cb.callback(total_elements);
+//        cb.callback(total_elements);
 
         boolean need_refetch = true;
         while (need_refetch) {
@@ -60,7 +60,7 @@ public class PluginDumpDownloader extends DownloadBase {
                 return false;
             }
             total_elements += chunk.length;
-            cb.callback(total_elements);
+//            cb.callback(total_elements);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         }
 

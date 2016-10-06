@@ -17,7 +17,7 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
         super(restAccess);
     }
 
-    public Iterator<AttributeTypeDTO> BySeqRun(long seqrunId) throws MGXDTOException {
+    public Iterator<AttributeTypeDTO> bySeqRun(long seqrunId) throws MGXDTOException {
         return get(AttributeTypeDTOList.class, "AttributeType", "BySeqRun", String.valueOf(seqrunId)).getAttributeTypeList().iterator();
     }
 
@@ -46,7 +46,7 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
         return super.delete(id, AttributeTypeDTO.class);
     }
 
-    public Iterator<AttributeTypeDTO> ByJob(long job_id) throws MGXDTOException {
+    public Iterator<AttributeTypeDTO> byJob(long job_id) throws MGXDTOException {
         return get(AttributeTypeDTOList.class, "AttributeType", "ByJob", String.valueOf(job_id)).getAttributeTypeList().iterator();
     }
 

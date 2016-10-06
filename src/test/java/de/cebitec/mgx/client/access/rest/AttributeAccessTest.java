@@ -54,6 +54,8 @@ public class AttributeAccessTest {
         assertEquals("50.8", attr.getValue());
         assertTrue(attr.hasAttributeTypeId());
         assertEquals(1, attr.getAttributeTypeId());
+        assertTrue(attr.hasJobid());
+        assertEquals(1, attr.getJobid());
     }
 
     @Test
@@ -85,11 +87,16 @@ public class AttributeAccessTest {
             fail(ex.getMessage());
         }
         assertNotNull(ad);
-        assertEquals(7, ad.getAttributeTypeCount());
-        assertEquals(30, ad.getAttributeCountsCount());
 
         List<AttributeTypeDTO> attributeTypeList = ad.getAttributeTypeList();
         assertNotNull(attributeTypeList);
+//        for (AttributeTypeDTO  at : attributeTypeList) {
+//            System.err.println(at.getName());
+//        }
+
+        assertEquals(7, ad.getAttributeTypeCount());
+        assertEquals(30, ad.getAttributeCountsCount());
+
 
         int roots = 0;
         long total = 0;
@@ -145,7 +152,7 @@ public class AttributeAccessTest {
 
         Iterator<AttributeDTO> iter = null;
         try {
-            iter = master.Attribute().ByJob(3);
+            iter = master.Attribute().byJob(3);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

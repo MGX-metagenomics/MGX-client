@@ -9,7 +9,7 @@ import de.cebitec.mgx.client.MGXDTOMaster;
  */
 public abstract class UploadBase extends TransferBase {
 
-    private CallbackI cb = null;
+//    private CallbackI cb = null;
     protected static final int DEFAULT_CHUNK_SIZE = 2048;
     private int chunk_size = DEFAULT_CHUNK_SIZE;
 
@@ -32,21 +32,21 @@ public abstract class UploadBase extends TransferBase {
         super.dispose();
     }
 
-    public void setProgressCallback(CallbackI cb) {
-        this.cb = cb;
-    }
-
-    protected CallbackI getProgressCallback() {
-        return cb != null ? cb
-                : new NullCallBack();
-    }
+//    public void setProgressCallback(CallbackI cb) {
+//        this.cb = cb;
+//    }
+//
+//    protected CallbackI getProgressCallback() {
+//        return cb != null ? cb
+//                : new NullCallBack();
+//    }
 
     public abstract boolean upload();
 
-    private final static class NullCallBack implements CallbackI {
-
-        @Override
-        public void callback(long i) {
-        }
-    }
+//    private final static class NullCallBack implements CallbackI {
+//
+//        @Override
+//        public void callback(long i) {
+//        }
+//    }
 }

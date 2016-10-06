@@ -32,7 +32,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return super.fetch(id, SeqRunDTO.class);
     }
 
-    public Iterator<SeqRunDTO> ByExtract(long extract_id) throws MGXDTOException {
+    public Iterator<SeqRunDTO> byExtract(long extract_id) throws MGXDTOException {
         return get(SeqRunDTOList.class, r.resolve(SeqRunDTO.class, "byExtract", String.valueOf(extract_id))).getSeqrunList().iterator();
     }
 

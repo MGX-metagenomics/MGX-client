@@ -28,7 +28,7 @@ public class FileDownloader extends DownloadBase {
 
     @Override
     public boolean download() {
-        CallbackI cb = getProgressCallback();
+//        CallbackI cb = getProgressCallback();
 
         String session_uuid;
         try {
@@ -38,7 +38,8 @@ public class FileDownloader extends DownloadBase {
             return false;
         }
 
-        cb.callback(total_elements);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+//        cb.callback(total_elements);
 
         boolean need_refetch = true;
         while (need_refetch) {
@@ -54,7 +55,7 @@ public class FileDownloader extends DownloadBase {
                 return false;
             }
 
-            // empty sequence list indicates end of download
+            // empty chunk indicates end of download
             need_refetch = chunk.length > 0;
 
             try {
@@ -64,7 +65,7 @@ public class FileDownloader extends DownloadBase {
                 return false;
             }
             total_elements += chunk.length;
-            cb.callback(total_elements);
+//            cb.callback(total_elements);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         }
 
@@ -88,19 +89,19 @@ public class FileDownloader extends DownloadBase {
 
     protected String initDownload() throws MGXServerException, UnsupportedEncodingException {
         MGXString session_uuid = super.get(MGXString.class, "File", "initDownload", URLEncoder.encode(serverFname, "UTF-8"));
-        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+        //fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return session_uuid.getValue();
     }
 
     protected void finishTransfer(String uuid) throws MGXServerException {
         super.get("File", "closeDownload", uuid);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+        //fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
     }
 
     protected byte[] fetchChunk(String session_uuid) throws MGXServerException {
         BytesDTO entity = super.get(BytesDTO.class, "File", "get", session_uuid);
-        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+        //fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         return entity.getData().toByteArray();
     }
 

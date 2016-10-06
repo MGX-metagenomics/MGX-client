@@ -23,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,16 +68,96 @@ public class MappingAccessTest {
     }
 
     @Test
-    public void testBySeqRun() throws Exception {
-        System.out.println("BySeqRun");
+    public void testByValidSeqRun() throws Exception {
+        System.out.println("testByValidSeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<MappingDTO> it = master.Mapping().BySeqRun(1);
+        Iterator<MappingDTO> it = master.Mapping().bySeqRun(1);
         assertNotNull(it);
-        Set<MappingDTO> data = new HashSet<>();
+        int cnt = 0;
         while (it.hasNext()) {
-            data.add(it.next());
+            MappingDTO next = it.next();
+            assertNotNull(next);
+            cnt++;
         }
-        assertEquals(1, data.size());
+        assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testByInvalidSeqRun() {
+        System.out.println("testByInvalidSeqRun");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<MappingDTO> iter = null;
+        try {
+            iter = master.Mapping().bySeqRun(100);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type SeqRun for ID 100.")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        assertNull(iter);
+    }
+
+    @Test
+    public void testByValidReference() throws Exception {
+        System.out.println("testByValidReference");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<MappingDTO> it = master.Mapping().byReference(8);
+        assertNotNull(it);
+        int cnt = 0;
+        while (it.hasNext()) {
+            MappingDTO next = it.next();
+            assertNotNull(next);
+            cnt++;
+        }
+        assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testByInvalidReference() {
+        System.out.println("testByInvalidReference");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<MappingDTO> iter = null;
+        try {
+            iter = master.Mapping().byReference(100);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type Reference for ID 100.")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        assertNull(iter);
+    }
+
+    @Test
+    public void testByValidJob() throws Exception {
+        System.out.println("testByValidJob");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<MappingDTO> it = master.Mapping().byJob(124);
+        assertNotNull(it);
+        int cnt = 0;
+        while (it.hasNext()) {
+            MappingDTO next = it.next();
+            assertNotNull(next);
+            cnt++;
+        }
+        assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testByInvalidJob() {
+        System.out.println("testByInvalidJob");
+        MGXDTOMaster master = TestMaster.getRO();
+        Iterator<MappingDTO> iter = null;
+        try {
+            Iterator<MappingDTO> it = master.Mapping().byJob(100);
+        } catch (MGXDTOException ex) {
+            if (ex.getMessage().contains("No object of type Job for ID 100.")) {
+                return;
+            }
+            fail(ex.getMessage());
+        }
+        assertNull(iter);
     }
 
     @Test

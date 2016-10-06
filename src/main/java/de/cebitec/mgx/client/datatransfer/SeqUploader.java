@@ -36,7 +36,7 @@ public class SeqUploader extends UploadBase {
 
     @Override
     public boolean upload() {
-        CallbackI cb = getProgressCallback();
+//        CallbackI cb = getProgressCallback();
         int current_num_elements = 0;
 
         String session_uuid;
@@ -47,7 +47,7 @@ public class SeqUploader extends UploadBase {
             return false;
         }
 
-        cb.callback(total_elements);
+//        cb.callback(total_elements);
         Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
         seqListBuilder.setComplete(true);
 
@@ -73,10 +73,10 @@ public class SeqUploader extends UploadBase {
 
                 if (current_num_elements >= getChunkSize()) {
                     total_elements += current_num_elements;
-                    cb.callback(total_elements);
+//                    cb.callback(total_elements);
                     try {
                         sendChunk(seqListBuilder.build(), session_uuid);
-                        cb.callback(total_elements);
+//                        cb.callback(total_elements);
                     } catch (MGXServerException ex) {
                         abortTransfer(ex.getMessage());
                         return false;
@@ -99,7 +99,7 @@ public class SeqUploader extends UploadBase {
                 abortTransfer(ex.getMessage());
                 return false;
             }
-            cb.callback(total_elements);
+//            cb.callback(total_elements);
         }
         try {
             finishTransfer(session_uuid);

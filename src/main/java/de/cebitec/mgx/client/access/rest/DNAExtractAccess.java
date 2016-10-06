@@ -22,7 +22,7 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
         return fetchlist(DNAExtractDTOList.class).getExtractList().iterator();
     }
 
-    public Iterator<DNAExtractDTO> BySample(long sample_id) throws MGXDTOException {
+    public Iterator<DNAExtractDTO> bySample(long sample_id) throws MGXDTOException {
         return get(DNAExtractDTOList.class, r.resolve(DNAExtractDTO.class, "bySample", String.valueOf(sample_id))).getExtractList().iterator();
     }
 
