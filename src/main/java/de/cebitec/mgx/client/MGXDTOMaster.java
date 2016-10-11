@@ -136,7 +136,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new MappingAccess(restAccess);
+        return new MappingAccess(this, restAccess);
     }
 
     public SequenceAccess Sequence() throws MGXClientException {
