@@ -15,6 +15,8 @@ import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -60,10 +62,11 @@ public class ReferenceAccessTest {
         assertNotNull(iter);
         int refCnt = 0;
         while (iter.hasNext()) {
-            iter.next();
+            ReferenceDTO ref = iter.next();
+            System.err.println(ref.getName());
             refCnt++;
         }
-        assertEquals(2, refCnt);
+        assertEquals(1663, refCnt);
     }
 
     @Test
@@ -129,6 +132,7 @@ public class ReferenceAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
 
         String refName = null;
+        TaskDTO task;
         try {
 
             boolean found = false;
@@ -138,13 +142,14 @@ public class ReferenceAccessTest {
                 if (ref.getId() == 3) {
                     found = true;
                     refName = ref.getName();
+                    break;
                 }
             }
             assertTrue("reference id 3 was not present in the global repository", found);
 
             UUID taskId = m.Reference().installGlobalReference(3);
 
-            TaskDTO task = m.Task().get(taskId);
+            task = m.Task().get(taskId);
             assertNotNull(task);
             while ((task.getState() != TaskState.FINISHED) || (task.getState() != TaskState.FAILED)) {
                 System.err.println(" --> " + task.getState());
@@ -160,6 +165,7 @@ public class ReferenceAccessTest {
         }
 
         long projRefId = -1;
+        ReferenceDTO projReference = null;
         boolean installSuccess = false;
         try {
             Iterator<ReferenceDTO> iterProj = m.Reference().fetchall();
@@ -168,6 +174,7 @@ public class ReferenceAccessTest {
                 if (ref.getName().equals(refName)) {
                     installSuccess = true;
                     projRefId = ref.getId();
+                    projReference = ref;
                 }
             }
             assertTrue(installSuccess);
@@ -183,6 +190,18 @@ public class ReferenceAccessTest {
         }
 
         assertNotNull(seqData);
+        assertNotNull(projReference);
+
+        int numSubregions = 0;
+        try {
+            Iterator<RegionDTO> regionIter = m.Reference().byReferenceInterval(projRefId, 0, projReference.getLength() - 1);
+            while (regionIter != null && regionIter.hasNext()) {
+                RegionDTO reg = regionIter.next();
+                numSubregions++;
+            }
+        } catch (MGXDTOException ex) {
+            Logger.getLogger(ReferenceAccessTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // delete it again
         try {
@@ -198,6 +217,8 @@ public class ReferenceAccessTest {
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
+
+        assertEquals(553, numSubregions);
     }
 
     @Test

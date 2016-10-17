@@ -112,7 +112,7 @@ public class SeqRunAccessTest {
             iter.next();
             refCnt++;
         }
-        assertEquals(3, refCnt);
+        assertEquals(4, refCnt);
     }
 
     @Test
