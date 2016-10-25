@@ -86,7 +86,7 @@ public class SequenceAccessTest {
         System.out.println("fetchInvalid");
         MGXDTOMaster master = TestMaster.getRW();
         try {
-            SequenceDTO result = master.Sequence().fetch(999999);
+            SequenceDTO result = master.Sequence().fetch(99999999);
         } catch (MGXServerException ex) {
             return; // ok
         } catch (MGXDTOException ex) {

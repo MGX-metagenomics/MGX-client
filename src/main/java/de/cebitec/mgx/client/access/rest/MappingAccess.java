@@ -1,6 +1,8 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.datatransfer.BAMFileDownloader;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -8,6 +10,7 @@ import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTOList;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.dto.dto.MappingDTOList;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -17,8 +20,11 @@ import java.util.UUID;
  */
 public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
-    public MappingAccess(RESTAccessI restAccess) {
+    private final MGXDTOMaster dtomaster;
+
+    public MappingAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     @Override
@@ -74,6 +80,10 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
 
     public void closeMapping(UUID uuid) throws MGXDTOException {
         super.get("Mapping", "closeMapping", uuid.toString());
+    }
+
+    public BAMFileDownloader createDownloader(long mappingId, OutputStream writer) throws MGXDTOException {
+        return new BAMFileDownloader(dtomaster, getRESTAccess(), mappingId, writer);
     }
 
 }

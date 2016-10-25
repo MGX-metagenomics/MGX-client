@@ -6,6 +6,8 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.access.rest.util.MapFetcher;
+import de.cebitec.mgx.client.datatransfer.BAMFileDownloader;
+import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -13,6 +15,15 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.MappedSequenceDTO;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.osgiutils.MGXOptions;
+import de.cebitec.mgx.testutils.PropCounter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -331,6 +343,87 @@ public class MappingAccessTest {
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
+    }
+
+    @Test
+    public synchronized void testDownloadBAM() throws IOException {
+        System.out.println("testDownloadBAM");
+        MGXDTOMaster m = TestMaster.getRO();
+
+        OutputStream os = null;
+        File f = File.createTempFile("testDownloadBAM", "xx");
+        try {
+            os = new FileOutputStream(f);
+        } catch (FileNotFoundException ex) {
+            fail(ex.getMessage());
+        }
+
+        BAMFileDownloader down = null;
+        try {
+            down = m.Mapping().createDownloader(30, os);
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(down);
+
+        PropCounter pc = new PropCounter();
+        down.addPropertyChangeListener(pc);
+
+        boolean success = down.download();
+        assertTrue(down.getErrorMessage(), success);
+
+        try {
+            os.close();
+        } catch (IOException ex) {
+            fail(ex.getMessage());
+        }
+
+        if (!success) {
+            fail(down.getErrorMessage());
+        }
+
+        try {
+            String md5 = getMD5Checksum(f.getAbsolutePath());
+            assertEquals("8bb7aa4ff0b667b22ba9c7521b00bf91", md5);
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+
+        // cleanup
+        if (f.exists()) {
+            f.delete();
+        }
+
+        assertTrue(10 < pc.getCount());
+        assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
+    }
+
+    private static byte[] createChecksum(String filename) throws Exception {
+        InputStream fis = new FileInputStream(filename);
+
+        byte[] buffer = new byte[1024];
+        MessageDigest complete = MessageDigest.getInstance("MD5");
+        int numRead;
+
+        do {
+            numRead = fis.read(buffer);
+            if (numRead > 0) {
+                complete.update(buffer, 0, numRead);
+            }
+        } while (numRead != -1);
+
+        fis.close();
+        return complete.digest();
+    }
+
+    private static String getMD5Checksum(String filename) throws Exception {
+        byte[] b = createChecksum(filename);
+        String result = "";
+
+        for (int i = 0; i < b.length; i++) {
+            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+        }
+        return result;
     }
 
 }

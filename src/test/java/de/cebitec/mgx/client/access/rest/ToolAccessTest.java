@@ -99,9 +99,10 @@ public class ToolAccessTest {
         int cnt = 0;
         while (it.hasNext()) {
             cnt++;
-            it.next();
+            ToolDTO tool = it.next();
+            //System.err.println(tool.getName());
         }
-        assertEquals(17, cnt);
+        assertEquals(18, cnt);
     }
 
     @Test

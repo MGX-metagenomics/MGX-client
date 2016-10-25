@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
 
@@ -56,7 +58,11 @@ public class TestMaster {
         while (mIter != null && mIter.hasNext()) {
             MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
-                masterRO = new MGXDTOMaster(gpms.createMaster(m));
+                try {
+                    masterRO = new MGXDTOMaster(gpms.createMaster(m));
+                } catch (GPMSException ex) {
+                    fail(ex.getMessage());
+                }
                 break;
             }
         }
@@ -99,7 +105,11 @@ public class TestMaster {
         while (mIter != null && mIter.hasNext()) {
             MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && ("MGX_Unittest".equals(m.getProject().getName()))) {
-                masterRW = new MGXDTOMaster(gpms.createMaster(m));
+                try {
+                    masterRW = new MGXDTOMaster(gpms.createMaster(m));
+                } catch (GPMSException ex) {
+                    fail(ex.getMessage());
+                }
                 break;
             }
         }
@@ -142,7 +152,11 @@ public class TestMaster {
         while (mIter.hasNext()) {
             MembershipI m = mIter.next();
             if ("MGX".equals(m.getProject().getProjectClass().getName()) && (targetProject.equals(m.getProject().getName()))) {
-                master = new MGXDTOMaster(gpms.createMaster(m));
+                try {
+                    master = new MGXDTOMaster(gpms.createMaster(m));
+                } catch (GPMSException ex) {
+                    fail(ex.getMessage());
+                }
                 break;
             }
         }

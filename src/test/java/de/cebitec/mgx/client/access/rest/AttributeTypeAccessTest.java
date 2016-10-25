@@ -67,10 +67,11 @@ public class AttributeTypeAccessTest {
         int cnt = 0;
         while (types.hasNext()) {
             AttributeTypeDTO next = types.next();
+            System.err.println(next.getName());
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(21, cnt);
+        assertEquals(22, cnt);
     }
 
     @Test
