@@ -95,7 +95,16 @@ public class ReferenceUploader extends UploadBase {
             //
             // trim down sequence name
             //
-            String seqname = seq.getDescription() != null ? seq.getDescription().replaceAll("\n", " ") : "unnamed sequence";
+            String seqname = null;
+            if (seq.getDescription() != null) {
+                seqname = seq.getDescription().replaceAll("\n", " ");
+            }
+            if (seqname == null || seqname.trim().isEmpty()) {
+                seqname = seq.getName().trim();
+            }
+            if (seqname == null || seqname.trim().isEmpty()) {
+                seqname = "unnamed sequence";
+            }
             if (seqname.endsWith(", complete sequence.")) {
                 int trimPos = seqname.lastIndexOf(", complete sequence.");
                 seqname = seqname.substring(0, trimPos);
