@@ -44,6 +44,7 @@
                             de.cebitec.mgx.client.exception
                         </Export-Package>
                         <Import-Package>
+                            javax.ws.rs,
                             com.sun.jersey.api.client,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.protobuf,
@@ -69,7 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <source>1.7</source>
