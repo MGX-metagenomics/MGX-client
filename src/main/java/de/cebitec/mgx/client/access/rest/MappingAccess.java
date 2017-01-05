@@ -12,10 +12,8 @@ import de.cebitec.mgx.dto.dto.MappedSequenceDTOList;
 import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.dto.dto.MappingDTOList;
 import java.io.OutputStream;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,6 +74,7 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
         return UUID.fromString(super.get(MGXString.class, "Mapping", "openMapping", String.valueOf(id)).getValue());
     }
 
+    @SuppressWarnings("unchecked")
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXDTOException {
         try {
             long duration = System.currentTimeMillis();
