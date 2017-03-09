@@ -40,33 +40,25 @@ public class SeqDownloader extends DownloadBase {
 
     @Override
     public boolean download() {
-//        CallbackI cb = getProgressCallback();
 
         String session_uuid;
         try {
             session_uuid = initTransfer();
         } catch (MGXServerException ex) {
-            //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
             abortTransfer(ex.getMessage());
             return false;
         }
 
-//        cb.callback(total_elements);
-
         boolean need_refetch = true;
         while (need_refetch) {
             int current_num_elements = 0;
-            SequenceDTOList chunk = null;
+            SequenceDTOList chunk;
             try {
                 chunk = fetchChunk(session_uuid);
             } catch (MGXServerException ex) {
-                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 abortTransfer(ex.getMessage());
                 return false;
             }
-
-            // empty sequence list indicates end of download
-            need_refetch = chunk.getSeqCount() > 0;
 
             try {
                 for (SequenceDTO dto : chunk.getSeqList()) {
@@ -92,8 +84,14 @@ public class SeqDownloader extends DownloadBase {
                 return false;
             }
             total_elements += current_num_elements;
-//            cb.callback(total_elements);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+
+            //
+            // completeness flag indicates last chunk
+            //
+            if (chunk.getComplete()) {
+                need_refetch = false;
+            }
         }
 
         // finish the transfer
@@ -124,7 +122,6 @@ public class SeqDownloader extends DownloadBase {
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 return initTransfer(); // retry
             }
         }
@@ -138,7 +135,6 @@ public class SeqDownloader extends DownloadBase {
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 finishTransfer(uuid);
             }
         }
@@ -151,7 +147,6 @@ public class SeqDownloader extends DownloadBase {
             return entity;
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                //Logger.getLogger(SeqDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 return fetchChunk(session_uuid);
             }
         }
