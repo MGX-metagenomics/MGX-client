@@ -1,11 +1,14 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.datatransfer.SeqByAttributeDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
+import de.cebitec.mgx.dto.dto.AttributeDTO;
+import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.osgiutils.MGXOptions;
@@ -13,7 +16,9 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
+import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -161,7 +166,7 @@ public class SequenceAccessTest {
         while (from < ids.length) {
             chunk = Arrays.copyOfRange(ids, from, Math.min(from + size, ids.length));
 
-            System.err.println("  fetching interval " + chunk[0] + "-" + chunk[chunk.length-1]);
+            System.err.println("  fetching interval " + chunk[0] + "-" + chunk[chunk.length - 1]);
             SequenceDTOList result = null;
             try {
                 result = master.Sequence().fetchByIds(chunk);
@@ -170,9 +175,60 @@ public class SequenceAccessTest {
             }
             assertNotNull(result);
             assertEquals(chunk.length, result.getSeqCount());
-            
+
             from += size;
         }
 
     }
+
+    @Test
+    public void testDownloadSequencesForAttribute() throws MGXDTOException {
+        System.out.println("testDownloadSequencesForAttribute");
+        MGXDTOMaster master = TestMaster.getRO();
+
+        // GC, 50.8 
+        AttributeDTO attr = master.Attribute().fetch(1);
+        assertNotNull(attr);
+        AttributeDTOList set = AttributeDTOList.newBuilder()
+                .addAttribute(attr)
+                .build();
+
+        final Holder<Integer> cnt = new Holder<>();
+        cnt.set(0);
+        final Holder<Boolean> closed = new Holder<>();
+        closed.set(Boolean.FALSE);
+
+        SeqWriterI<DNASequenceI> dummy = new SeqWriterI<DNASequenceI>() {
+            @Override
+            public void addSequence(DNASequenceI seq) throws SeqStoreException {
+                cnt.set(cnt.get() + 1);
+            }
+
+            @Override
+            public void close() throws Exception {
+                closed.set(Boolean.TRUE);
+            }
+        };
+        SeqByAttributeDownloader downloader = master.Sequence().createDownloaderByAttributes(set, dummy, true);
+        boolean success = downloader.download();
+
+        assertTrue(success);
+
+        assertTrue(closed.get());
+        assertEquals(220, cnt.get().intValue());
+    }
+
+    private static class Holder<T> {
+
+        T val = null;
+
+        public void set(T newVal) {
+            val = newVal;
+        }
+
+        public T get() {
+            return val;
+        }
+    }
+
 }
