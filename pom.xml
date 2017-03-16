@@ -22,7 +22,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.0</version>
                 <extensions>true</extensions>
                 <executions>
                     <!-- This execution makes sure that the manifest is available 
@@ -44,6 +44,7 @@
                             de.cebitec.mgx.client.exception
                         </Export-Package>
                         <Import-Package>
+                            javax.ws.rs,
                             com.sun.jersey.api.client,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.protobuf,
@@ -69,7 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.0</version>
                 <configuration>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <source>1.7</source>
@@ -203,7 +204,7 @@
         <dependency>
             <groupId>de.cebitec.mgx</groupId>
             <artifactId>MGX-restgpms</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>de.cebitec.mgx</groupId>

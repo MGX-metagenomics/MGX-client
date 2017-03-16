@@ -36,6 +36,10 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return get(SeqRunDTOList.class, r.resolve(SeqRunDTO.class, "byExtract", String.valueOf(extract_id))).getSeqrunList().iterator();
     }
 
+    public SeqRunDTO byJob(long jobId) throws MGXDTOException {
+        return get(SeqRunDTO.class, r.resolve(SeqRunDTO.class, "byJob", String.valueOf(jobId)));
+    }
+
     @Override
     public long create(SeqRunDTO sr) throws MGXDTOException {
         return super.create(sr, SeqRunDTO.class);

@@ -56,13 +56,13 @@ public class MGXDTOMaster implements PropertyChangeListener {
             restmaster.removePropertyChangeListener(this);
             pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, true, false));
             pcs.close();
-            restmaster.close();
+//            restmaster.close();
             restmaster = null;
             login = null;
             restAccess = null;
         }
     }
-    
+
     public boolean isClosed() {
         return restmaster == null;
     }
@@ -242,10 +242,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (!Objects.equals(this.restmaster, other.restmaster)) {
             return false;
         }
-        if (!Objects.equals(this.role, other.role)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.role, other.role);
     }
 
 }

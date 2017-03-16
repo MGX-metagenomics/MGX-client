@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.access.rest.util.IteratorIterator;
 import de.cebitec.mgx.client.datatransfer.BAMFileDownloader;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXLong;
@@ -12,7 +13,11 @@ import de.cebitec.mgx.dto.dto.MappingDTO;
 import de.cebitec.mgx.dto.dto.MappingDTOList;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ws.rs.WebApplicationException;
 
 /**
  *
@@ -69,9 +74,30 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
         return UUID.fromString(super.get(MGXString.class, "Mapping", "openMapping", String.valueOf(id)).getValue());
     }
 
+    @SuppressWarnings("unchecked")
     public Iterator<MappedSequenceDTO> byReferenceInterval(UUID uuid, int from, int to) throws MGXDTOException {
-        return super.get(MappedSequenceDTOList.class, "Mapping", "byReferenceInterval", uuid.toString(), String.valueOf(from), String.valueOf(to))
-                .getMappedSequenceList().iterator();
+        try {
+            long duration = System.currentTimeMillis();
+            Iterator<MappedSequenceDTO> ret = ListByReferenceInterval(uuid, from, to).iterator();
+            duration = System.currentTimeMillis() - duration;
+            Logger.getLogger(MappingAccess.class.getName()).log(Level.INFO, "{0}-{1} took {2}ms", new Object[]{from, to, duration});
+            return ret;
+        } catch (WebApplicationException ex) {
+            Logger.getLogger(MappingAccess.class.getName()).log(Level.INFO, "Too many mappings in interval {0}-{1}, splitting query", new Object[]{from, to});
+            // too much data, retry with smaller intervals
+            if (ex.getMessage() != null && ex.getMessage().contains("Protocol message was too large")) {
+                int mid = from + (to - from) / 2;
+                Iterator<MappedSequenceDTO> firstHalf = byReferenceInterval(uuid, from, mid);
+                Iterator<MappedSequenceDTO> secondHalf = byReferenceInterval(uuid, mid + 1, to);
+                return new IteratorIterator<>(firstHalf, secondHalf);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    private List<MappedSequenceDTO> ListByReferenceInterval(UUID uuid, int from, int to) throws MGXDTOException {
+        return super.get(MappedSequenceDTOList.class, "Mapping", "byReferenceInterval", uuid.toString(), String.valueOf(from), String.valueOf(to)).getMappedSequenceList();
     }
 
     public long getMaxCoverage(UUID uuid) throws MGXDTOException {

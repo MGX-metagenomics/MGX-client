@@ -131,6 +131,21 @@ public class SeqRunAccessTest {
     }
 
     @Test
+    public void testByJob() {
+        System.out.println("testByJob");
+        MGXDTOMaster master = TestMaster.getRO();
+        SeqRunDTO dto = null;
+        try {
+            dto = master.SeqRun().byJob(7);
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(dto);
+        assertEquals(2, dto.getId());
+        assertEquals("dataset2", dto.getName());
+    }
+
+    @Test
     public void testJobsAndAttributeTypes() {
         System.out.println("testJobsAndAttributeTypes");
         MGXDTOMaster master = TestMaster.getRO();
