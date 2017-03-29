@@ -1,5 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.access.rest.util.XMLValidator;
 import de.cebitec.mgx.client.exception.MGXClientException;
@@ -12,6 +14,7 @@ import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.dto.dto.ToolDTOList;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -19,8 +22,13 @@ import java.util.UUID;
  */
 public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
 
+    private final Cache<Long, ToolDTO> toolByJob;
+
     public ToolAccess(RESTAccessI restAccess) {
         super(restAccess);
+        toolByJob = CacheBuilder.newBuilder()
+                .expireAfterAccess(5, TimeUnit.MINUTES)
+                .build();
     }
 
     public Iterable<JobParameterDTO> getAvailableParameters(long tool_id, boolean isGlobal) throws MGXDTOException {
@@ -35,14 +43,6 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         MGXString dto = MGXString.newBuilder().setValue(toolXml).build();
         return put(dto, JobParameterListDTO.class, "Tool", "getParameters").getParameterList();
     }
-
-//    public Iterable<JobParameterDTO> getAvailableParameters(ToolDTO dto) throws MGXServerException, MGXClientException {
-//        XMLValidator validator = new XMLValidator();
-//        if (!validator.isValid(dto.getXml())) {
-//            throw new MGXClientException("Invalid tool file");
-//        }
-//        return put(dto, JobParameterListDTO.class, "Tool", "getAvailableParameters").getParameterList();
-//    }
 
     @Override
     public Iterator<ToolDTO> fetchall() throws MGXDTOException {
@@ -78,7 +78,13 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
 
     public ToolDTO byJob(long job_id) throws MGXDTOException {
-        return get(ToolDTO.class, r.resolve(ToolDTO.class, "byJob", String.valueOf(job_id)));
+        ToolDTO tool = toolByJob.getIfPresent(job_id);
+        if (tool != null) {
+            return tool;
+        }
+        tool = get(ToolDTO.class, r.resolve(ToolDTO.class, "byJob", String.valueOf(job_id)));
+        toolByJob.put(job_id, tool);
+        return tool;
     }
 
     public String getXMLDefinition(long tool_id) throws MGXDTOException {
