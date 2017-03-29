@@ -4,6 +4,7 @@ import de.cebitec.gpms.core.GPMSException;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
 import de.cebitec.mgx.restgpms.GPMSClient;
@@ -23,217 +24,82 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
+        if (args.length < 3) {
+            System.err.println("Invalid arguments.");
+            System.err.println();
+            System.err.println("Usage: MGX_MyProject MyDNAExtract file1.fastq file2.fastq file3.fastq");
+            System.err.println();
+            System.exit(1);
+        }
+
         String pName = args[0];
+        String extractName = args[1];
 
         Console con = System.console();
-        String username = "pblumenk"; //con.readLine("Username: ");
+        String username = con.readLine("Username: ");
         char[] password = con.readPassword("Password: ");
 
         MGXDTOMaster master = getMaster(username, password, pName);
-//        ToolDTO aa = null;
-//        Iterator<ToolDTO> it = master.Tool().fetchall();
-//        while (it.hasNext()) {
-//            aa = it.next();
-//            if (aa.getName().equals("BestHit-AA")) {
-//                break;
-//            }
-//        }
-//        Iterable<JobParameterDTO> parameters = master.Job().getParameters(86);
-//        JobParameterListDTO.Builder params = JobParameterListDTO.newBuilder();
-//        for (JobParameterDTO jp : parameters) {
-//            params.addParameter(jp);
-//        }
-//
-//        Iterator<SeqRunDTO> sit = master.SeqRun().fetchall();
-//        while (sit.hasNext()) {
-//            SeqRunDTO sr = sit.next();
-//            Iterable<JobDTO> jobs = master.Job().BySeqRun(sr.getId());
-//            boolean ok = false;
-//            for (JobDTO j : jobs) {
-//                if (j.getToolId() == aa.getId()) {
-//                    ok = true;
-//                }
-//            }
-//
-//            if (!ok) {
-//                JobDTO dto = JobDTO.newBuilder()
-//                        .setToolId(aa.getId())
-//                        .setSeqrunId(sr.getId())
-//                        .setState(JobDTO.JobState.CREATED)
-//                        .setParameters(params.build())
-//                        .build();
-//                Long job_id = master.Job().create(dto);
-//                System.err.println("job created.");
-//                boolean job_ok = master.Job().verify(job_id);
-//                System.err.println("job verification: " + job_ok);
-//                if (job_ok) {
-//                    System.err.println("submitting job " + job_id + "..");
-//                    boolean submitted = master.Job().execute(job_id);
-//                    System.err.println("job execution: " + submitted);
-//                }
-//            }
-//        }
-//        System.exit(0);
 
-//        AttributeDTO adto = master.Attribute().fetch(127400);
-//        assert adto != null;
-//        AttributeDTOList build = AttributeDTOList.newBuilder().addAttribute(adto).build();
-//        FastaWriter writer = new FastaWriter("/tmp/foo.fas");
-//        master.Sequence().fetchAnnotatedReads(build, writer);
-//        writer.close();
-//        System.exit(0);
-        //master.Sequence().downloadSequences(2, writer);
-//        for (FileDTO f : master.File().fetchall(args[1])) {
-//            System.out.println(f.getName());
-//        }
-//        System.exit(0);
-        //        MGXDTOMaster master2 = getMaster(username, password, "MGX_Stadtwerke");
-        //
-        //        assert master != null;
-        //        System.err.println("using " + master.getProject().getName());
-        //
-        //        for (HabitatDTO h : master.Habitat().fetchall()) {
-        //                for (HabitatDTO h2 : master2.Habitat().fetchall()) {
-        //                    for (SampleDTO s2 : master2.Sample().ByHabitat(h2.getId())) {
-        //                        for (DNAExtractDTO d2 : master2.DNAExtract().BySample(s2.getId())) {
-        //                            for (SeqRunDTO sr2 : master2.SeqRun().ByExtract(d2.getId())) {
-        //                                System.err.println(master2.getProject().getName() + " " + sr2.getName());
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            for (SampleDTO s : master.Sample().ByHabitat(h.getId())) {
-        //                for (DNAExtractDTO d : master.DNAExtract().BySample(s.getId())) {
-        //                    for (SeqRunDTO sr : master.SeqRun().ByExtract(d.getId())) {
-        //                        System.err.println(master.getProject().getName() + " " + sr.getName());
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        System.exit(0);
+        DNAExtractDTO extract = null;
+        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
+        while (iter != null && iter.hasNext()) {
+            DNAExtractDTO ex = iter.next();
+            if (ex.getName().equals(extractName)) {
+                extract = ex;
+                break;
+            }
+        }
+
+        if (extract == null) {
+            System.err.println("No DNA extract named " + extractName);
+            System.exit(1);
+        }
+
         Iterator<SeqRunDTO> runiter = master.SeqRun().fetchall();
         Set<String> runs = new HashSet<>();
         while (runiter.hasNext()) {
             runs.add(runiter.next().getName());
         }
 
-        long extract_id = 1; // new metagenomes, overlapped
-
         TermDTO flx = master.Term().fetch(5); // miseq
         TermDTO wgs = master.Term().fetch(13); // pe
 
-        for (int argpos = 1; argpos < args.length; argpos++) {
+        for (int argpos = 2; argpos < args.length; argpos++) {
             String fname = new File(args[argpos]).getName();
             fname = fname.replaceAll(".fastq", "");
+            fname = fname.replaceAll(".fastq.gz", "");
 
             if (runs.contains(fname)) {
                 System.err.println("skipping " + fname + ", already present");
-                continue;
             } else {
 
-                System.err.print("extract id " + extract_id + ", attach run " + fname + " using " + args[argpos] + " (y/n)? ");
-                String answer = "y"; //con.readLine();
-                if ("y".equals(answer)) {
-                    // create new seqrun
-                    SeqRunDTO sr = SeqRunDTO.newBuilder()
-                            .setName(fname)
-                            .setExtractId(extract_id)
-                            .setAccession("")
-                            .setSubmittedToInsdc(false)
-                            .setSequencingMethod(wgs)
-                            .setSequencingTechnology(flx)
-                            .build();
-                    Long seqrun_id = master.SeqRun().create(sr);
-                    System.err.println("  created seqrun " + sr.getAccession() + " with id " + seqrun_id);
+                // create new seqrun
+                SeqRunDTO sr = SeqRunDTO.newBuilder()
+                        .setName(fname)
+                        .setExtractId(extract.getId())
+                        .setAccession("")
+                        .setSubmittedToInsdc(false)
+                        .setSequencingMethod(wgs)
+                        .setSequencingTechnology(flx)
+                        .build();
+                long seqrun_id = master.SeqRun().create(sr);
+                System.err.print("  created seqrun " + sr.getName() + " with id " + seqrun_id + ", starting sequence import..");
 
-                    // upload sequence data
-                    SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(args[argpos]);
-                    master.Sequence().sendSequences(seqrun_id, reader);
-                }
+                // upload sequence data
+                SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(args[argpos]);
+                master.Sequence().sendSequences(seqrun_id, reader);
+                System.err.println("complete.");
             }
         }
-        System.exit(0);
-//        // fetch global tool Ids
-//        Iterator<ToolDTO> globalTools = master.Tool().listGlobalTools();
-//        Iterator<ToolDTO> localiter = master.Tool().fetchall();
-//        Collection<ToolDTO> local = new ArrayList<>();
-//        while (localiter.hasNext()) {
-//            local.add(localiter.next());
-//        }
-//
-        // copy tools to project
-//        while (globalTools.hasNext()) {
-//            ToolDTO globaltool = globalTools.next();
-//            for (ToolDTO localtool : local) {
-//                if (globaltool.getName().equals(localtool.getName())) {
-//                    isPresent = true;
-//                }
-//            }
-
-            //if ((!isPresent) && (globaltool.getName().equals("16S Pipeline"))) {
-//            if ((globaltool.getAuthor().equals("Sebastian Jaenicke") && (globaltool.getName().equals("16S Pipeline")))) {
-//                master.Tool().installGlobalTool(globaltool.getId());
-//            }
-//        }
-//
-//        // fetch all tools in project
-//        Iterator<ToolDTO> localiter = master.Tool().fetchall();
-//        ToolDTO tool = null;
-//        while (localiter.hasNext()) {
-//            tool = localiter.next();
-//        }
-//        assert tool != null;
-//
-//        Iterator<SeqRunDTO> iter = master.SeqRun().fetchall();
-//        while (iter.hasNext()) {
-//            SeqRunDTO seqrun = iter.next();
-//
-//            System.err.print("create job: " + seqrun.getName() + "/" + tool.getName() + "/" + tool.getId() + " (y/n)? ");
-//            String answer = con.readLine();
-//            //if (tool.getName().contains("16S")) {
-//            if ("y".equals(answer)) {
-//                JobDTO dto = JobDTO.newBuilder()
-//                        .setToolId(tool.getId())
-//                        .setSeqrunId(seqrun.getId())
-//                        .setState(JobDTO.JobState.CREATED)
-//                        .setParameters(JobParameterListDTO.newBuilder().build())
-//                        .build();
-//                Long job_id = master.Job().create(dto);
-//                System.err.println("job created.");
-//                boolean job_ok = master.Job().verify(job_id);
-//                System.err.println("job verification: " + job_ok);
-//                if (job_ok) {
-//                    System.err.println("submitting job " + job_id + "..");
-//                    boolean submitted = master.Job().execute(job_id);
-//                    System.err.println("job execution: " + submitted);
-//                }
-//            }
-//
-//        }
-//        // wait for jobs to finish execution
-//        for (Long job_id : jobIDs) {
-//            JobDTO job = master.Job().fetch(job_id);
-//            while (!((job.getState() == JobState.FINISHED) || (job.getState() == JobState.FAILED))) {
-//                System.out.println("state of job " + job.getId() + " is " + job.getState().name());
-//                Thread.sleep(5000);
-//                job = master.Job().fetch(job_id); //refresh
-//            }
-//            System.out.println("state of job " + job.getId() + " is " + job.getState().name());
-//        }
-        //System.out.println("sending cancel()");
-        //master.Job().cancel(lastjob);
-        // deleting the toplevel obj  will also remove everything else
-//        //master.Habitat().delete(hab_id);
     }
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
         MGXDTOMaster master = null;
-        // http://localhost:8080/MGX-maven-web/webresources/
-        //GPMSClientI gpms = new GPMS("MyServer", "http://scooter.cebitec.uni-bielefeld.de:8080/MGX-maven-web/webresources/");
-        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/");
+        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
         if (!gpms.login(username, new String(password))) {
-            System.err.println("login failed");
+            System.err.println("login failed.");
             System.exit(1);
         }
         Iterator<MembershipI> mIter = gpms.getMemberships();
@@ -243,6 +109,9 @@ public class App {
                 master = new MGXDTOMaster(gpms.createMaster(m));
                 break; // just use the first project we find
             }
+        }
+        if (master == null) {
+            System.err.println("No project " + pName + " found.");
         }
         return master;
     }
@@ -279,13 +148,4 @@ public class App {
     protected static List<String> split(String message, String separator) {
         return new ArrayList<>(Arrays.asList(message.split(separator)));
     }
-//    private void fixCSF(String fname) throws SeqStoreException, IOException {
-//        CSFReader r = new CSFReader(fname);
-//        CSFWriter w = new CSFWriter("/tmp/tmpcsf");
-//        while (r.hasMoreElements()) {
-//            w.addSequence(r.nextElement().getSequence());
-//        }
-//        w.close();
-//        r.close();
-//    }
 }
