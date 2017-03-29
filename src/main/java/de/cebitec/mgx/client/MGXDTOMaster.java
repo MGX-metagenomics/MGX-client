@@ -32,6 +32,14 @@ public class MGXDTOMaster implements PropertyChangeListener {
     private static final Logger logger = Logger.getLogger("MGXDTOMaster");
     private final ParallelPropertyChangeSupport pcs = new ParallelPropertyChangeSupport(this, true);
 
+    //
+    private HabitatAccess habitatAccess = null;
+    private SampleAccess sampleAccess = null;
+    private DNAExtractAccess extractAccess = null;
+    private SeqRunAccess runAccess = null;
+    private ToolAccess toolAccess = null;
+    private JobAccess jobAccess = null;
+
     public MGXDTOMaster(RESTMasterI restmaster) {
         this.restmaster = restmaster;
         this.role = restmaster.getRole();
@@ -56,7 +64,6 @@ public class MGXDTOMaster implements PropertyChangeListener {
             restmaster.removePropertyChangeListener(this);
             pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_LOGGEDIN, true, false));
             pcs.close();
-//            restmaster.close();
             restmaster = null;
             login = null;
             restAccess = null;
@@ -87,7 +94,10 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new HabitatAccess(restAccess);
+        if (habitatAccess == null) {
+            habitatAccess = new HabitatAccess(restAccess);
+        }
+        return habitatAccess;
     }
 
     public AttributeAccess Attribute() throws MGXClientException {
@@ -108,21 +118,30 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new SampleAccess(restAccess);
+        if (sampleAccess == null) {
+            sampleAccess = new SampleAccess(restAccess);
+        }
+        return sampleAccess;
     }
 
     public DNAExtractAccess DNAExtract() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new DNAExtractAccess(restAccess);
+        if (extractAccess == null) {
+            extractAccess = new DNAExtractAccess(restAccess);
+        }
+        return extractAccess;
     }
 
     public SeqRunAccess SeqRun() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new SeqRunAccess(restAccess);
+        if (runAccess == null) {
+            runAccess = new SeqRunAccess(restAccess);
+        }
+        return runAccess;
     }
 
     public ReferenceAccess Reference() throws MGXClientException {
@@ -150,14 +169,20 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new ToolAccess(restAccess);
+        if (toolAccess == null) {
+            toolAccess = new ToolAccess(restAccess);
+        }
+        return toolAccess;
     }
 
     public JobAccess Job() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new JobAccess(restAccess);
+        if (jobAccess == null) {
+            jobAccess = new JobAccess(restAccess);
+        }
+        return jobAccess;
     }
 
     public ObservationAccess Observation() throws MGXClientException {
