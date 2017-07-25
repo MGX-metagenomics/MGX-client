@@ -82,4 +82,9 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     public MGXString getError(long job_id) throws MGXDTOException {
         return get(MGXString.class, "Job", "GetError", String.valueOf(job_id));
     }
+
+    public void runDefaultTools(long runId) throws MGXDTOException {
+        MGXString dto = MGXString.newBuilder().setValue(String.valueOf(runId)).build();
+        put(dto, "Job", "runDefaultTools");
+    }
 }
