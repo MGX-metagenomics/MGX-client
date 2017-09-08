@@ -90,7 +90,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
 
         while (!reply.getComplete()) {
             String uuid = reply.getUuid();
-            reply = get(SequenceDTOList.class, "Attribute", "continueSearch", uuid, toString());
+            reply = get(SequenceDTOList.class, "Attribute", "continueSearch", uuid);
             //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
             ret.addAll(reply.getSeqList());
         }
