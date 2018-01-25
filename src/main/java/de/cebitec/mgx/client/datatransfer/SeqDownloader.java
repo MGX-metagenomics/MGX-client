@@ -27,14 +27,14 @@ public class SeqDownloader extends DownloadBase {
     protected long total_elements = 0;
     private final boolean closeWriter;
 
-    public SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+    public SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         this(dtomaster, rab, writer, closeWriter);
         this.seqrun_id = seqrun_id;
     }
 
-    protected SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+    protected SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         super(dtomaster, rab);
-        this.writer = writer;
+        this.writer = (SeqWriterI<DNASequenceI>) writer;
         this.closeWriter = closeWriter;
     }
 

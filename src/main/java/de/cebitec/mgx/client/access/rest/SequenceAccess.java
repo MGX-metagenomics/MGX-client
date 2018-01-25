@@ -53,7 +53,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, reader);
     }
 
-    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         return new SeqDownloader(dtomaster, getRESTAccess(), seqrun_id, writer, closeWriter);
     }
 

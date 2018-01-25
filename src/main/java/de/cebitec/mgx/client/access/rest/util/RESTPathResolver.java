@@ -85,6 +85,7 @@ public class RESTPathResolver {
         methodmappings.put("byExtract", "byExtract");
         methodmappings.put("bySample", "bySample");
         methodmappings.put("byJob", "byJob");
+        methodmappings.put("hasQuality", "hasQuality");
         methodmappings.put("getXML", "getXML");
         methodmappings.put("byCategory", "byCategory");
         methodmappings.put("byRead", "byRead");

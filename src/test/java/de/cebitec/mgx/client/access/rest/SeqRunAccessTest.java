@@ -12,6 +12,7 @@ import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
+import de.cebitec.mgx.dto.dto.MGXBoolean;
 import de.cebitec.mgx.dto.dto.QCResultDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
@@ -400,5 +401,18 @@ public class SeqRunAccessTest {
             fail(ex.getMessage());
         }
         fail("deleting a non-existing seqrun should produce an error");
+    }
+
+    @Test
+    public void testHasQuality() {
+        System.out.println("testHasQuality");
+        MGXDTOMaster master = TestMaster.getRO();
+        boolean hasQ = true;
+        try {
+            hasQ = master.SeqRun().hasQuality(3);
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(false, hasQ);
     }
 }

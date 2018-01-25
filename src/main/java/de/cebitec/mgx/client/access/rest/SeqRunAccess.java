@@ -2,6 +2,7 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobsAndAttributeTypesDTO;
 import de.cebitec.mgx.dto.dto.QCResultDTO;
@@ -29,7 +30,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     @Override
     public SeqRunDTO fetch(long id) throws MGXDTOException {
-        return super.fetch(id, SeqRunDTO.class);
+        return super.fetch(id, SeqRunDTO.class); 
     }
 
     public Iterator<SeqRunDTO> byExtract(long extract_id) throws MGXDTOException {
@@ -61,5 +62,9 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     public List<QCResultDTO> getQC(long seqrun_id) throws MGXDTOException {
         return get(QCResultDTOList.class, r.resolve(SeqRunDTO.class, "getQC", String.valueOf(seqrun_id))).getResultList();
+    }
+
+    public boolean hasQuality(long seqrun_id) throws MGXDTOException {
+        return get(dto.MGXBoolean.class, r.resolve(SeqRunDTO.class, "hasQuality", String.valueOf(seqrun_id))).getValue();
     }
 }
