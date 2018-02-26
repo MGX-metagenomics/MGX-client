@@ -12,9 +12,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -178,7 +180,7 @@ public class ReferenceUploader extends UploadBase {
                         total_elements_sent += regions.size();
                         regions.clear();
                         //cb.callback(total_elements_sent);
-                        fireTaskChange(MESSAGE, total_elements_sent + " regions sent.");
+                        fireTaskChange(MESSAGE, NumberFormat.getInstance(Locale.US).format(total_elements_sent) + " regions sent.");
                     }
                 }
             }
@@ -194,7 +196,7 @@ public class ReferenceUploader extends UploadBase {
                 total_elements_sent += regions.size();
                 //cb.callback(total_elements_sent);
                 regions.clear();
-                fireTaskChange(MESSAGE, total_elements_sent + " regions sent.");
+                fireTaskChange(MESSAGE, NumberFormat.getInstance(Locale.US).format(total_elements_sent) + " regions sent.");
             }
 
             try {
@@ -255,11 +257,11 @@ public class ReferenceUploader extends UploadBase {
     private void sendSequence(String dna, String session_uuid) throws MGXServerException {
         int length = dna.length();
         for (int i = 0; i < length; i += 10000) {
-            fireTaskChange(MESSAGE, String.valueOf(i) + "bp sent..");
+            fireTaskChange(MESSAGE, NumberFormat.getInstance(Locale.US).format(i) + " bp sent..");
             String chunk = dna.substring(i, Math.min(length, i + 10000));
             super.put(MGXString.newBuilder().setValue(chunk).build(), "Reference", "addSequence", session_uuid);
         }
-        fireTaskChange(MESSAGE, String.valueOf(length) + "bp sent..");
+        fireTaskChange(MESSAGE, NumberFormat.getInstance(Locale.US).format(length) + " bp sent..");
     }
 
     private void finishTransfer(String uuid) throws MGXServerException {
