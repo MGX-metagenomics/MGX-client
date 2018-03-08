@@ -97,7 +97,6 @@ public class AttributeAccessTest {
         assertEquals(7, ad.getAttributeTypeCount());
         assertEquals(30, ad.getAttributeCountsCount());
 
-
         int roots = 0;
         long total = 0;
         for (AttributeCount ac : ad.getAttributeCountsList()) {
@@ -143,6 +142,57 @@ public class AttributeAccessTest {
             System.err.println(s);
         }
         assertEquals(179, cnt);
+    }
+
+    @Test
+    public void testFindCaseInsensitive() {
+        System.out.println("testFindCaseInsensitive");
+        MGXDTOMaster master = TestMaster.getRO();
+
+        Iterator<String> iter = null;
+        
+        
+        // 
+        // lower-case search
+        //
+        try {
+            iter = master.Attribute().find(SearchRequestDTO.newBuilder()
+                    .setExact(false)
+                    .setTerm("alcohol")
+                    .addSeqrunId(1)
+                    .build());
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        int cnt = 0;
+        while (iter.hasNext()) {
+            String s = iter.next();
+            cnt++;
+            System.err.println(s);
+        }
+        assertEquals(8, cnt);
+        
+        // 
+        // upper-case search
+        //
+        try {
+            iter = master.Attribute().find(SearchRequestDTO.newBuilder()
+                    .setExact(false)
+                    .setTerm("ALCOHOL")
+                    .addSeqrunId(1)
+                    .build());
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
+        assertNotNull(iter);
+        cnt = 0;
+        while (iter.hasNext()) {
+            String s = iter.next();
+            cnt++;
+            System.err.println(s);
+        }
+        assertEquals(8, cnt);
     }
 
     @Test
