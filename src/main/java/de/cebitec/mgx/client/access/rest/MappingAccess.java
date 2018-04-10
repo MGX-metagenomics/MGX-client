@@ -112,4 +112,8 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
         return new BAMFileDownloader(dtomaster, getRESTAccess(), mappingId, writer);
     }
 
+    public long getGenomicCoverage(UUID uuid) throws MGXDTOException {
+        return super.get(MGXLong.class, "Mapping", "getGenomicCoverage", uuid.toString()).getValue();
+    }
+
 }
