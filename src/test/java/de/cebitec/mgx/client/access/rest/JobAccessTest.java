@@ -13,12 +13,14 @@ import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
 import de.cebitec.mgx.dto.dto.ToolDTO;
 import de.cebitec.mgx.osgiutils.MGXOptions;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,8 +79,11 @@ public class JobAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         JobDTO job = master.Job().fetch(1);
         assertNotNull(job);
-        assertEquals("Thu Jun 20 15:19:18 CEST 2013", new Date(1000L * job.getStartDate()).toString());
-        assertEquals("Thu Jun 20 15:20:01 CEST 2013", new Date(1000L * job.getFinishDate()).toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        assertEquals("2013-06-20T13:19:18Z", sdf.format(new Date(1000L * job.getStartDate())));
+        assertEquals("2013-06-20T13:20:01Z", sdf.format(new Date(1000L * job.getFinishDate())));
     }
 
     @Test
