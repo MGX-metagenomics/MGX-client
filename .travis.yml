@@ -27,5 +27,7 @@ before_install:
   - git clone https://github.com/MGX-metagenomics/GPMS.git
   - cd GPMS && mvn clean install -DskipTests=true && cd .. && rm -rf GPMS
 
+install: true
+
 script:
   - mvn clean install
