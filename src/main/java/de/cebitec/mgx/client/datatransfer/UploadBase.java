@@ -13,7 +13,7 @@ public abstract class UploadBase extends TransferBase {
     protected static final int DEFAULT_CHUNK_SIZE = 2048;
     private int chunk_size = DEFAULT_CHUNK_SIZE;
 
-    public UploadBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
+    public UploadBase(final MGXDTOMaster dtomaster, final RESTAccessI rab) {
         super(dtomaster, rab);
     }
 

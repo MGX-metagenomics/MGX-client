@@ -25,7 +25,7 @@ public abstract class TransferBase implements PropertyChangeListener {
     public static final String TRANSFER_FAILED = "transferFailed";
     public static final String TRANSFER_COMPLETED = "transferCompleted";
 
-    public TransferBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
+    public TransferBase(final MGXDTOMaster dtomaster, final RESTAccessI rab) {
         this.restAccess = rab;
         this.dtomaster = dtomaster;
         this.pcs = new PropertyChangeSupport(this);
