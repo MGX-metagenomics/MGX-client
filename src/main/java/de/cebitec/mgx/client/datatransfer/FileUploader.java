@@ -38,7 +38,7 @@ public class FileUploader extends UploadBase {
         }
         this.remoteName = tmp.replace("/", "|");
         int randomNess = (int) Math.round(Math.random() * 20);
-        super.setChunkSize(1024 * 32 + randomNess);
+        super.setChunkSize(1024 * 256 + randomNess);
     }
 
     @Override
