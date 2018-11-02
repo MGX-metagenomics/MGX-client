@@ -2,16 +2,14 @@ package de.cebitec.mgx.client.mgxtestclient;
 
 import de.cebitec.gpms.core.GPMSException;
 import de.cebitec.gpms.core.MembershipI;
+import de.cebitec.gpms.rest.GPMSClientFactory;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
-import de.cebitec.mgx.restgpms.GPMSClient;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
 
@@ -43,8 +41,9 @@ public class TestMaster {
             }
         }
 
-        GPMSClient gpms = new GPMSClient("MyServer", serverURI, false);
+        GPMSClientI gpms = null;
         try {
+            gpms = GPMSClientFactory.createClient("MyServer", serverURI, false);
             gpms.login("mgx_unittestRO", "gut-isM5iNt");
         } catch (GPMSException ex) {
             fail(ex.getMessage());
@@ -90,7 +89,14 @@ public class TestMaster {
             }
         }
 
-        GPMSClient gpms = new GPMSClient("MyServer", serverURI, false);
+        GPMSClientI gpms;
+        try {
+            gpms = GPMSClientFactory.createClient("MyServer", serverURI, false);
+        } catch (GPMSException ex) {
+            fail(ex.getMessage());
+            return null;
+        }
+
         try {
             gpms.login("mgx_unittestRW", "hL0amo3oLae");
         } catch (GPMSException ex) {
@@ -135,7 +141,13 @@ public class TestMaster {
                 System.out.println(ex.getMessage());
             }
         }
-        GPMSClientI gpms = new GPMSClient("MyServer", serverURI);
+        GPMSClientI gpms;
+        try {
+            gpms = GPMSClientFactory.createClient("MyServer", serverURI);
+        } catch (GPMSException ex) {
+            fail(ex.getMessage());
+            return null;
+        }
         try {
             gpms.login(p.getProperty("username"), p.getProperty("password"));
         } catch (GPMSException ex) {
