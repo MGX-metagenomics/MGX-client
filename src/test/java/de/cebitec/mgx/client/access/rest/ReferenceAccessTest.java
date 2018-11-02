@@ -23,14 +23,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
@@ -82,7 +80,8 @@ public class ReferenceAccessTest {
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {
-            iter.next();
+            RegionDTO region = iter.next();
+            assertEquals("CDS", region.getType());
             cnt++;
         }
         assertEquals(87, cnt);
@@ -116,7 +115,7 @@ public class ReferenceAccessTest {
                     .setName("testref")
                     .setLength(42)
                     .build();
-            long refId = -1;
+            long refId;
             refId = m.Reference().create(ref);
             assertNotEquals(-1, refId);
 
