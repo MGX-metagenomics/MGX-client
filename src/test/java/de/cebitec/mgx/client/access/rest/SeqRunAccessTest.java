@@ -12,7 +12,6 @@ import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
-import de.cebitec.mgx.dto.dto.MGXBoolean;
 import de.cebitec.mgx.dto.dto.QCResultDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
@@ -82,6 +81,7 @@ public class SeqRunAccessTest {
         Iterator<SeqRunDTO> iter = null;
         try {
             iter = m.SeqRun().fetchall();
+            assertNotNull(iter);
             while (iter.hasNext()) {
                 SeqRunDTO sr = iter.next();
                 if ("Unittest-Run".equals(sr.getName())) {
@@ -110,7 +110,8 @@ public class SeqRunAccessTest {
         assertNotNull(iter);
         int refCnt = 0;
         while (iter.hasNext()) {
-            iter.next();
+            SeqRunDTO run = iter.next();
+            System.err.println(" [" + run.getId() + "] " + run.getName());
             refCnt++;
         }
         assertEquals(4, refCnt);
@@ -231,6 +232,7 @@ public class SeqRunAccessTest {
             } catch (MGXClientException ex) {
                 fail(ex.getMessage());
             }
+            assertNotNull(up);
             up.addPropertyChangeListener(pc);
             boolean success = up.upload();
 
@@ -414,5 +416,19 @@ public class SeqRunAccessTest {
             fail(ex.getMessage());
         }
         assertEquals(false, hasQ);
+    }
+
+    @Test
+    public void testWrongSeqRunHasQuality() {
+        System.out.println("testWrongSeqRunHasQuality");
+        MGXDTOMaster master = TestMaster.getRO();
+        try {
+            master.SeqRun().hasQuality(42);
+            fail("Got reply for nonexisting seqrun");
+        } catch (MGXDTOException ex) {
+            if (!ex.getMessage().contains("No object of type SeqRun")) {
+                fail(ex.getMessage());
+            }
+        }
     }
 }
