@@ -495,7 +495,7 @@ public class StatisticsAccessTest {
                 .build();
         matrix.addRow(p3);
 
-        PointDTOList ret = master.Statistics().PCoA(matrix.build());
+        PointDTOList ret = master.Statistics().NMDS(matrix.build());
         assertNotNull(ret);
 
         assertEquals(3, ret.getPointCount());

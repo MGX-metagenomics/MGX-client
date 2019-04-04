@@ -57,11 +57,11 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(dto, PCAResultDTO.class, "Statistics", "PCA", String.valueOf(pc1), String.valueOf(pc2));
     }
 
-    public PointDTOList PCoA(MGXMatrixDTO dto) throws MGXDTOException {
+    public PointDTOList NMDS(MGXMatrixDTO dto) throws MGXDTOException {
         if (dto.getRowCount() < 3) {
             throw new MGXClientException("Number of datasets too small.");
         }
-        return put(dto, PointDTOList.class, "Statistics", "PCoA");
+        return put(dto, PointDTOList.class, "Statistics", "NMDS");
     }
 
     @Override
