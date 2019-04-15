@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
+import de.cebitec.mgx.dto.dto.MGXDoubleList;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
@@ -31,12 +32,15 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(b.build(), PointDTOList.class, "Statistics", "Rarefaction").getPointList().iterator();
     }
 
+    private static final String[] AGGLO = new String[]{"ward", "single", "complete", "average", "mcquitty", "median", "centroid"};
+    private static final String[] DIST = new String[]{"aitchison", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski"};
+
     public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXDTOException {
-        if (distMethod == null) {
-            throw new MGXClientException("Null distance method");
+        if (!ArrayContains(DIST, distMethod)) {
+            throw new MGXClientException("Invalid distance method: "+ distMethod);
         }
-        if (aggloMethod == null) {
-            throw new MGXClientException("Null agglomeration method");
+        if (!ArrayContains(AGGLO, aggloMethod)) {
+            throw new MGXClientException("Invalid agglomeration method: "+ aggloMethod);
         }
         return put(dto, MGXString.class, "Statistics", "Clustering", distMethod, aggloMethod).getValue();
     }
@@ -64,6 +68,21 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return put(dto, PointDTOList.class, "Statistics", "NMDS");
     }
 
+    public double[] toCLR(double[] counts) throws MGXDTOException {
+        MGXDoubleList.Builder b = MGXDoubleList.newBuilder();
+        for (double n : counts) {
+            b.addValue(n);
+        }
+
+        MGXDoubleList result = put(b.build(), MGXDoubleList.class, "Statistics", "toCLR");
+
+        double[] clr = new double[counts.length];
+        for (int i = 0; i < clr.length; i++) {
+            clr[i] = result.getValue(i);
+        }
+        return clr;
+    }
+
     @Override
     public PointDTO fetch(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
@@ -87,6 +106,15 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
     @Override
     public UUID delete(long id) throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
+    }
+
+    private static boolean ArrayContains(String[] options, String value) {
+        for (String o : options) {
+            if (o.equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
