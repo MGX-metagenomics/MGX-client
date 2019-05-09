@@ -54,9 +54,9 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (appServer == null) {
             throw new RuntimeException("No suitable REST application server found.");
         }
-
+        
         restmaster.addPropertyChangeListener(this);
-        restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, false);
+        restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
     }
 
     public void close() {
