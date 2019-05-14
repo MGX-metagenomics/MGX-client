@@ -84,11 +84,11 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return super.put(seqNameDTO, SequenceDTO.class, path);
     }
 
-    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         return new SeqByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
     }
 
-    public void fetchAnnotatedReads(AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) throws MGXDTOException {
+    public void fetchAnnotatedReads(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) throws MGXDTOException {
         SeqByAttributeDownloader dl = new SeqByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
         boolean success = dl.download();
         if (!success) {

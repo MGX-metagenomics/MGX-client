@@ -20,7 +20,7 @@ public class SeqByAttributeDownloader extends SeqDownloader {
 
     private final AttributeDTOList attrs;
 
-    public SeqByAttributeDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, AttributeDTOList attrs, SeqWriterI<DNASequenceI> writer, boolean closeWriter) {
+    public SeqByAttributeDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         super(dtomaster, rab, writer, closeWriter);
         this.attrs = attrs;
     }
