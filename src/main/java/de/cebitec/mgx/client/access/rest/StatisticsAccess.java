@@ -3,6 +3,7 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
+import de.cebitec.mgx.dto.dto.MGXDouble;
 import de.cebitec.mgx.dto.dto.MGXDoubleList;
 import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
@@ -10,6 +11,7 @@ import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
+import de.cebitec.mgx.dto.dto.ProfileDTO;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.UUID;
@@ -37,10 +39,10 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
 
     public String Clustering(MGXMatrixDTO dto, String distMethod, String aggloMethod) throws MGXDTOException {
         if (!ArrayContains(DIST, distMethod)) {
-            throw new MGXClientException("Invalid distance method: "+ distMethod);
+            throw new MGXClientException("Invalid distance method: " + distMethod);
         }
         if (!ArrayContains(AGGLO, aggloMethod)) {
-            throw new MGXClientException("Invalid agglomeration method: "+ aggloMethod);
+            throw new MGXClientException("Invalid agglomeration method: " + aggloMethod);
         }
         return put(dto, MGXString.class, "Statistics", "Clustering", distMethod, aggloMethod).getValue();
     }
@@ -66,6 +68,32 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
             throw new MGXClientException("Number of datasets too small.");
         }
         return put(dto, PointDTOList.class, "Statistics", "NMDS");
+    }
+
+    public double aitchisonDistance(double[] d1, double[] d2) throws MGXDTOException {
+        if (d1.length != d2.length) {
+            throw new MGXClientException("Arrays do not have equal length.");
+        }
+        ProfileDTO.Builder d1dto = ProfileDTO.newBuilder();
+        MGXDoubleList.Builder d1b = MGXDoubleList.newBuilder();
+        for (double d : d1) {
+            d1b = d1b.addValue(d);
+        }
+        d1dto.setName("d1");
+        d1dto.setValues(d1b.build());
+
+        ProfileDTO.Builder d2dto = ProfileDTO.newBuilder();
+        MGXDoubleList.Builder d2b = MGXDoubleList.newBuilder();
+        for (double d : d2) {
+            d2b = d2b.addValue(d);
+        }
+        d2dto.setName("d2");
+        d2dto.setValues(d2b.build());
+
+        MGXMatrixDTO.Builder m = MGXMatrixDTO.newBuilder();
+        m.addRow(d1dto.build());
+        m.addRow(d2dto.build());
+        return put(m.build(), MGXDouble.class, "Statistics", "aitchisonDistance").getValue();
     }
 
     public double[] toCLR(double[] counts) throws MGXDTOException {
