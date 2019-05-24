@@ -5,7 +5,7 @@
 
     <groupId>de.cebitec.mgx.client</groupId>
     <artifactId>MGX-client-api</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <packaging>bundle</packaging>
 
     <name>MGX-client-api</name>
