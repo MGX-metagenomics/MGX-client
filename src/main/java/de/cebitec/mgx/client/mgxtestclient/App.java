@@ -2,16 +2,17 @@ package de.cebitec.mgx.client.mgxtestclient;
 
 import de.cebitec.gpms.core.GPMSException;
 import de.cebitec.gpms.core.MembershipI;
+import de.cebitec.gpms.rest.GPMSClientFactory;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
+import de.cebitec.mgx.dto.dto.HabitatDTO;
+import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
-import de.cebitec.mgx.restgpms.GPMSClient;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import java.io.Console;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,52 @@ import java.util.Set;
 
 public class App {
 
+//    public static void main(String[] args) throws Exception {
+//        Console con = System.console();
+//        String username = con.readLine("Username: ");
+//        char[] password = con.readPassword("Password: ");
+//        MGXDTOMaster master = getMaster(username, password, args[0]);
+//
+//        // get the attribute type
+//        long attrTypeId = 0;
+//        Iterator<AttributeTypeDTO> types = master.AttributeType().fetchall();
+//        while (types != null && types.hasNext()) {
+//            AttributeTypeDTO aType = types.next();
+//            if (aType.getName().equals("NCBI_SPECIES")) {
+//                attrTypeId = aType.getId();
+//            }
+//        }
+//
+//        Iterator<SeqRunDTO> runIter = master.SeqRun().fetchall();
+//        while (runIter != null && runIter.hasNext()) {
+//            SeqRunDTO run = runIter.next();
+//            Iterator<JobDTO> jobs = master.Job().bySeqRun(run.getId()).iterator();
+//
+//            // only one job per run expected
+//            JobDTO job = null;
+//            while (jobs != null && jobs.hasNext()) {
+//                job = jobs.next();
+//            }
+//
+//            AttributeDistribution dist = master.Attribute().getDistribution(attrTypeId, job.getId());
+//            List<AttributeCount> attributeCountsList = dist.getAttributeCountsList();
+//            for (AttributeCount ac : attributeCountsList) {
+//                if (ac.getAttribute().getValue().equals("uncultured bacterium")) {
+//                    AttributeDTOList reqList = AttributeDTOList.newBuilder()
+//                            .addAttribute(ac.getAttribute())
+//                            .build();
+//
+//                    FastaWriter fw = new FastaWriter("uncult_" + run.getName() + ".fas");
+//                    SeqByAttributeDownloader dl = master.Sequence().createDownloaderByAttributes(reqList, fw, true);
+//                    if (!dl.download()) {
+//                        System.err.println(run.getId() + "/" + run.getName() + " failed, " + dl.getErrorMessage());
+//                    }
+//
+//                }
+//            }
+//        }
+//    }
+//
     public static void main(String[] args) throws Exception {
 
         if (args.length < 3) {
@@ -32,14 +79,21 @@ public class App {
             System.exit(1);
         }
 
-        String pName = args[0];
+        String projectName = args[0];
         String extractName = args[1];
 
-        Console con = System.console();
-        String username = con.readLine("Username: ");
-        char[] password = con.readPassword("Password: ");
+        String username = System.console().readLine("Username: ");
+        char[] password = System.console().readPassword("Password: ");
+        MGXDTOMaster master = getMaster(username, password, projectName);
 
-        MGXDTOMaster master = getMaster(username, password, pName);
+        Iterator<HabitatDTO> it = master.Habitat().fetchall();
+        while (it != null && it.hasNext()) {
+            HabitatDTO habitat = it.next();
+            Iterator<SampleDTO> samples = master.Sample().byHabitat(habitat.getId());
+            while (samples != null && samples.hasNext()) {
+                SampleDTO sample = samples.next();
+            }
+        }
 
         DNAExtractDTO extract = null;
         Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
@@ -67,8 +121,11 @@ public class App {
 
         for (int argpos = 2; argpos < args.length; argpos++) {
             String fname = new File(args[argpos]).getName();
+            fname = fname.replaceAll(".gz", "");
             fname = fname.replaceAll(".fastq", "");
-            fname = fname.replaceAll(".fastq.gz", "");
+            fname = fname.replaceAll(".fq", "");
+            fname = fname.replaceAll(".fas", "");
+            fname = fname.replaceAll(".fna", "");
 
             if (runs.contains(fname)) {
                 System.err.println("skipping " + fname + ", already present");
@@ -96,12 +153,18 @@ public class App {
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
-        MGXDTOMaster master = null;
-        GPMSClientI gpms = new GPMSClient("MyServer", "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/");
-        if (!gpms.login(username, new String(password))) {
-            System.err.println("login failed.");
+        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/");
+        if (!gpms.login(username, password)) {
+            System.err.println("Login failed.");
             System.exit(1);
         }
+//        Iterator<MembershipI> mIter = gpms.getMemberships();
+//        while (mIter.hasNext()) {
+//            MembershipI mbr = mIter.next();
+//            System.out.println(mbr.getProject().getName());
+//        }
+
+        MGXDTOMaster master = null;
         Iterator<MembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
             MembershipI m = mIter.next();
@@ -116,7 +179,7 @@ public class App {
         return master;
     }
 
-//    public static void printObjTree(MGXDTOMaster m) throws MGXServerException, MGXClientException {
+//    public static void printObjTree(MGXDTOMaster m) throws Exception  {
 //        System.out.println("\n.------------------------------------------------------------");
 //        System.err.println("| DB Contents (" + m.getProject() + ")\n|");
 //        for (HabitatDTO h : m.Habitat().fetchall()) {

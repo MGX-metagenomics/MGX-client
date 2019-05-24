@@ -1,6 +1,8 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.dto.dto.AssemblyDTO;
+import de.cebitec.mgx.dto.dto.AssemblyDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTO;
 import de.cebitec.mgx.dto.dto.AttributeTypeDTOList;
@@ -58,6 +60,7 @@ public class RESTPathResolver {
         objmappings.put(FileDTO.class, "File");
         objmappings.put(ReferenceDTO.class, "Reference");
         objmappings.put(MappingDTO.class, "Mapping");
+        objmappings.put(AssemblyDTO.class, "Assembly");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
@@ -72,6 +75,7 @@ public class RESTPathResolver {
         objmappings.put(MappingDTOList.class, "Mapping");
         objmappings.put(ObservationDTOList.class, "Observation");
         objmappings.put(BulkObservationDTOList.class, "Observation");
+        objmappings.put(AssemblyDTOList.class, "Assembly");
 
         // methods
         methodmappings.put("create", "create");
@@ -94,6 +98,7 @@ public class RESTPathResolver {
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
         methodmappings.put("getQC", "getQC");
         methodmappings.put("createBulk", "createBulk");
+
     }
 
     private RESTPathResolver() {

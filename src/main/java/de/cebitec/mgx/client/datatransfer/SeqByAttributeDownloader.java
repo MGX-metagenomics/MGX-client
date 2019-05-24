@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -11,6 +10,7 @@ import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
+import javax.ws.rs.ProcessingException;
 
 /**
  *
@@ -35,7 +35,7 @@ public class SeqByAttributeDownloader extends SeqDownloader {
                 throw new MGXServerException("Could not initialize transfer");
             }
             return uuid;
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 Logger.getLogger(SeqByAttributeDownloader.class.getName()).log(Level.SEVERE, null, ex);
                 return initTransfer();

@@ -10,7 +10,7 @@ import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.*;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
-import de.cebitec.mgx.restgpms.Jersey1RESTAccess;
+import de.cebitec.mgx.restgpms.Jersey2RESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
@@ -56,7 +56,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         }
         
         restmaster.addPropertyChangeListener(this);
-        restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
+        restAccess = new Jersey2RESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
     }
 
     public void close() {
@@ -90,6 +90,9 @@ public class MGXDTOMaster implements PropertyChangeListener {
         return restmaster != null ? restmaster.getServerName() : null;
     }
 
+    /*
+     * read-based support
+     */
     public HabitatAccess Habitat() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
@@ -218,6 +221,37 @@ public class MGXDTOMaster implements PropertyChangeListener {
             throw new MGXClientException("You are logged out.");
         }
         return new StatisticsAccess(restAccess);
+    }
+
+    /*
+     * metagenome assembly support
+     */
+    public AssemblyAccess Assembly() throws MGXClientException {
+        if (restAccess == null) {
+            throw new MGXClientException("You are logged out.");
+        }
+        return new AssemblyAccess(restAccess);
+    }
+
+    public BinAccess Bin() throws MGXClientException {
+        if (restAccess == null) {
+            throw new MGXClientException("You are logged out.");
+        }
+        return new BinAccess(restAccess);
+    }
+
+    public ContigAccess Contig() throws MGXClientException {
+        if (restAccess == null) {
+            throw new MGXClientException("You are logged out.");
+        }
+        return new ContigAccess(restAccess);
+    }
+
+    public GeneAccess Gene() throws MGXClientException {
+        if (restAccess == null) {
+            throw new MGXClientException("You are logged out.");
+        }
+        return new GeneAccess(restAccess);
     }
 
     void log(Level lvl, String msg) {

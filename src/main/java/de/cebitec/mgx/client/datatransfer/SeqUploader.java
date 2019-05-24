@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
 import com.google.protobuf.ByteString;
-import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -14,6 +13,7 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import javax.net.ssl.SSLHandshakeException;
+import javax.ws.rs.ProcessingException;
 
 /**
  *
@@ -41,7 +41,7 @@ public class SeqUploader extends UploadBase {
 
         String session_uuid;
         try {
-            session_uuid = initTransfer(seqrun_id);
+            session_uuid = initTransfer();
         } catch (MGXServerException ex) {
             abortTransfer(ex.getMessage());
             return false;
@@ -115,14 +115,14 @@ public class SeqUploader extends UploadBase {
         return total_elements;
     }
 
-    private String initTransfer(final long seqrun_id) throws MGXServerException {
+    private String initTransfer() throws MGXServerException {
         try {
             MGXString session_uuid = super.get(MGXString.class, "Sequence", "initUpload", String.valueOf(seqrun_id), String.valueOf(reader.hasQuality()));
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return session_uuid.getValue();
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return initTransfer(seqrun_id); // retry
+                return initTransfer(); // retry
             } else {
                 throw ex; // rethrow
             }
@@ -132,7 +132,7 @@ public class SeqUploader extends UploadBase {
     private void finishTransfer(final String uuid) throws MGXServerException {
         try {
             super.get("Sequence", "closeUpload", uuid);
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid); // retry
             } else {
@@ -147,7 +147,7 @@ public class SeqUploader extends UploadBase {
         try {
             super.post(seqList, "Sequence", "add", session_uuid);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 sendChunk(seqList, session_uuid); // retry
             } else {
