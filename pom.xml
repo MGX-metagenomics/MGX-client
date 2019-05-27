@@ -50,7 +50,6 @@
                         </Export-Package>
                         <Import-Package>
                             javax.ws.rs,
-                            javax.annotation,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.common.cache,
                             com.google.protobuf,
@@ -217,12 +216,6 @@
             <groupId>de.cebitec.mgx</groupId>
             <artifactId>MGX-restgpms</artifactId>
             <version>2.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.annotation</groupId>
-                    <artifactId>jakarta.annotation-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.cebitec.mgx</groupId>
