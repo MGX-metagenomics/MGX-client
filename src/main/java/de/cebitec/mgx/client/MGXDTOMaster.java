@@ -10,7 +10,7 @@ import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.*;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
-import de.cebitec.mgx.restgpms.Jersey2RESTAccess;
+import de.cebitec.mgx.restgpms.JAXRSRESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
@@ -43,7 +43,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
     public MGXDTOMaster(RESTMasterI restmaster) {
         this.restmaster = restmaster;
         this.role = restmaster.getRole();
-        this.login = restmaster.getUser().getLogin();
+        this.login = restmaster.getUser() != null ? restmaster.getUser().getLogin() : null;
         DataSource_ApplicationServerI appServer = null;
         for (DataSourceI rds : restmaster.getProject().getDataSources()) {
             if (rds instanceof DataSource_ApplicationServerI) {
@@ -56,7 +56,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         }
         
         restmaster.addPropertyChangeListener(this);
-        restAccess = new Jersey2RESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
+        restAccess = new JAXRSRESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
     }
 
     public void close() {
@@ -237,14 +237,14 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new BinAccess(restAccess);
+        return new BinAccess(this, restAccess);
     }
 
     public ContigAccess Contig() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new ContigAccess(restAccess);
+        return new ContigAccess(this, restAccess);
     }
 
     public GeneAccess Gene() throws MGXClientException {

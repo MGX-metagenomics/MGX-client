@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.ContigDTO;
 import de.cebitec.mgx.dto.dto.ContigDTOList;
@@ -13,8 +14,11 @@ import java.util.UUID;
  */
 public class ContigAccess extends AccessBase<ContigDTO, ContigDTOList> {
 
-    public ContigAccess(RESTAccessI restAccess) {
+    private final MGXDTOMaster dtomaster;
+
+    public ContigAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     @Override
@@ -28,13 +32,13 @@ public class ContigAccess extends AccessBase<ContigDTO, ContigDTOList> {
     }
 
     @Override
-    public long create(ContigDTO s) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+    public long create(ContigDTO c) throws MGXDTOException {
+        return super.create(c, ContigDTO.class);
     }
 
     @Override
     public void update(ContigDTO d) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+        super.update(d, ContigDTO.class);
     }
 
     @Override

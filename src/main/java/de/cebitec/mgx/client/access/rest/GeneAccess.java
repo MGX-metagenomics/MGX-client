@@ -29,12 +29,12 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
 
     @Override
     public long create(GeneDTO s) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+        return super.create(s, GeneDTO.class);
     }
 
     @Override
     public void update(GeneDTO d) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+        super.update(d, GeneDTO.class);
     }
 
     @Override
@@ -43,6 +43,6 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
     }
 
     public Iterator<GeneDTO> byContig(long contig_id) throws MGXDTOException {
-         return get(GeneDTOList.class, r.resolve(GeneDTOList.class, "byContig", String.valueOf(contig_id))).getGeneList().iterator();
+        return get(GeneDTOList.class, r.resolve(GeneDTOList.class, "byContig", String.valueOf(contig_id))).getGeneList().iterator();
     }
 }

@@ -31,13 +31,12 @@ public class AssemblyAccess extends AccessBase<AssemblyDTO, AssemblyDTOList> {
 
     @Override
     public long create(AssemblyDTO s) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
-
+        return super.create(s, AssemblyDTO.class);
     }
 
     @Override
     public void update(AssemblyDTO d) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+        super.update(d, AssemblyDTO.class);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.BinDTO;
 import de.cebitec.mgx.dto.dto.BinDTOList;
@@ -13,8 +14,11 @@ import java.util.UUID;
  */
 public class BinAccess extends AccessBase<BinDTO, BinDTOList> {
 
-    public BinAccess(RESTAccessI restAccess) {
+    private final MGXDTOMaster dtomaster;
+
+    public BinAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     @Override
@@ -33,13 +37,12 @@ public class BinAccess extends AccessBase<BinDTO, BinDTOList> {
 
     @Override
     public long create(BinDTO s) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
-
+        return super.create(s, BinDTO.class);
     }
 
     @Override
     public void update(BinDTO d) throws MGXDTOException {
-        throw new UnsupportedOperationException("Not supported.");
+        super.update(d, BinDTO.class);
     }
 
     @Override
