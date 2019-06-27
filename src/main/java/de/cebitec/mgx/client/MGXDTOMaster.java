@@ -56,7 +56,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         }
         
         restmaster.addPropertyChangeListener(this);
-        restAccess = new JAXRSRESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
+        restAccess = new JAXRSRESTAccess(restmaster.getUser(), appServer.getURL(), restmaster.validateSSL());
     }
 
     public void close() {
