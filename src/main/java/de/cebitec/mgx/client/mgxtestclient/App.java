@@ -153,7 +153,7 @@ public class App {
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
-        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/");
+        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/", true);
         if (!gpms.login(username, password)) {
             System.err.println("Login failed.");
             System.exit(1);

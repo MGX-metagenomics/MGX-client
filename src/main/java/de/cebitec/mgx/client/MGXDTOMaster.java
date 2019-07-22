@@ -13,6 +13,7 @@ import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
 import de.cebitec.mgx.restgpms.JAXRSRESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,7 +55,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (appServer == null) {
             throw new RuntimeException("No suitable REST application server found.");
         }
-        
+
         restmaster.addPropertyChangeListener(this);
         restAccess = new JAXRSRESTAccess(restmaster.getUser(), appServer.getURL(), restmaster.validateSSL());
     }
@@ -66,6 +67,10 @@ public class MGXDTOMaster implements PropertyChangeListener {
             pcs.close();
             restmaster = null;
             login = null;
+            try {
+                restAccess.close();
+            } catch (IOException ex) {
+            }
             restAccess = null;
         }
     }

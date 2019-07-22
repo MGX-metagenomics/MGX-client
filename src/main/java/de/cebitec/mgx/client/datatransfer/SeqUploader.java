@@ -30,7 +30,12 @@ public class SeqUploader extends UploadBase {
         this.seqrun_id = seqrun_id;
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
+        // generate an even number so interleaved paired-end uploads
+        // stay in the correct order
         int randomNess = (int) Math.round(Math.random() * 20);
+        if (randomNess % 2 == 1) {
+            randomNess++;
+        }
         super.setChunkSize(5800 + randomNess);
     }
 
