@@ -30,7 +30,7 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     @Override
     public SeqRunDTO fetch(long id) throws MGXDTOException {
-        return super.fetch(id, SeqRunDTO.class); 
+        return super.fetch(id, SeqRunDTO.class);
     }
 
     public Iterator<SeqRunDTO> byExtract(long extract_id) throws MGXDTOException {
@@ -39,6 +39,10 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
 
     public Iterator<SeqRunDTO> byJob(long jobId) throws MGXDTOException {
         return get(SeqRunDTOList.class, r.resolve(SeqRunDTO.class, "byJob", String.valueOf(jobId))).getSeqrunList().iterator();
+    }
+
+    public Iterator<SeqRunDTO> byAssembly(long asmId) throws MGXDTOException {
+        return get(SeqRunDTOList.class, r.resolve(SeqRunDTO.class, "byAssembly", String.valueOf(asmId))).getSeqrunList().iterator();
     }
 
     @Override
