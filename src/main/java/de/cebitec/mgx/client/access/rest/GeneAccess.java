@@ -1,11 +1,10 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
-import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.GeneDTO;
 import de.cebitec.mgx.dto.dto.GeneDTOList;
-import de.cebitec.mgx.dto.dto.MGXStringList;
+import de.cebitec.mgx.dto.dto.SequenceDTO;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -48,8 +47,7 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
         return get(GeneDTOList.class, r.resolve(GeneDTOList.class, "byContig", String.valueOf(contig_id))).getGeneList().iterator();
     }
 
-    public String[] getSequence(long gene_id) throws MGXDTOException {
-        MGXStringList get = get(MGXStringList.class, r.resolve(MGXStringList.class, "getSequence", String.valueOf(gene_id)));
-        return new String[]{get.getString(0).getValue(), get.getString(1).getValue()};
+    public SequenceDTO getDNASequence(long gene_id) throws MGXDTOException {
+        return get(SequenceDTO.class, r.resolve(GeneDTO.class, "getDNASequence", String.valueOf(gene_id)));
     }
 }

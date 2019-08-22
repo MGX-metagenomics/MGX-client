@@ -110,6 +110,7 @@ public class RESTPathResolver {
         methodmappings.put("byAssembly", "byAssembly");
         methodmappings.put("byBin", "byBin");
         methodmappings.put("byContig", "byContig");
+        methodmappings.put("getDNASequence", "getDNASequence");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
         methodmappings.put("getQC", "getQC");
         methodmappings.put("createBulk", "createBulk");
