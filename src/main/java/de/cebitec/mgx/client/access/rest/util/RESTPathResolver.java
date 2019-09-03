@@ -19,6 +19,8 @@ import de.cebitec.mgx.dto.dto.GeneCoverageDTO;
 import de.cebitec.mgx.dto.dto.GeneCoverageDTOList;
 import de.cebitec.mgx.dto.dto.GeneDTO;
 import de.cebitec.mgx.dto.dto.GeneDTOList;
+import de.cebitec.mgx.dto.dto.GeneObservationDTO;
+import de.cebitec.mgx.dto.dto.GeneObservationDTOList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
 import de.cebitec.mgx.dto.dto.JobDTO;
@@ -73,6 +75,7 @@ public class RESTPathResolver {
         objmappings.put(ContigDTO.class, "Contig");
         objmappings.put(GeneDTO.class, "Gene");
         objmappings.put(GeneCoverageDTO.class, "GeneCoverage");
+        objmappings.put(GeneObservationDTO.class, "GeneObservation");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
@@ -92,6 +95,7 @@ public class RESTPathResolver {
         objmappings.put(ContigDTOList.class, "Contig");
         objmappings.put(GeneDTOList.class, "Gene");
         objmappings.put(GeneCoverageDTOList.class, "GeneCoverage");
+        objmappings.put(GeneObservationDTOList.class, "GeneObservation");
 
         // methods
         methodmappings.put("create", "create");
