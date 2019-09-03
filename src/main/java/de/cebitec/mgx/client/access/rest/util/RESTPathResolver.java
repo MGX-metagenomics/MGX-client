@@ -15,6 +15,8 @@ import de.cebitec.mgx.dto.dto.DNAExtractDTO;
 import de.cebitec.mgx.dto.dto.DNAExtractDTOList;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
+import de.cebitec.mgx.dto.dto.GeneCoverageDTO;
+import de.cebitec.mgx.dto.dto.GeneCoverageDTOList;
 import de.cebitec.mgx.dto.dto.GeneDTO;
 import de.cebitec.mgx.dto.dto.GeneDTOList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
@@ -70,6 +72,7 @@ public class RESTPathResolver {
         objmappings.put(BinDTO.class, "Bin");
         objmappings.put(ContigDTO.class, "Contig");
         objmappings.put(GeneDTO.class, "Gene");
+        objmappings.put(GeneCoverageDTO.class, "GeneCoverage");
 
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
@@ -88,6 +91,7 @@ public class RESTPathResolver {
         objmappings.put(BinDTOList.class, "Bin");
         objmappings.put(ContigDTOList.class, "Contig");
         objmappings.put(GeneDTOList.class, "Gene");
+        objmappings.put(GeneCoverageDTOList.class, "GeneCoverage");
 
         // methods
         methodmappings.put("create", "create");
@@ -110,6 +114,7 @@ public class RESTPathResolver {
         methodmappings.put("byAssembly", "byAssembly");
         methodmappings.put("byBin", "byBin");
         methodmappings.put("byContig", "byContig");
+        methodmappings.put("byGene", "byGene");
         methodmappings.put("getDNASequence", "getDNASequence");
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
         methodmappings.put("getQC", "getQC");
