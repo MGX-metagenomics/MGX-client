@@ -52,9 +52,7 @@ public class AttributeAccessTest {
         assertNotNull(attr);
         assertNotNull(attr.getValue());
         assertEquals("50.8", attr.getValue());
-        assertTrue(attr.hasAttributeTypeId());
         assertEquals(1, attr.getAttributeTypeId());
-        assertTrue(attr.hasJobid());
         assertEquals(1, attr.getJobid());
     }
 
@@ -106,10 +104,10 @@ public class AttributeAccessTest {
             assertNotNull(ac.getAttribute());
             AttributeDTO attr = ac.getAttribute();
             if (attr.getValue().equals("Root")) {
-                assertFalse(attr.hasParentId());
+                assertEquals(0, attr.getParentId());
                 roots++;
             } else {
-                assertTrue(attr.hasParentId());
+                assertNotEquals(1, attr.getParentId());
             }
         }
         assertEquals(1, roots);

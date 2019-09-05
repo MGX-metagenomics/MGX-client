@@ -63,14 +63,14 @@ public class SeqDownloader extends DownloadBase {
             try {
                 for (SequenceDTO dto : chunk.getSeqList()) {
                     DNASequenceI seq;
-                    if (dto.hasQuality()) {
+                    if (!dto.getQuality().isEmpty()) {
                         DNAQualitySequenceI qseq = new QualityDNASequence();
                         qseq.setQuality(dto.getQuality().toByteArray());
                         seq = qseq;
                     } else {
                         seq = new DNASequence();
                     }
-                    if (dto.hasId()) {
+                    if (dto.getId() != 0) {
                         seq.setId(dto.getId());
                     }
                     seq.setName(dto.getName().getBytes());

@@ -36,12 +36,11 @@ public class SeqUploader extends UploadBase {
         if (randomNess % 2 == 1) {
             randomNess++;
         }
-        super.setChunkSize(5800 + randomNess);
+        super.setChunkSize(6_000 + randomNess);
     }
 
     @Override
     public boolean upload() {
-//        CallbackI cb = getProgressCallback();
         int current_num_elements = 0;
 
         String session_uuid;

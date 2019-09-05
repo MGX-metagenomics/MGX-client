@@ -17,11 +17,11 @@ public abstract class UploadBase extends TransferBase {
         super(dtomaster, rab);
     }
 
-    public void setChunkSize(int i) {
+    public final void setChunkSize(int i) {
         chunk_size = i;
     }
     
-    public int getChunkSize() {
+    public final int getChunkSize() {
         return chunk_size;
     }
 
