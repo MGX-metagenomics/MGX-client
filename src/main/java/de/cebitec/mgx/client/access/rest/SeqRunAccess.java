@@ -2,9 +2,10 @@ package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
-import de.cebitec.mgx.dto.dto;
+import de.cebitec.mgx.common.ToolScope;
 import de.cebitec.mgx.dto.dto.JobAndAttributeTypes;
 import de.cebitec.mgx.dto.dto.JobsAndAttributeTypesDTO;
+import de.cebitec.mgx.dto.dto.MGXBoolean;
 import de.cebitec.mgx.dto.dto.QCResultDTO;
 import de.cebitec.mgx.dto.dto.QCResultDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
@@ -60,8 +61,9 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return super.delete(id, SeqRunDTO.class);
     }
 
-    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id) throws MGXDTOException {
-        return get(JobsAndAttributeTypesDTO.class, r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes", String.valueOf(seqrun_id))).getEntryList();
+    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id, ToolScope scope) throws MGXDTOException {
+        return get(JobsAndAttributeTypesDTO.class, r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes", String.valueOf(seqrun_id), 
+                String.valueOf(scope.getValue()))).getEntryList();
     }
 
     public List<QCResultDTO> getQC(long seqrun_id) throws MGXDTOException {
@@ -69,6 +71,6 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
 
     public boolean hasQuality(long seqrun_id) throws MGXDTOException {
-        return get(dto.MGXBoolean.class, r.resolve(SeqRunDTO.class, "hasQuality", String.valueOf(seqrun_id))).getValue();
+        return get(MGXBoolean.class, r.resolve(SeqRunDTO.class, "hasQuality", String.valueOf(seqrun_id))).getValue();
     }
 }
