@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.JobDTO;
 import de.cebitec.mgx.dto.dto.JobDTOList;
@@ -45,6 +46,10 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
 
     @Override
     public long create(JobDTO dto) throws MGXDTOException {
+        if (dto.getSeqrunCount() == 0 && dto.getAssemblyId() == 0) {
+            throw new MGXClientException("Requested job references no data to process.");
+        }
+
         return super.create(dto, JobDTO.class);
     }
 
@@ -54,8 +59,12 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     }
 
     @Override
-    public void update(JobDTO t) throws MGXDTOException {
-        super.update(t, JobDTO.class);
+    public void update(JobDTO dto) throws MGXDTOException {
+        if (dto.getSeqrunCount() == 0 && dto.getAssemblyId() == 0) {
+            throw new MGXClientException("Requested job references no data to process.");
+        }
+
+        super.update(dto, JobDTO.class);
     }
 
     @Override
