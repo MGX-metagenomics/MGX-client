@@ -35,12 +35,14 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         return get(AttributeDTOList.class, "Attribute", "ByJob", String.valueOf(jobId)).getAttributeList().iterator();
     }
 
-    public AttributeDistribution getDistribution(final long attrType_id, final long job_id) throws MGXDTOException {
-        return get(AttributeDistribution.class, "Attribute", "getDistribution", String.valueOf(attrType_id), String.valueOf(job_id));
+    public AttributeDistribution getDistribution(final long attrType_id, final long job_id, final long run_id) throws MGXDTOException {
+        return get(AttributeDistribution.class, "Attribute", "getDistribution",
+                String.valueOf(attrType_id), String.valueOf(job_id), String.valueOf(run_id));
     }
 
-    public AttributeDistribution getHierarchy(final long attrType_id, final long job_id) throws MGXDTOException {
-        return get(AttributeDistribution.class, "Attribute", "getHierarchy", String.valueOf(attrType_id), String.valueOf(job_id));
+    public AttributeDistribution getHierarchy(final long attrType_id, final long job_id, final long run_id) throws MGXDTOException {
+        return get(AttributeDistribution.class, "Attribute", "getHierarchy",
+                String.valueOf(attrType_id), String.valueOf(job_id), String.valueOf(run_id));
     }
 
     public AttributeCorrelation getCorrelation(final long attrtypeId1, final long jobid1, final long attrtypeid2, final long jobid2) throws MGXDTOException {
