@@ -80,6 +80,10 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
         return get(JobDTOList.class, "Job", "BySeqRun", String.valueOf(seqrun_id)).getJobList();
     }
 
+    public Iterable<JobDTO> byAssembly(long asm_id) throws MGXDTOException {
+        return get(JobDTOList.class, "Job", "ByAssembly", String.valueOf(asm_id)).getJobList();
+    }
+
     public Iterable<JobParameterDTO> getParameters(long job_id) throws MGXDTOException {
         return get(JobParameterListDTO.class, "Job", "getParameters", String.valueOf(job_id)).getParameterList();
     }
