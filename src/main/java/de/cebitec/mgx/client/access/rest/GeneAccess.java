@@ -1,10 +1,15 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.datatransfer.GeneByAttributeDownloader;
 import de.cebitec.mgx.client.exception.MGXDTOException;
+import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.GeneDTO;
 import de.cebitec.mgx.dto.dto.GeneDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
+import de.cebitec.mgx.sequence.DNASequenceI;
+import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -14,8 +19,11 @@ import java.util.UUID;
  */
 public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
 
-    public GeneAccess(RESTAccessI restAccess) {
+    private final MGXDTOMaster dtomaster;
+
+    public GeneAccess(MGXDTOMaster dtomaster, RESTAccessI restAccess) {
         super(restAccess);
+        this.dtomaster = dtomaster;
     }
 
     @Override
@@ -49,5 +57,9 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
 
     public SequenceDTO getDNASequence(long gene_id) throws MGXDTOException {
         return get(SequenceDTO.class, r.resolve(GeneDTO.class, "getDNASequence", String.valueOf(gene_id)));
+    }
+
+    public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
+        return new GeneByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
     }
 }

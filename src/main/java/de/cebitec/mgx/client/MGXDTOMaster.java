@@ -256,7 +256,7 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (restAccess == null) {
             throw new MGXClientException("You are logged out.");
         }
-        return new GeneAccess(restAccess);
+        return new GeneAccess(this, restAccess);
     }
 
     public GeneCoverageAccess GeneCoverage() throws MGXClientException {
