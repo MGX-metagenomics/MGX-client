@@ -61,9 +61,16 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
         return super.delete(id, SeqRunDTO.class);
     }
 
-    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id, ToolScope scope) throws MGXDTOException {
-        return get(JobsAndAttributeTypesDTO.class, r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes", String.valueOf(seqrun_id), 
-                String.valueOf(scope.getValue()))).getEntryList();
+    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id) throws MGXDTOException {
+        return get(JobsAndAttributeTypesDTO.class, r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes", String.valueOf(seqrun_id),
+                "0",
+                String.valueOf(ToolScope.READ.getValue()))).getEntryList();
+    }
+
+    public List<JobAndAttributeTypes> getJobsAndAttributeTypes(long seqrun_id, long assembly_id) throws MGXDTOException {
+        return get(JobsAndAttributeTypesDTO.class, r.resolve(SeqRunDTO.class, "JobsAndAttributeTypes", String.valueOf(seqrun_id),
+                String.valueOf(assembly_id),
+                String.valueOf(ToolScope.GENE_ANNOTATION.getValue()))).getEntryList();
     }
 
     public List<QCResultDTO> getQC(long seqrun_id) throws MGXDTOException {
