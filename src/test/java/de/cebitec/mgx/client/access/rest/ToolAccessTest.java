@@ -24,7 +24,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sj
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class ToolAccessTest {
 
     @Configuration
@@ -49,6 +49,22 @@ public class ToolAccessTest {
             cnt++;
         }
         assertEquals(2, cnt);
+    }
+
+    @Test
+    public void testGetAvailableParameters_mgx2() throws Exception {
+        System.out.println("testGetAvailableParameters_mgx2");
+        MGXDTOMaster master = TestMaster.getPrivate("MGX2_devel");
+        assertNotNull(master);
+        Iterable<JobParameterDTO> it = master.Tool().getAvailableParameters(2, false);
+        assertNotNull(it);
+        int cnt = 0;
+        for (JobParameterDTO jp : it) {
+            assertNotNull(jp.getDisplayName());
+            System.out.println(jp.getDisplayName());
+            cnt++;
+        }
+        assertEquals(1, cnt);
     }
 
     @Test

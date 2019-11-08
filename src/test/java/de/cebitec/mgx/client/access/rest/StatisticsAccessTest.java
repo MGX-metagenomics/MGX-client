@@ -293,7 +293,7 @@ public class StatisticsAccessTest {
 
         // check points
         for (PointDTO point : ret.getDatapointList()) {
-            assertTrue(point.hasName());
+            assertNotEquals("", point.getName());
             switch (point.getName()) {
                 case "DS1":
                     assertEquals(1.1026783, Math.abs(point.getX()), 0.001);
@@ -511,7 +511,7 @@ public class StatisticsAccessTest {
 
         // check points
         for (PointDTO point : ret.getPointList()) {
-            assertTrue(point.hasName());
+            assertNotEquals("", point.getName());
             switch (point.getName()) {
                 case "DS1":
                     assertEquals(1.5105621, Math.abs(point.getX()), 0.001);

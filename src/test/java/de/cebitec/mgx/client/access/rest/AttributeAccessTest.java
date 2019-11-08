@@ -53,7 +53,7 @@ public class AttributeAccessTest {
         assertNotNull(attr.getValue());
         assertEquals("50.8", attr.getValue());
         assertEquals(1, attr.getAttributeTypeId());
-        assertEquals(1, attr.getJobid());
+        assertEquals(1, attr.getJobId());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AttributeAccessTest {
 
         AttributeDistribution dist = null;
         try {
-            dist = master.Attribute().getDistribution(6, 3);
+            dist = master.Attribute().getDistribution(6, 3, 1);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -80,7 +80,7 @@ public class AttributeAccessTest {
         AttributeDistribution ad = null;
 
         try {
-            ad = master.Attribute().getHierarchy(6, 3);
+            ad = master.Attribute().getHierarchy(6, 3, 1);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

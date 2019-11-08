@@ -136,15 +136,21 @@ public class SeqRunAccessTest {
     public void testByJob() {
         System.out.println("testByJob");
         MGXDTOMaster master = TestMaster.getRO();
-        SeqRunDTO dto = null;
+        Iterator<SeqRunDTO> iter = null;
         try {
-            dto = master.SeqRun().byJob(7);
+            iter = master.SeqRun().byJob(7);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
-        assertNotNull(dto);
-        assertEquals(2, dto.getId());
-        assertEquals("dataset2", dto.getName());
+        assertNotNull(iter);
+        boolean success = false;
+        while (iter.hasNext()) {
+            SeqRunDTO dto = iter.next();
+            if (dto.getId() == 2 && dto.getName().equals("dataset2")) {
+                success = true;
+            }
+        }
+        assertTrue(success);
     }
 
     @Test

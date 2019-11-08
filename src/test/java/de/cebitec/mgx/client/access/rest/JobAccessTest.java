@@ -5,9 +5,9 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.JobDTO;
-import de.cebitec.mgx.dto.dto.JobDTO.JobState;
 import de.cebitec.mgx.dto.dto.JobParameterDTO;
 import de.cebitec.mgx.dto.dto.JobParameterListDTO;
+import de.cebitec.mgx.dto.dto.JobState;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
@@ -39,7 +39,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
  *
  * @author sj
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class JobAccessTest {
 
     @Configuration
@@ -81,9 +81,32 @@ public class JobAccessTest {
         assertNotNull(job);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        
+
         assertEquals("2013-06-20T13:19:18Z", sdf.format(new Date(1000L * job.getStartDate())));
         assertEquals("2013-06-20T13:20:01Z", sdf.format(new Date(1000L * job.getFinishDate())));
+    }
+
+    @Test
+    public void testFetch_mgx2() throws Exception {
+        System.out.println("testFetch_mgx2");
+        MGXDTOMaster master = TestMaster.getPrivate("MGX2_devel");
+        assertNotNull(master);
+        JobDTO job = master.Job().fetch(1);
+        assertNotNull(job);
+    }
+
+    @Test
+    public void testFetch_byRun_mgx2() throws Exception {
+        System.out.println("testFetch_mgx2");
+        MGXDTOMaster master = TestMaster.getPrivate("MGX2_devel");
+        assertNotNull(master);
+        Iterable<JobDTO> jobs = master.Job().bySeqRun(1);
+        assertNotNull(jobs);
+        int cnt = 0;
+        for (JobDTO j : jobs) {
+            cnt++;
+        }
+        assertEquals(2, cnt);
     }
 
     @Test
@@ -132,7 +155,7 @@ public class JobAccessTest {
         System.out.println("createJob");
         MGXDTOMaster m = TestMaster.getRW();
         JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
-                .setSeqrunId(2)
+                .addSeqrun(2)
                 .setToolId(2)
                 .setState(JobState.CREATED)
                 .setParameters(JobParameterListDTO.newBuilder().build())
@@ -165,7 +188,7 @@ public class JobAccessTest {
         System.out.println("verifyJob");
         MGXDTOMaster m = TestMaster.getRW();
         JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
-                .setSeqrunId(2)
+                .addSeqrun(2)
                 .setToolId(2)
                 .setState(JobState.CREATED)
                 .setParameters(JobParameterListDTO.newBuilder().build())
@@ -227,7 +250,7 @@ public class JobAccessTest {
         System.err.print("  creating: ");
         for (int i = 0; i < 10; i++) {
             JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
-                    .setSeqrunId(2)
+                    .addSeqrun(2)
                     .setToolId(2)
                     .setState(JobState.CREATED)
                     .setParameters(JobParameterListDTO.newBuilder().build())
