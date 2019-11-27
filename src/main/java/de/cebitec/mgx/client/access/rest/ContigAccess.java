@@ -5,6 +5,7 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.ContigDTO;
 import de.cebitec.mgx.dto.dto.ContigDTOList;
+import de.cebitec.mgx.dto.dto.SequenceDTO;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -48,5 +49,9 @@ public class ContigAccess extends AccessBase<ContigDTO, ContigDTOList> {
 
     public Iterator<ContigDTO> byBin(long bin_id) throws MGXDTOException {
         return get(ContigDTOList.class, r.resolve(ContigDTOList.class, "byBin", String.valueOf(bin_id))).getContigList().iterator();
+    }
+
+    public SequenceDTO getDNASequence(long contig_id) throws MGXDTOException {
+        return get(SequenceDTO.class, r.resolve(ContigDTO.class, "getDNASequence", String.valueOf(contig_id)));
     }
 }
