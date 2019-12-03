@@ -11,6 +11,7 @@ import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -59,7 +60,7 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
         return get(SequenceDTO.class, r.resolve(GeneDTO.class, "getDNASequence", String.valueOf(gene_id)));
     }
 
-    public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
-        return new GeneByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
+    public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter, Set<String> seenGeneNames) {
+        return new GeneByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter, seenGeneNames);
     }
 }
