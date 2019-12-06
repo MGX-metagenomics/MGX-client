@@ -128,7 +128,7 @@ public class TestMaster {
     public static MGXDTOMaster getPrivate(String targetProject) {
         MGXDTOMaster master = null;
 
-        String serverURI = "https://mgx.cebitec.uni-bielefeld.de/MGX-maven-web/webresources/";
+        String serverURI = "https://mgx-test.computational.bio.uni-giessen.de/MGX-maven-web/webresources/";
 
         Properties p = new Properties();
         String config = System.getProperty("user.home") + "/.m2/mgx.private";
@@ -143,7 +143,7 @@ public class TestMaster {
         }
         GPMSClientI gpms;
         try {
-            gpms = GPMSClientFactory.createClient("MyServer", serverURI);
+            gpms = GPMSClientFactory.createClient("MyServer", serverURI, false);
         } catch (GPMSException ex) {
             fail(ex.getMessage());
             return null;
@@ -163,7 +163,7 @@ public class TestMaster {
 
         while (mIter.hasNext()) {
             MembershipI m = mIter.next();
-            if ("MGX".equals(m.getProject().getProjectClass().getName()) && (targetProject.equals(m.getProject().getName()))) {
+            if (targetProject.equals(m.getProject().getName())) {
                 try {
                     master = new MGXDTOMaster(gpms.createMaster(m));
                 } catch (GPMSException ex) {
