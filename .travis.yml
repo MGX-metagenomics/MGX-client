@@ -5,26 +5,27 @@ notifications:
 
 language: java
 
-dist: trusty
+dist: bionic
 
 sudo: required
 
-jdk: oraclejdk8
+jdk: oraclejdk11
 
 branches:
   only:
-    - master
+    - MGX_client_2_0
 
 cache:
   directories:
   - $HOME/.m2
 
 before_install:
+  - sudo add-apt-repository -y ppa:maarten-fonville/protobuf
   - sudo apt-get update -qq
   - sudo apt-get install -qq protobuf-compiler
-  - git clone https://github.com/MGX-metagenomics/utilities.git
+  - git clone -b utilities_2_0 https://github.com/MGX-metagenomics/utilities.git
   - cd utilities && mvn clean install -DskipTests=true && cd .. && rm -rf utilities
-  - git clone https://github.com/MGX-metagenomics/GPMS.git
+  - git clone -b GPMS_2_0 https://github.com/MGX-metagenomics/GPMS.git
   - cd GPMS && mvn clean install -DskipTests=true && cd .. && rm -rf GPMS
 
 install: true
