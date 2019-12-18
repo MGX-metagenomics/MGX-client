@@ -123,7 +123,7 @@ public class AttributeAccessTest {
         SearchRequestDTO req = SearchRequestDTO.newBuilder()
                 .setExact(false)
                 .setTerm("meth")
-                .addSeqrunId(2)
+                .setSeqrunId(2)
                 .build();
 
         Iterator<String> iter = null;
@@ -157,7 +157,7 @@ public class AttributeAccessTest {
             iter = master.Attribute().find(SearchRequestDTO.newBuilder()
                     .setExact(false)
                     .setTerm("alcohol")
-                    .addSeqrunId(1)
+                    .setSeqrunId(1)
                     .build());
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
@@ -178,7 +178,7 @@ public class AttributeAccessTest {
             iter = master.Attribute().find(SearchRequestDTO.newBuilder()
                     .setExact(false)
                     .setTerm("ALCOHOL")
-                    .addSeqrunId(1)
+                    .setSeqrunId(1)
                     .build());
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
