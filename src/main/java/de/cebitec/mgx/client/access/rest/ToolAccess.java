@@ -87,8 +87,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
         return tool;
     }
 
-    public String getXMLDefinition(long tool_id) throws MGXDTOException {
-        return get(MGXString.class, r.resolve(ToolDTO.class, "getXML", String.valueOf(tool_id))).getValue();
+    public String getDefinition(long tool_id) throws MGXDTOException {
+        return get(MGXString.class, r.resolve(ToolDTO.class, "getDefinition", String.valueOf(tool_id))).getValue();
     }
 
 }
