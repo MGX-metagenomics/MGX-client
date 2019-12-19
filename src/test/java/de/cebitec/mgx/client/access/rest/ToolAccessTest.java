@@ -11,14 +11,12 @@ import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.util.Iterator;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
@@ -179,7 +177,7 @@ public class ToolAccessTest {
     public void testFetchXML() throws Exception {
         System.out.println("fetchXML");
         MGXDTOMaster master = TestMaster.getRO();
-        String xmlData = master.Tool().getXMLDefinition(1);
+        String xmlData = master.Tool().getDefinition(1);
         assertNotNull(xmlData);
         assertTrue(xmlData.startsWith("<?xml version"));
     }
