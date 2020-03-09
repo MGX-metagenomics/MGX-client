@@ -36,7 +36,7 @@ public class SeqUploader extends UploadBase {
         if (randomNess % 2 == 1) {
             randomNess++;
         }
-        super.setChunkSize(6_000 + randomNess);
+        super.setChunkSize(10_000 + randomNess);
     }
 
     @Override
@@ -51,8 +51,7 @@ public class SeqUploader extends UploadBase {
             return false;
         }
 
-//        cb.callback(total_elements);
-        Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+        Builder seqListBuilder = SequenceDTOList.newBuilder();
         seqListBuilder.setComplete(true);
 
         try {
@@ -77,16 +76,14 @@ public class SeqUploader extends UploadBase {
 
                 if (current_num_elements >= getChunkSize()) {
                     total_elements += current_num_elements;
-//                    cb.callback(total_elements);
                     try {
                         sendChunk(seqListBuilder.build(), session_uuid);
-//                        cb.callback(total_elements);
                     } catch (MGXServerException ex) {
                         abortTransfer(ex.getMessage());
                         return false;
                     }
                     current_num_elements = 0;
-                    seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+                    seqListBuilder = SequenceDTOList.newBuilder();
                     seqListBuilder.setComplete(true);
                 }
             }
@@ -103,7 +100,6 @@ public class SeqUploader extends UploadBase {
                 abortTransfer(ex.getMessage());
                 return false;
             }
-//            cb.callback(total_elements);
         }
         try {
             finishTransfer(session_uuid);
@@ -134,6 +130,28 @@ public class SeqUploader extends UploadBase {
     }
 
     private void finishTransfer(final String uuid) throws MGXServerException {
+
+//        while (!pendingRequests.isEmpty()) {
+//
+//            List<AsyncRequestHandleI> toRemove = new ArrayList<>();
+//
+//            for (AsyncRequestHandleI arh : pendingRequests) {
+//                if (arh.isDone()) {
+//                    try {
+//                        // isSuccess always returns true or throws exception
+//                        boolean success = arh.isSuccess();
+//                        if (!success) {
+//                            throw new MGXServerException("Not reached.");
+//                        }
+//                        toRemove.add(arh);
+//                    } catch (RESTException ex) {
+//                        throw new MGXServerException(ex.getMessage());
+//                    }
+//                }
+//            }
+//            pendingRequests.removeAll(toRemove);
+//        }
+
         try {
             super.get("Sequence", "closeUpload", uuid);
         } catch (ProcessingException ex) {
@@ -148,15 +166,59 @@ public class SeqUploader extends UploadBase {
     }
 
     private void sendChunk(final SequenceDTOList seqList, final String session_uuid) throws MGXServerException {
-        try {
-            super.post(seqList, "Sequence", "add", session_uuid);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        } catch (ProcessingException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                sendChunk(seqList, session_uuid); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+//        //
+//        // remove finished requests from queue
+//        //
+//        List<AsyncRequestHandleI> toRemove = new ArrayList<>();
+//
+//        for (AsyncRequestHandleI arh : pendingRequests) {
+//            if (arh.isDone()) {
+//                // isSuccess always returns true or throws exception
+//                try {
+//                    boolean success = arh.isSuccess();
+//                    if (!success) {
+//                        throw new MGXServerException("Not reached.");
+//                    }
+//                    toRemove.add(arh);
+//                    fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+//                } catch (RESTException ex) {
+//                    throw new MGXServerException(ex.getMessage());
+//                }
+//
+//            }
+//        }
+//        pendingRequests.removeAll(toRemove);
+//        toRemove.clear();
+//
+//        //
+//        // if queue is full, need to await completion of at least one request
+//        //
+//        while (pendingRequests.size() >= 40) {
+//            for (AsyncRequestHandleI arh : pendingRequests) {
+//                try {
+//                    // isSuccess always returns true or throws exception
+//                    boolean success = arh.isSuccess();
+//                    if (!success) {
+//                        throw new MGXServerException("Not reached.");
+//                    }
+//                    toRemove.add(arh);
+//                    fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+//                } catch (RESTException ex) {
+//                    throw new MGXServerException(ex.getMessage());
+//                }
+//            }
+//
+//            pendingRequests.removeAll(toRemove);
+//            toRemove.clear();
+//        }
+        
+        super.post(seqList, "Sequence", "add", session_uuid);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
+
+        //AsyncRequestHandleI handle = super.postAsync(seqList, "Sequence", "add", session_uuid);
+        //pendingRequests.add(handle);
+
     }
+
+//    private final Set<AsyncRequestHandleI> pendingRequests = new HashSet<>(40);
 }
