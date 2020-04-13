@@ -32,6 +32,7 @@ public class SeqDownloader extends DownloadBase {
         this.seqrun_id = seqrun_id;
     }
 
+    @SuppressWarnings("unchecked")
     protected SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
         super(dtomaster, rab);
         this.writer = (SeqWriterI<DNASequenceI>) writer;
