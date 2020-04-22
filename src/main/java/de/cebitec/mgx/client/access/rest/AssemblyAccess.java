@@ -4,8 +4,6 @@ import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.AssemblyDTO;
 import de.cebitec.mgx.dto.dto.AssemblyDTOList;
-import de.cebitec.mgx.dto.dto.SampleDTO;
-import de.cebitec.mgx.dto.dto.SampleDTOList;
 import java.util.Iterator;
 import java.util.UUID;
 
