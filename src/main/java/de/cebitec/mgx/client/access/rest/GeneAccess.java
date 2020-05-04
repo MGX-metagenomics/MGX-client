@@ -60,7 +60,7 @@ public class GeneAccess extends AccessBase<GeneDTO, GeneDTOList> {
         return get(SequenceDTO.class, r.resolve(GeneDTO.class, "getDNASequence", String.valueOf(gene_id)));
     }
 
-    public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter, Set<String> seenGeneNames) {
+    public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter, Set<String> seenGeneNames) throws MGXDTOException {
         return new GeneByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter, seenGeneNames);
     }
 }

@@ -49,11 +49,11 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
     }
 
-    public SeqUploader createUploader(long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
+    public SeqUploader createUploader(long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) throws MGXDTOException {
         return new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, reader);
     }
 
-    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
+    public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) throws MGXDTOException {
         return new SeqDownloader(dtomaster, getRESTAccess(), seqrun_id, writer, closeWriter);
     }
 
@@ -84,7 +84,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         return super.put(seqNameDTO, SequenceDTO.class, path);
     }
 
-    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
+    public SeqByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) throws MGXDTOException {
         return new SeqByAttributeDownloader(dtomaster, getRESTAccess(), attrs, writer, closeWriter);
     }
 

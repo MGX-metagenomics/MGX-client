@@ -67,7 +67,7 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
         return get(MGXString.class, "Reference", "getSequence", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getValue().toUpperCase();
     }
 
-    public ReferenceUploader createUploader(File localFile) {
+    public ReferenceUploader createUploader(File localFile) throws MGXDTOException {
         return new ReferenceUploader(dtomaster, getRESTAccess(), localFile);
     }
 }

@@ -1,9 +1,11 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.gpms.rest.RESTAccessI;
+import de.cebitec.gpms.rest.RESTDisconnectedException;
 import de.cebitec.gpms.rest.RESTException;
 import de.cebitec.mgx.client.access.rest.util.RESTPathResolver;
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.client.exception.MGXClientLoggedOutException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
@@ -25,7 +27,10 @@ public abstract class AccessBase<T, U> {
         this.restAccess = restAccess;
     }
 
-    public final RESTAccessI getRESTAccess() {
+    protected final RESTAccessI getRESTAccess() throws MGXClientLoggedOutException {
+        if (restAccess.isClosed()) {
+            throw new MGXClientLoggedOutException();
+        }
         return restAccess;
     }
 
@@ -49,7 +54,9 @@ public abstract class AccessBase<T, U> {
         String[] resolve = r.resolve(c, "create");
         long id;
         try {
-            id = restAccess.put(dto, MGXLong.class, resolve).getValue();
+            id = getRESTAccess().put(dto, MGXLong.class, resolve).getValue();
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -62,7 +69,9 @@ public abstract class AccessBase<T, U> {
         }
         String[] resolve = r.resolve(c, "update");
         try {
-            restAccess.post(dto, resolve);
+            getRESTAccess().post(dto, resolve);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -74,7 +83,9 @@ public abstract class AccessBase<T, U> {
         }
         String[] resolve = r.resolve(c, "fetch", String.valueOf(id));
         try {
-            return restAccess.get(c, resolve);
+            return getRESTAccess().get(c, resolve);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -83,7 +94,9 @@ public abstract class AccessBase<T, U> {
     protected U fetchlist(Class<U> c) throws MGXDTOException {
         String[] resolve = r.resolve(c, "fetchall");
         try {
-            return restAccess.<U>get(c, resolve);
+            return getRESTAccess().<U>get(c, resolve);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -95,7 +108,9 @@ public abstract class AccessBase<T, U> {
         }
         String s;
         try {
-            s = restAccess.delete(MGXString.class, r.resolve(c, "delete", String.valueOf(id))).getValue();
+            s = getRESTAccess().delete(MGXString.class, r.resolve(c, "delete", String.valueOf(id))).getValue();
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -104,7 +119,9 @@ public abstract class AccessBase<T, U> {
 
     protected final void put(Object obj, String... path) throws MGXDTOException {
         try {
-            restAccess.put(obj, path);
+            getRESTAccess().put(obj, path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -112,7 +129,9 @@ public abstract class AccessBase<T, U> {
 
     protected final <U> U put(Object obj, Class<U> c, String... path) throws MGXDTOException {
         try {
-            return restAccess.put(obj, c, path);
+            return getRESTAccess().put(obj, c, path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -120,7 +139,9 @@ public abstract class AccessBase<T, U> {
 
     protected final void get(String... path) throws MGXDTOException {
         try {
-            restAccess.get(path);
+            getRESTAccess().get(path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -128,7 +149,9 @@ public abstract class AccessBase<T, U> {
 
     protected final <U> U get(Class<U> c, String... path) throws MGXDTOException {
         try {
-            return restAccess.get(c, path);
+            return getRESTAccess().get(c, path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -136,7 +159,9 @@ public abstract class AccessBase<T, U> {
 
     protected final <U> U delete(Class<U> clazz, String... path) throws MGXDTOException {
         try {
-            return restAccess.delete(clazz, path);
+            return getRESTAccess().delete(clazz, path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -144,7 +169,9 @@ public abstract class AccessBase<T, U> {
 
     protected final void delete(String... path) throws MGXDTOException {
         try {
-            restAccess.delete(path);
+            getRESTAccess().delete(path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }
@@ -152,7 +179,9 @@ public abstract class AccessBase<T, U> {
 
     protected final <U> void post(U obj, String... path) throws MGXDTOException {
         try {
-            restAccess.post(obj, path);
+            getRESTAccess().post(obj, path);
+        } catch (RESTDisconnectedException rde) {
+            throw new MGXClientLoggedOutException();
         } catch (RESTException ex) {
             throw new MGXServerException(ex.getMessage());
         }

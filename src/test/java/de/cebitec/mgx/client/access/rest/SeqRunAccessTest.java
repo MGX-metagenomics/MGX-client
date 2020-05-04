@@ -4,7 +4,6 @@ import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.SeqDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
 import de.cebitec.mgx.client.datatransfer.TransferBase;
-import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.DataRowDTO;
@@ -235,7 +234,7 @@ public class SeqRunAccessTest {
             SeqUploader up = null;
             try {
                 up = master.Sequence().createUploader(999999, reader);
-            } catch (MGXClientException ex) {
+            } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
             assertNotNull(up);

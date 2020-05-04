@@ -3,7 +3,6 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.ReferenceUploader;
 import de.cebitec.mgx.client.datatransfer.TransferBase;
-import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
@@ -255,7 +254,7 @@ public class ReferenceAccessTest {
         ReferenceUploader up = null;
         try {
             up = m.Reference().createUploader(f);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(up);

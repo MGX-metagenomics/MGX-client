@@ -3,7 +3,6 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.datatransfer.SeqByAttributeDownloader;
 import de.cebitec.mgx.client.datatransfer.SeqUploader;
-import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
@@ -18,7 +17,6 @@ import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -60,7 +58,7 @@ public class SequenceAccessTest {
         SeqUploader up = null;
         try {
             up = master.Sequence().createUploader(9999, reader);
-        } catch (MGXClientException ex) {
+        } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(up);
