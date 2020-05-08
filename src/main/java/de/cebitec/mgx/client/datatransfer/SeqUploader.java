@@ -23,33 +23,37 @@ public class SeqUploader extends UploadBase {
 
     private final long seqrun_id;
     private final SeqReaderI<? extends DNASequenceI> reader;
-    private long total_elements = 0;
+    private volatile long total_elements = 0;
+    private final static int BASE_PAIR_LIMIT = 2_000_000;
 
     public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
         super(dtomaster, rab);
         this.seqrun_id = seqrun_id;
         this.reader = reader;
         // add in some randomness to make the numbers appear "nicer"
+        // generate an even number so interleaved paired-end uploads
+        // stay in the correct order
         int randomNess = (int) Math.round(Math.random() * 20);
-        super.setChunkSize(5800 + randomNess);
+        if (randomNess % 2 == 1) {
+            randomNess++;
+        }
+        super.setChunkSize(10_000 + randomNess);
     }
 
     @Override
     public boolean upload() {
-//        CallbackI cb = getProgressCallback();
         int current_num_elements = 0;
+        int current_bp = 0;
 
         String session_uuid;
         try {
-            session_uuid = initTransfer(seqrun_id);
+            session_uuid = initTransfer();
         } catch (MGXServerException ex) {
             abortTransfer(ex.getMessage());
             return false;
         }
 
-//        cb.callback(total_elements);
-        Builder seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
-        seqListBuilder.setComplete(true);
+        Builder seqListBuilder = SequenceDTOList.newBuilder();
 
         try {
             while (reader.hasMoreElements()) {
@@ -70,19 +74,22 @@ public class SeqUploader extends UploadBase {
                 }
                 seqListBuilder.addSeq(seqbuilder.build());
                 current_num_elements++;
+                current_bp += nextElement.getSequence().length;
 
-                if (current_num_elements >= getChunkSize()) {
+                // if number of sequences exceeds chunk size or bp in chunk
+                // exceeds base pair limit, send chunk to server
+                if (current_num_elements >= getChunkSize() || (current_num_elements % 2 == 0 && current_bp >= BASE_PAIR_LIMIT)) {
                     total_elements += current_num_elements;
-//                    cb.callback(total_elements);
                     try {
+                        seqListBuilder.setComplete(!reader.hasMoreElements());
                         sendChunk(seqListBuilder.build(), session_uuid);
-//                        cb.callback(total_elements);
                     } catch (MGXServerException ex) {
                         abortTransfer(ex.getMessage());
                         return false;
                     }
                     current_num_elements = 0;
-                    seqListBuilder = de.cebitec.mgx.dto.dto.SequenceDTOList.newBuilder();
+                    current_bp = 0;
+                    seqListBuilder = SequenceDTOList.newBuilder();
                     seqListBuilder.setComplete(true);
                 }
             }
@@ -94,12 +101,12 @@ public class SeqUploader extends UploadBase {
         if (current_num_elements > 0) {
             total_elements += current_num_elements;
             try {
+                seqListBuilder.setComplete(true);
                 sendChunk(seqListBuilder.build(), session_uuid);
             } catch (MGXServerException ex) {
                 abortTransfer(ex.getMessage());
                 return false;
             }
-//            cb.callback(total_elements);
         }
         try {
             finishTransfer(session_uuid);
@@ -115,14 +122,14 @@ public class SeqUploader extends UploadBase {
         return total_elements;
     }
 
-    private String initTransfer(final long seqrun_id) throws MGXServerException {
+    private String initTransfer() throws MGXServerException {
         try {
             MGXString session_uuid = super.get(MGXString.class, "Sequence", "initUpload", String.valueOf(seqrun_id), String.valueOf(reader.hasQuality()));
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return session_uuid.getValue();
         } catch (ClientHandlerException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                return initTransfer(seqrun_id); // retry
+                return initTransfer(); // retry
             } else {
                 throw ex; // rethrow
             }
