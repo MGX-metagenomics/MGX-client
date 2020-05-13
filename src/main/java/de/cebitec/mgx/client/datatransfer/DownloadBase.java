@@ -9,7 +9,6 @@ import de.cebitec.mgx.client.MGXDTOMaster;
  */
 public abstract class DownloadBase extends TransferBase {
 
-//    private CallbackI cb = null;
     private volatile boolean aborted = false;
 
     public DownloadBase(MGXDTOMaster dtomaster, RESTAccessI rab) {
@@ -25,21 +24,6 @@ public abstract class DownloadBase extends TransferBase {
         }
     }
 
-//    public final void setProgressCallback(CallbackI cb) {
-//        this.cb = cb;
-//    }
-
-//    protected final CallbackI getProgressCallback() {
-//        return cb != null ? cb
-//                : new DownloadBase.NullCallBack();
-//    }
-
     public abstract boolean download();
 
-//    protected final static class NullCallBack implements CallbackI {
-//
-//        @Override
-//        public void callback(long i) {
-//        }
-//    }
 }

@@ -23,8 +23,9 @@ public class SeqUploader extends UploadBase {
 
     private final long seqrun_id;
     private final SeqReaderI<? extends DNASequenceI> reader;
-    private long total_elements = 0;
-
+    private volatile long total_elements = 0;
+    private final static int BASE_PAIR_LIMIT = 2_000_000;
+    
     public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
         super(dtomaster, rab);
         this.seqrun_id = seqrun_id;
@@ -42,6 +43,7 @@ public class SeqUploader extends UploadBase {
     @Override
     public boolean upload() {
         int current_num_elements = 0;
+        int current_bp = 0;
 
         String session_uuid;
         try {
@@ -52,7 +54,6 @@ public class SeqUploader extends UploadBase {
         }
 
         Builder seqListBuilder = SequenceDTOList.newBuilder();
-        seqListBuilder.setComplete(true);
 
         try {
             while (reader.hasMoreElements()) {
@@ -73,16 +74,21 @@ public class SeqUploader extends UploadBase {
                 }
                 seqListBuilder.addSeq(seqbuilder.build());
                 current_num_elements++;
+                current_bp += nextElement.getSequence().length;
 
-                if (current_num_elements >= getChunkSize()) {
+                // if number of sequences exceeds chunk size or bp in chunk
+                // exceeds base pair limit, send chunk to server
+                if (current_num_elements >= getChunkSize() || (current_num_elements % 2 == 0 && current_bp > BASE_PAIR_LIMIT)) {
                     total_elements += current_num_elements;
                     try {
+                        seqListBuilder.setComplete(!reader.hasMoreElements());
                         sendChunk(seqListBuilder.build(), session_uuid);
                     } catch (MGXServerException ex) {
                         abortTransfer(ex.getMessage());
                         return false;
                     }
                     current_num_elements = 0;
+                    current_bp = 0;
                     seqListBuilder = SequenceDTOList.newBuilder();
                     seqListBuilder.setComplete(true);
                 }
@@ -95,6 +101,7 @@ public class SeqUploader extends UploadBase {
         if (current_num_elements > 0) {
             total_elements += current_num_elements;
             try {
+                seqListBuilder.setComplete(true);
                 sendChunk(seqListBuilder.build(), session_uuid);
             } catch (MGXServerException ex) {
                 abortTransfer(ex.getMessage());

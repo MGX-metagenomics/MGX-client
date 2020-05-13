@@ -24,7 +24,7 @@ public class SeqDownloader extends DownloadBase {
 
     private long seqrun_id = -1;
     protected final SeqWriterI<DNASequenceI> writer;
-    protected long total_elements = 0;
+    protected volatile long total_elements = 0;
     protected final boolean closeWriter;
 
     public SeqDownloader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) {
