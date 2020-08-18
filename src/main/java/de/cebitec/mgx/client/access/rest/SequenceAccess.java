@@ -17,7 +17,9 @@ import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqWriterI;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -97,7 +99,27 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     public Iterator<Long> fetchSequenceIDs(long attrId) throws MGXDTOException {
-        return get(MGXLongList.class, "Sequence", "fetchSequenceIDs", String.valueOf(attrId)).getLongList().iterator();
+        
+        //
+        // TODO: implement LongIterator to avoid long/Long autoboxing
+        //
+        
+        MGXLongList ret = get(MGXLongList.class, "Sequence", "fetchSequenceIDs", String.valueOf(attrId));
+        if (ret.getComplete()) {
+            return ret.getLongList().iterator();
+        } else {
+            if (ret.getUuid() == null || ret.getUuid().isEmpty()) {
+                throw new MGXClientException("No UUID!");
+            }
+            List<Long> list = new ArrayList<>(ret.getLongCount());
+            list.addAll(ret.getLongList());
+            while (!ret.getComplete()) {
+                ret = get(MGXLongList.class, "Iterator", "getLong", ret.getUuid());
+                list.addAll(ret.getLongList());
+
+            }
+            return list.iterator();
+        }
     }
 
     @Override
