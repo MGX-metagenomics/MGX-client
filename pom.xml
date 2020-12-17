@@ -118,6 +118,11 @@
                     <threadCount>8</threadCount>
                 </configuration> -->
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
 
         </plugins>
     </build>
