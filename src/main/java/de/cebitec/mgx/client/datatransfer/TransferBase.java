@@ -134,7 +134,11 @@ public abstract class TransferBase implements PropertyChangeListener {
     }
 
 //    protected final <U> AsyncRequestHandleI postAsync(U obj, String... path) throws MGXServerException {
-//        return restAccess.postAsync(obj, path);
+//        try {
+//            return restAccess.postAsync(obj, path);
+//        } catch (RESTException ex) {
+//            throw new MGXServerException(ex.getMessage());
+//        }
 //    }
 
 }

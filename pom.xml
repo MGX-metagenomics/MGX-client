@@ -53,6 +53,7 @@
                             de.cebitec.gpms.rest,
                             de.cebitec.mgx.restgpms,
                             de.cebitec.mgx.dto,
+                            de.cebitec.mgx.seqcompression,
                             de.cebitec.mgx.sequence,
                             de.cebitec.mgx.seqstorage,
                             de.cebitec.mgx.pevents,
@@ -246,14 +247,14 @@
             <version>2.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>2.5.0</version>
-        </dependency> -->
         <dependency>
             <groupId>de.cebitec.mgx</groupId>
             <artifactId>MGX-common</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.cebitec.mgx</groupId>
+            <artifactId>MGX-seqcompression</artifactId>
             <version>2.0</version>
         </dependency>
     </dependencies>

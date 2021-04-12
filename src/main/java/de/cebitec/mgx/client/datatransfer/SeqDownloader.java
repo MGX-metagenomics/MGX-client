@@ -6,6 +6,9 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
+import de.cebitec.mgx.seqcompression.FourBitEncoder;
+import de.cebitec.mgx.seqcompression.QualityEncoder;
+import de.cebitec.mgx.seqcompression.SequenceException;
 import de.cebitec.mgx.seqstorage.DNASequence;
 import de.cebitec.mgx.seqstorage.QualityDNASequence;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
@@ -64,9 +67,13 @@ public class SeqDownloader extends DownloadBase {
             try {
                 for (SequenceDTO dto : chunk.getSeqList()) {
                     DNASequenceI seq;
+                    
+                    byte[] encodedDNA = dto.getSequence().toByteArray();
+                    
                     if (!dto.getQuality().isEmpty()) {
                         DNAQualitySequenceI qseq = new QualityDNASequence();
-                        qseq.setQuality(dto.getQuality().toByteArray());
+                        qseq.setQuality(QualityEncoder.decode(dto.getQuality().toByteArray(), 
+                                (int)FourBitEncoder.decodeLength(encodedDNA)));
                         seq = qseq;
                     } else {
                         seq = new DNASequence();
@@ -75,12 +82,12 @@ public class SeqDownloader extends DownloadBase {
                         seq.setId(dto.getId());
                     }
                     seq.setName(dto.getName().getBytes());
-                    seq.setSequence(dto.getSequence().getBytes());
+                    seq.setSequence(FourBitEncoder.decode(encodedDNA));
                     writer.addSequence(seq);
                     current_num_elements++;
                 }
 
-            } catch (SeqStoreException sse) {
+            } catch (SequenceException sse) {
                 abortTransfer(sse.getMessage());
                 return false;
             }

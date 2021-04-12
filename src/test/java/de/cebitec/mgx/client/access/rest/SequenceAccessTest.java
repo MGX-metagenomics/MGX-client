@@ -11,6 +11,7 @@ import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.osgiutils.MGXOptions;
+import de.cebitec.mgx.seqcompression.FourBitEncoder;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
@@ -80,7 +81,8 @@ public class SequenceAccessTest {
         assertNotNull(result);
         assertEquals("seq1", result.getName());
         assertEquals(23, result.getLength());
-        assertEquals(23, result.getSequence().length());
+        byte[] decoded = FourBitEncoder.decode(result.getSequence().toByteArray());
+        assertEquals(23, new String(decoded).length());
         assertEquals("AAATTTATATATAAAACTCTCTC", result.getSequence());
     }
 

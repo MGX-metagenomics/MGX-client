@@ -8,10 +8,12 @@ import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTOList.Builder;
+import de.cebitec.mgx.seqcompression.FourBitEncoder;
+import de.cebitec.mgx.seqcompression.QualityEncoder;
+import de.cebitec.mgx.seqcompression.SequenceException;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import de.cebitec.mgx.sequence.SeqStoreException;
 import javax.net.ssl.SSLHandshakeException;
 import javax.ws.rs.ProcessingException;
 
@@ -24,8 +26,10 @@ public class SeqUploader extends UploadBase {
     private final long seqrun_id;
     private final SeqReaderI<? extends DNASequenceI> reader;
     private volatile long total_elements = 0;
+    private long duration;
+
     private final static int BASE_PAIR_LIMIT = 2_000_000;
-    
+
     public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
         super(dtomaster, rab);
         this.seqrun_id = seqrun_id;
@@ -37,7 +41,8 @@ public class SeqUploader extends UploadBase {
         if (randomNess % 2 == 1) {
             randomNess++;
         }
-        super.setChunkSize(10_000 + randomNess);
+        super.setChunkSize(5_000 + randomNess);
+        duration = System.currentTimeMillis();
     }
 
     @Override
@@ -63,14 +68,14 @@ public class SeqUploader extends UploadBase {
                 if (nextElement.getSequence().length == 0) {
                     continue;
                 }
-
+                
                 SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
                         .setName(new String(nextElement.getName()))
-                        .setSequence(new String(nextElement.getSequence()));
+                        .setSequence(ByteString.copyFrom(FourBitEncoder.encode(nextElement.getSequence())));
 
                 if (nextElement instanceof DNAQualitySequenceI) {
                     DNAQualitySequenceI q = (DNAQualitySequenceI) nextElement;
-                    seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(q.getQuality()));
+                    seqbuilder = seqbuilder.setQuality(ByteString.copyFrom(QualityEncoder.encode(q.getQuality())));
                 }
                 seqListBuilder.addSeq(seqbuilder.build());
                 current_num_elements++;
@@ -93,7 +98,7 @@ public class SeqUploader extends UploadBase {
                     seqListBuilder.setComplete(true);
                 }
             }
-        } catch (SeqStoreException ex) {
+        } catch (SequenceException ex) {
             abortTransfer(ex.getMessage());
             return false;
         }
@@ -137,28 +142,6 @@ public class SeqUploader extends UploadBase {
     }
 
     private void finishTransfer(final String uuid) throws MGXServerException {
-
-//        while (!pendingRequests.isEmpty()) {
-//
-//            List<AsyncRequestHandleI> toRemove = new ArrayList<>();
-//
-//            for (AsyncRequestHandleI arh : pendingRequests) {
-//                if (arh.isDone()) {
-//                    try {
-//                        // isSuccess always returns true or throws exception
-//                        boolean success = arh.isSuccess();
-//                        if (!success) {
-//                            throw new MGXServerException("Not reached.");
-//                        }
-//                        toRemove.add(arh);
-//                    } catch (RESTException ex) {
-//                        throw new MGXServerException(ex.getMessage());
-//                    }
-//                }
-//            }
-//            pendingRequests.removeAll(toRemove);
-//        }
-
         try {
             super.get("Sequence", "closeUpload", uuid);
         } catch (ProcessingException ex) {
@@ -170,62 +153,13 @@ public class SeqUploader extends UploadBase {
         }
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
+        duration = System.currentTimeMillis() - duration;
+        System.out.println("transfer done in "+duration + "ms");
     }
 
     private void sendChunk(final SequenceDTOList seqList, final String session_uuid) throws MGXServerException {
-//        //
-//        // remove finished requests from queue
-//        //
-//        List<AsyncRequestHandleI> toRemove = new ArrayList<>();
-//
-//        for (AsyncRequestHandleI arh : pendingRequests) {
-//            if (arh.isDone()) {
-//                // isSuccess always returns true or throws exception
-//                try {
-//                    boolean success = arh.isSuccess();
-//                    if (!success) {
-//                        throw new MGXServerException("Not reached.");
-//                    }
-//                    toRemove.add(arh);
-//                    fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-//                } catch (RESTException ex) {
-//                    throw new MGXServerException(ex.getMessage());
-//                }
-//
-//            }
-//        }
-//        pendingRequests.removeAll(toRemove);
-//        toRemove.clear();
-//
-//        //
-//        // if queue is full, need to await completion of at least one request
-//        //
-//        while (pendingRequests.size() >= 40) {
-//            for (AsyncRequestHandleI arh : pendingRequests) {
-//                try {
-//                    // isSuccess always returns true or throws exception
-//                    boolean success = arh.isSuccess();
-//                    if (!success) {
-//                        throw new MGXServerException("Not reached.");
-//                    }
-//                    toRemove.add(arh);
-//                    fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-//                } catch (RESTException ex) {
-//                    throw new MGXServerException(ex.getMessage());
-//                }
-//            }
-//
-//            pendingRequests.removeAll(toRemove);
-//            toRemove.clear();
-//        }
-        
         super.post(seqList, "Sequence", "add", session_uuid);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-
-        //AsyncRequestHandleI handle = super.postAsync(seqList, "Sequence", "add", session_uuid);
-        //pendingRequests.add(handle);
-
     }
 
-//    private final Set<AsyncRequestHandleI> pendingRequests = new HashSet<>(40);
 }

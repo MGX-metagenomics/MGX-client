@@ -7,6 +7,8 @@ import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.dto.dto.SequenceDTOList;
+import de.cebitec.mgx.seqcompression.FourBitEncoder;
+import de.cebitec.mgx.seqcompression.SequenceException;
 import de.cebitec.mgx.seqstorage.DNASequence;
 import de.cebitec.mgx.seqstorage.QualityDNASequence;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
@@ -72,7 +74,7 @@ public class GeneByAttributeDownloader extends SeqDownloader {
 
                     if (!seenGeneNames.contains(dto.getName())) {
                         seq.setName(dto.getName().getBytes());
-                        seq.setSequence(dto.getSequence().getBytes());
+                        seq.setSequence(FourBitEncoder.decode(dto.getSequence().toByteArray()));
                         writer.addSequence(seq);
                         current_num_elements++;
                         
@@ -80,7 +82,7 @@ public class GeneByAttributeDownloader extends SeqDownloader {
                     }
                 }
 
-            } catch (SeqStoreException sse) {
+            } catch (SequenceException sse) {
                 abortTransfer(sse.getMessage());
                 return false;
             }

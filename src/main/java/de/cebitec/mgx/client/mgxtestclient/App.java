@@ -117,7 +117,7 @@ public class App {
         }
 
         TermDTO flx = master.Term().fetch(5); // miseq
-        TermDTO wgs = master.Term().fetch(13); // pe
+        TermDTO wgs = master.Term().fetch(12); // wgs
 
         for (int argpos = 2; argpos < args.length; argpos++) {
             String fname = new File(args[argpos]).getName();
@@ -153,7 +153,7 @@ public class App {
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
-        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/", true);
+        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx-test.computational.bio.uni-giessen.de/MGX-maven-web/webresources/", true);
         if (!gpms.login(username, password)) {
             System.err.println("Login failed.");
             System.exit(1);
@@ -168,7 +168,7 @@ public class App {
         Iterator<MembershipI> mIter = gpms.getMemberships();
         while (mIter.hasNext()) {
             MembershipI m = mIter.next();
-            if ("MGX".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
+            if ("MGX-2".equals(m.getProject().getProjectClass().getName()) && (pName.equals(m.getProject().getName()))) {
                 master = new MGXDTOMaster(gpms.createMaster(m));
                 break; // just use the first project we find
             }
