@@ -10,10 +10,6 @@
 
     <name>MGX-client-api</name>
     
-    <prerequisites>
-        <maven>3.0.5</maven>
-    </prerequisites>
-    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <exam.version>4.11.0</exam.version>
@@ -247,6 +243,11 @@
             <artifactId>protobuf-java</artifactId>
             <version>2.5.0</version>
         </dependency> -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>6.0.0</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
