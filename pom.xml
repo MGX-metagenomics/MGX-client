@@ -44,7 +44,6 @@
                         </Export-Package>
                         <Import-Package>
                             javax.ws.rs,
-                            com.sun.jersey.api.client,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.common.cache,
                             com.google.protobuf,
@@ -55,7 +54,9 @@
                             de.cebitec.mgx.sequence,
                             de.cebitec.mgx.seqstorage,
                             de.cebitec.mgx.pevents,
-                            org.xml.sax,org.xml.sax.*,
+                            de.cebitec.mgx.common,
+                            org.xml.sax,
+                            org.xml.sax.*,
                             org.biojava.bio,
                             org.biojava.bio.seq,
                             org.biojava.bio.symbol,
@@ -250,16 +251,4 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>artifactory</id>
-            <name>local-libs-release</name>
-            <url>http://${artifactory.host}/artifactory/libs-release-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>artifactory</id>
-            <name>local-libs-snapshot</name>
-            <url>http://${artifactory.host}/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

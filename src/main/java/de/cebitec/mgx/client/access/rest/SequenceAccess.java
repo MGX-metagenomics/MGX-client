@@ -98,7 +98,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
 
     public Iterator<Long> fetchSequenceIDs(long attrId) throws MGXDTOException {
         return get(MGXLongList.class, "Sequence", "fetchSequenceIDs", String.valueOf(attrId)).getLongList().iterator();
-    }
+            }
 
     @Override
     public Iterator<SequenceDTO> fetchall() throws MGXDTOException {

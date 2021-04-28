@@ -56,7 +56,7 @@ public class JobAccess extends AccessBase<JobDTO, JobDTOList> {
     @Override
     public void update(JobDTO t) throws MGXDTOException {
         super.update(t, JobDTO.class);
-    }
+        }
 
     @Override
     public UUID delete(long id) throws MGXDTOException {

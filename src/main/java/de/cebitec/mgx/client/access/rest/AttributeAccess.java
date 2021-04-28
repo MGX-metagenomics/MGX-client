@@ -86,12 +86,9 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
         List<SequenceDTO> ret = new ArrayList<>();
         SequenceDTOList reply = put(req, SequenceDTOList.class, "Attribute", "search");
         ret.addAll(reply.getSeqList());
-        //Logger.getGlobal().log(Level.INFO, "got "+ret.size()+" seqs");
-
         while (!reply.getComplete()) {
             String uuid = reply.getUuid();
             reply = get(SequenceDTOList.class, "Attribute", "continueSearch", uuid);
-            //Logger.getGlobal().log(Level.INFO,"got additional "+reply.getSeqCount()+" seqs");
             ret.addAll(reply.getSeqList());
         }
         return ret.iterator();

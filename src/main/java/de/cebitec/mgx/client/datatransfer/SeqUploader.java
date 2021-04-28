@@ -1,7 +1,6 @@
 package de.cebitec.mgx.client.datatransfer;
 
 import com.google.protobuf.ByteString;
-import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -14,6 +13,7 @@ import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import javax.net.ssl.SSLHandshakeException;
+import javax.ws.rs.ProcessingException;
 
 /**
  *
@@ -24,6 +24,8 @@ public class SeqUploader extends UploadBase {
     private final long seqrun_id;
     private final SeqReaderI<? extends DNASequenceI> reader;
     private volatile long total_elements = 0;
+    private long duration;
+
     private final static int BASE_PAIR_LIMIT = 2_000_000;
 
     public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
@@ -37,7 +39,8 @@ public class SeqUploader extends UploadBase {
         if (randomNess % 2 == 1) {
             randomNess++;
         }
-        super.setChunkSize(10_000 + randomNess);
+        super.setChunkSize(5_000 + randomNess);
+        duration = System.currentTimeMillis();
     }
 
     @Override
@@ -63,7 +66,7 @@ public class SeqUploader extends UploadBase {
                 if (nextElement.getSequence().length == 0) {
                     continue;
                 }
-
+                
                 SequenceDTO.Builder seqbuilder = SequenceDTO.newBuilder()
                         .setName(new String(nextElement.getName()))
                         .setSequence(new String(nextElement.getSequence()));
@@ -127,7 +130,7 @@ public class SeqUploader extends UploadBase {
             MGXString session_uuid = super.get(MGXString.class, "Sequence", "initUpload", String.valueOf(seqrun_id), String.valueOf(reader.hasQuality()));
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return session_uuid.getValue();
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 return initTransfer(); // retry
             } else {
@@ -139,7 +142,7 @@ public class SeqUploader extends UploadBase {
     private void finishTransfer(final String uuid) throws MGXServerException {
         try {
             super.get("Sequence", "closeUpload", uuid);
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid); // retry
             } else {
@@ -148,18 +151,13 @@ public class SeqUploader extends UploadBase {
         }
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
+        duration = System.currentTimeMillis() - duration;
+        System.out.println("transfer done in "+duration + "ms");
     }
 
     private void sendChunk(final SequenceDTOList seqList, final String session_uuid) throws MGXServerException {
-        try {
-            super.post(seqList, "Sequence", "add", session_uuid);
-            fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        } catch (ClientHandlerException ex) {
-            if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
-                sendChunk(seqList, session_uuid); // retry
-            } else {
-                throw ex; // rethrow
-            }
-        }
+        super.post(seqList, "Sequence", "add", session_uuid);
+        fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
     }
+
 }

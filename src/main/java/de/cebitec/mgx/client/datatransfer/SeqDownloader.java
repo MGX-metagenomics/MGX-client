@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.datatransfer;
 
-import com.sun.jersey.api.client.ClientHandlerException;
 import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXServerException;
@@ -15,6 +14,7 @@ import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
 import javax.net.ssl.SSLHandshakeException;
+import javax.ws.rs.ProcessingException;
 
 /**
  *
@@ -120,7 +120,7 @@ public class SeqDownloader extends DownloadBase {
             MGXString session_uuid = super.get(MGXString.class, "Sequence", "initDownload", String.valueOf(seqrun_id));
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
             return session_uuid.getValue();
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 return initTransfer(); // retry
             }
@@ -133,7 +133,7 @@ public class SeqDownloader extends DownloadBase {
         try {
             super.get("Sequence", "closeDownload", uuid);
             fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 finishTransfer(uuid);
             }
@@ -145,7 +145,7 @@ public class SeqDownloader extends DownloadBase {
         try {
             SequenceDTOList entity = super.get(SequenceDTOList.class, "Sequence", "fetchSequences", session_uuid);
             return entity;
-        } catch (ClientHandlerException ex) {
+        } catch (ProcessingException ex) {
             if (ex.getCause() != null && ex.getCause() instanceof SSLHandshakeException) {
                 return fetchChunk(session_uuid);
             }

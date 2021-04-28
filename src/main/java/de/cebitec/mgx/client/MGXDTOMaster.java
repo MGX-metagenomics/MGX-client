@@ -10,7 +10,7 @@ import de.cebitec.gpms.rest.RESTMasterI;
 import de.cebitec.mgx.client.access.rest.*;
 import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.pevents.ParallelPropertyChangeSupport;
-import de.cebitec.mgx.restgpms.Jersey1RESTAccess;
+import de.cebitec.mgx.restgpms.JAXRSRESTAccess;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
@@ -54,9 +54,9 @@ public class MGXDTOMaster implements PropertyChangeListener {
         if (appServer == null) {
             throw new RuntimeException("No suitable REST application server found.");
         }
-        
+
         restmaster.addPropertyChangeListener(this);
-        restAccess = new Jersey1RESTAccess(restmaster.getUser(), appServer, restmaster.validateSSL());
+        restAccess = new JAXRSRESTAccess(restmaster.getUser(), appServer.getURL(), restmaster.validateSSL());
     }
 
     public void close() {
@@ -67,8 +67,8 @@ public class MGXDTOMaster implements PropertyChangeListener {
             restmaster = null;
             login = null;
             restAccess = null;
+            }
         }
-    }
 
     public boolean isClosed() {
         return restmaster == null;

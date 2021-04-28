@@ -81,7 +81,7 @@ public class JobAccessTest {
         assertNotNull(job);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        
+
         assertEquals("2013-06-20T13:19:18Z", sdf.format(new Date(1000L * job.getStartDate())));
         assertEquals("2013-06-20T13:20:01Z", sdf.format(new Date(1000L * job.getFinishDate())));
     }

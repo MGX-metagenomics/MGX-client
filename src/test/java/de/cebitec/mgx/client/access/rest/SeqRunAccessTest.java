@@ -145,7 +145,7 @@ public class SeqRunAccessTest {
         assertNotNull(dto);
         assertEquals(2, dto.getId());
         assertEquals("dataset2", dto.getName());
-    }
+            }
 
     @Test
     public void testJobsAndAttributeTypes() {

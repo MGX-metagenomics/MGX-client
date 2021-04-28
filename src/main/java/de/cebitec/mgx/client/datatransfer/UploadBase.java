@@ -32,21 +32,6 @@ public abstract class UploadBase extends TransferBase {
         super.dispose();
     }
 
-//    public void setProgressCallback(CallbackI cb) {
-//        this.cb = cb;
-//    }
-//
-//    protected CallbackI getProgressCallback() {
-//        return cb != null ? cb
-//                : new NullCallBack();
-//    }
-
     public abstract boolean upload();
 
-//    private final static class NullCallBack implements CallbackI {
-//
-//        @Override
-//        public void callback(long i) {
-//        }
-//    }
 }
