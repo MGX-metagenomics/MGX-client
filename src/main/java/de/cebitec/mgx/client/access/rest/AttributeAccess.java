@@ -40,6 +40,11 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
                 String.valueOf(attrType_id), String.valueOf(job_id), String.valueOf(run_id));
     }
 
+    public AttributeDistribution getFilteredDistribution(final long filterAttr_id, final long attrType_id, final long job_id) throws MGXDTOException {
+        return get(AttributeDistribution.class, "Attribute", "getFilteredDistribution",
+                String.valueOf(filterAttr_id), String.valueOf(attrType_id), String.valueOf(job_id));
+    }
+
     public AttributeDistribution getHierarchy(final long attrType_id, final long job_id, final long run_id) throws MGXDTOException {
         return get(AttributeDistribution.class, "Attribute", "getHierarchy",
                 String.valueOf(attrType_id), String.valueOf(job_id), String.valueOf(run_id));
