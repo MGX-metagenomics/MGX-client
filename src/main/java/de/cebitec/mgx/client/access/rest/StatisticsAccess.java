@@ -145,4 +145,9 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
         return false;
     }
 
+    public String newickToSVG(String newick) throws MGXDTOException {
+        MGXString dto = MGXString.newBuilder().setValue(newick).build();
+        return put(dto, MGXString.class, "Statistics", "NewickToSVG").getValue();
+    }
+
 }
