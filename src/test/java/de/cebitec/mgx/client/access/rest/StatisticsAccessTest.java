@@ -21,20 +21,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class StatisticsAccessTest {
 
     @Configuration
@@ -244,6 +242,21 @@ public class StatisticsAccessTest {
             fail(ex.getMessage());
         }
         fail();
+    }
+
+    @Test
+    public void testNewickToSVG() {
+        System.out.println("NewickToSVG");
+        try {
+            String svgData = master.Statistics().newickToSVG("(Group 1:47.6812332055286,Group 2:47.6812332055286);");
+            assertNotNull(svgData);
+            assertFalse(svgData.isEmpty());
+            assertTrue(svgData.contains("Group 1"));
+            assertTrue(svgData.contains("Group 2"));
+            assertTrue(svgData.contains("</svg>"));
+        } catch (MGXDTOException ex) {
+            fail(ex.getMessage());
+        }
     }
 
     @Test
