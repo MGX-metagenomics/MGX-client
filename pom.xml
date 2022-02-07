@@ -14,8 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.src.version>1.8</java.src.version>
         <java.target.version>1.8</java.target.version>
-        <exam.version>4.13.1</exam.version>
-        <url.version>2.6.1</url.version>
+        <exam.version>4.13.5</exam.version>
+        <url.version>2.6.10</url.version>
     </properties>
     
     <build>
@@ -45,7 +45,7 @@
                             de.cebitec.mgx.client.exception
                         </Export-Package>
                         <Import-Package>
-                            javax.ws.rs,
+                            jakarta.ws.rs,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.common.cache,
                             com.google.protobuf,
@@ -166,23 +166,54 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.framework</artifactId>
-            <version>6.0.3</version>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>2.0.14</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-logback</artifactId>
+            <version>2.0.14</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.framework</artifactId>
+            <version>7.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!--
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.35</version>
+            <scope>test</scope>
+        </dependency>
+         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.35</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.10</version>
             <scope>test</scope>
         </dependency>
+        -->
         
         <dependency>
             <groupId>junit</groupId>
@@ -193,7 +224,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
+            <version>31.0.1-jre</version>
         </dependency>
         <dependency>
             <groupId>de.cebitec.mgx</groupId>

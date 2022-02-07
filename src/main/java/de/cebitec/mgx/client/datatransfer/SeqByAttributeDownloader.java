@@ -10,7 +10,7 @@ import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  *

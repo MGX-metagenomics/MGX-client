@@ -13,11 +13,10 @@ import de.cebitec.mgx.seqstorage.DNASequence;
 import de.cebitec.mgx.seqstorage.QualityDNASequence;
 import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
-import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.awt.EventQueue;
 import javax.net.ssl.SSLHandshakeException;
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  *

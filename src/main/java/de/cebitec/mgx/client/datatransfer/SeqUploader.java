@@ -15,7 +15,7 @@ import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import javax.net.ssl.SSLHandshakeException;
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 /**
  *
