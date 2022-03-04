@@ -48,7 +48,6 @@ public class FileUploader extends UploadBase {
 
     @Override
     public final boolean upload() {
-//        CallbackI cb = getProgressCallback();
 
         String session_uuid;
         try {
@@ -58,7 +57,6 @@ public class FileUploader extends UploadBase {
             return false;
         }
 
-//        cb.callback(total_elements_sent);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
 
         if (in == null) {
@@ -74,12 +72,11 @@ public class FileUploader extends UploadBase {
         int bytesRead;
         byte[] buf = new byte[getChunkSize()];
         try {
-            while ((bytesRead = in.read(buf)) != -1) {
+            while (!cancelled && (bytesRead = in.read(buf)) != -1) {
                 byte[] data = new byte[bytesRead];
                 System.arraycopy(buf, 0, data, 0, bytesRead);
                 total_elements_sent += bytesRead;
                 sendChunk(data, session_uuid);
-//                cb.callback(total_elements_sent);
             }
         } catch (MGXServerException | IOException ex) {
             abortTransfer(ex.getMessage());
@@ -91,18 +88,30 @@ public class FileUploader extends UploadBase {
                 Logger.getLogger(FileUploader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        cb.callback(total_elements_sent);
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements_sent);
 
         try {
-            finishTransfer(session_uuid);
+            if (!cancelled) {
+                finishTransfer(session_uuid);
+            }
         } catch (MGXServerException ex) {
             abortTransfer(ex.getMessage());
             return false;
         }
 
-        fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements_sent);
-        return true;
+        if (!cancelled) {
+            fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements_sent);
+            return true;
+        } else {
+            try {
+                super.get("File", "cancel", session_uuid);
+            } catch (MGXServerException ex) {
+                Logger.getLogger(FileUploader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            fireTaskChange(TransferBase.TRANSFER_ABORTED, total_elements_sent);
+            return false;
+        }
+
     }
 
     private String initTransfer() throws MGXServerException, UnsupportedEncodingException {
