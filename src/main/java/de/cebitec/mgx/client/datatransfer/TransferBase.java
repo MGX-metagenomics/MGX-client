@@ -24,6 +24,7 @@ public abstract class TransferBase implements PropertyChangeListener {
     public static final String NUM_ELEMENTS_TRANSFERRED = "numElementsTransferred";
     public static final String TRANSFER_FAILED = "transferFailed";
     public static final String TRANSFER_COMPLETED = "transferCompleted";
+    public static final String TRANSFER_ABORTED = "transferAborted";
 
     public TransferBase(final MGXDTOMaster dtomaster, final RESTAccessI rab) {
         this.restAccess = rab;
@@ -140,5 +141,4 @@ public abstract class TransferBase implements PropertyChangeListener {
 //            throw new MGXServerException(ex.getMessage());
 //        }
 //    }
-
 }

@@ -12,6 +12,7 @@ public abstract class UploadBase extends TransferBase {
 //    private CallbackI cb = null;
     protected static final int DEFAULT_CHUNK_SIZE = 2048;
     private int chunk_size = DEFAULT_CHUNK_SIZE;
+    protected volatile boolean cancelled = false;
 
     public UploadBase(final MGXDTOMaster dtomaster, final RESTAccessI rab) {
         super(dtomaster, rab);
@@ -27,6 +28,7 @@ public abstract class UploadBase extends TransferBase {
 
     @Override
     protected void abortTransfer(String reason) {
+        cancelled = true;
         setErrorMessage(reason);
         fireTaskChange(TransferBase.TRANSFER_FAILED, reason);
         super.dispose();
