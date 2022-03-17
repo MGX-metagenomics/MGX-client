@@ -159,6 +159,13 @@ public class MGXDTOMaster implements PropertyChangeListener {
         return new ReferenceAccess(this, restAccess);
     }
 
+    public ReferenceRegionAccess ReferenceRegion() throws MGXClientException {
+        if (restAccess == null) {
+            throw new MGXClientLoggedOutException();
+        }
+        return new ReferenceRegionAccess(this, restAccess);
+    }
+
     public MappingAccess Mapping() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientLoggedOutException();
@@ -252,11 +259,11 @@ public class MGXDTOMaster implements PropertyChangeListener {
         return new ContigAccess(this, restAccess);
     }
 
-    public GeneAccess Gene() throws MGXClientException {
+    public AssembledRegionAccess AssembledRegion() throws MGXClientException {
         if (restAccess == null) {
             throw new MGXClientLoggedOutException();
         }
-        return new GeneAccess(this, restAccess);
+        return new AssembledRegionAccess(this, restAccess);
     }
 
     public GeneCoverageAccess GeneCoverage() throws MGXClientException {

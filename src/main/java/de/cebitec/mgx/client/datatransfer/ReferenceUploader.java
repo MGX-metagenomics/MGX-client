@@ -6,8 +6,9 @@ import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
-import de.cebitec.mgx.dto.dto.RegionDTO;
-import de.cebitec.mgx.dto.dto.RegionDTOList;
+import de.cebitec.mgx.dto.dto.ReferenceRegionDTO;
+import de.cebitec.mgx.dto.dto.ReferenceRegionDTOList;
+import de.cebitec.mgx.dto.dto.RegionType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -138,15 +139,35 @@ public class ReferenceUploader extends UploadBase {
             // transfer subregions
             //
             Iterator<Feature> iter = seq.features();
-            List<RegionDTO> regions = new ArrayList<>();
+            List<ReferenceRegionDTO> regions = new ArrayList<>();
             while (iter.hasNext()) {
                 RichFeature elem = (RichFeature) iter.next();
 
                 if (elem.getType() != null && (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA"))) {
                     Annotation annot = elem.getAnnotation();
-                    RegionDTO.Builder region = RegionDTO.newBuilder();
+                    ReferenceRegionDTO.Builder region = ReferenceRegionDTO.newBuilder();
                     region.setName(annot.getProperty("locus_tag").toString());
-                    region.setType(elem.getType());
+
+                    switch (elem.getType()) {
+                        case "CDS":
+                            region.setType(RegionType.CDS);
+                            break;
+                        case "rRNA":
+                            region.setType(RegionType.RRNA);
+                            break;
+                        case "tRNA":
+                            region.setType(RegionType.TRNA);
+                            break;
+                        case "tmRNA":
+                            region.setType(RegionType.TMRNA);
+                            break;
+                        case "ncRNA":
+                            region.setType(RegionType.NCRNA);
+                            break;
+                        default:
+                            region.setType(RegionType.MISC);
+                    }
+                    
                     if (annot.containsProperty("product")) {
                         region.setDescription(annot.getProperty("product").toString());
                     } else if (annot.containsProperty("function")) {
@@ -246,9 +267,9 @@ public class ReferenceUploader extends UploadBase {
         super.abortTransfer(reason);
     }
 
-    private void sendRegions(List<RegionDTO> regions, String session_uuid) throws MGXServerException {
-        RegionDTOList.Builder data = RegionDTOList.newBuilder();
-        for (RegionDTO r : regions) {
+    private void sendRegions(List<ReferenceRegionDTO> regions, String session_uuid) throws MGXServerException {
+        ReferenceRegionDTOList.Builder data = ReferenceRegionDTOList.newBuilder();
+        for (ReferenceRegionDTO r : regions) {
             data.addRegion(r);
         }
         super.put(data.build(), "Reference", "addRegions", session_uuid);

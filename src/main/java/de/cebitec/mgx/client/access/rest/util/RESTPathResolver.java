@@ -1,6 +1,8 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.dto.dto.AssembledRegionDTO;
+import de.cebitec.mgx.dto.dto.AssembledRegionDTOList;
 import de.cebitec.mgx.dto.dto.AssemblyDTO;
 import de.cebitec.mgx.dto.dto.AssemblyDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDTO;
@@ -17,8 +19,6 @@ import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.FileDTOList;
 import de.cebitec.mgx.dto.dto.GeneCoverageDTO;
 import de.cebitec.mgx.dto.dto.GeneCoverageDTOList;
-import de.cebitec.mgx.dto.dto.GeneDTO;
-import de.cebitec.mgx.dto.dto.GeneDTOList;
 import de.cebitec.mgx.dto.dto.GeneObservationDTO;
 import de.cebitec.mgx.dto.dto.GeneObservationDTOList;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
@@ -31,6 +31,8 @@ import de.cebitec.mgx.dto.dto.ObservationDTO;
 import de.cebitec.mgx.dto.dto.ObservationDTOList;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
+import de.cebitec.mgx.dto.dto.ReferenceRegionDTO;
+import de.cebitec.mgx.dto.dto.ReferenceRegionDTOList;
 import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SampleDTOList;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
@@ -69,11 +71,12 @@ public class RESTPathResolver {
         objmappings.put(ObservationDTO.class, "Observation");
         objmappings.put(FileDTO.class, "File");
         objmappings.put(ReferenceDTO.class, "Reference");
+        objmappings.put(ReferenceRegionDTO.class, "ReferenceRegion");
         objmappings.put(MappingDTO.class, "Mapping");
         objmappings.put(AssemblyDTO.class, "Assembly");
         objmappings.put(BinDTO.class, "Bin");
         objmappings.put(ContigDTO.class, "Contig");
-        objmappings.put(GeneDTO.class, "Gene");
+        objmappings.put(AssembledRegionDTO.class, "AssembledRegion");
         objmappings.put(GeneCoverageDTO.class, "GeneCoverage");
         objmappings.put(GeneObservationDTO.class, "GeneObservation");
 
@@ -87,13 +90,14 @@ public class RESTPathResolver {
         objmappings.put(FileDTOList.class, "File");
         objmappings.put(TermDTOList.class, "Term");
         objmappings.put(ReferenceDTOList.class, "Reference");
+        objmappings.put(ReferenceRegionDTOList.class, "ReferenceRegion");
         objmappings.put(MappingDTOList.class, "Mapping");
         objmappings.put(ObservationDTOList.class, "Observation");
         objmappings.put(BulkObservationDTOList.class, "Observation");
         objmappings.put(AssemblyDTOList.class, "Assembly");
         objmappings.put(BinDTOList.class, "Bin");
         objmappings.put(ContigDTOList.class, "Contig");
-        objmappings.put(GeneDTOList.class, "Gene");
+        objmappings.put(AssembledRegionDTOList.class, "AssembledRegion");
         objmappings.put(GeneCoverageDTOList.class, "GeneCoverage");
         objmappings.put(GeneObservationDTOList.class, "GeneObservation");
 
@@ -114,6 +118,7 @@ public class RESTPathResolver {
         methodmappings.put("byCategory", "byCategory");
         methodmappings.put("byRead", "byRead");
         methodmappings.put("byReference", "byReference");
+        methodmappings.put("byReferenceInterval", "byReferenceInterval");
         methodmappings.put("bySeqRun", "bySeqRun");
         methodmappings.put("byAssembly", "byAssembly");
         methodmappings.put("byBin", "byBin");

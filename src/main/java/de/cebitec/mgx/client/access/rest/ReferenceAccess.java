@@ -7,8 +7,6 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceDTOList;
-import de.cebitec.mgx.dto.dto.RegionDTO;
-import de.cebitec.mgx.dto.dto.RegionDTOList;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
@@ -57,10 +55,6 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
 
     public Iterator<ReferenceDTO> listGlobalReferences() throws MGXDTOException {
         return get(ReferenceDTOList.class, "Reference", "listGlobalReferences").getReferenceList().iterator();
-    }
-
-    public Iterator<RegionDTO> byReferenceInterval(long id, int from, int to) throws MGXDTOException {
-        return get(RegionDTOList.class, "Reference", "byReferenceInterval", String.valueOf(id), String.valueOf(from), String.valueOf(to)).getRegionList().iterator();
     }
 
     public String getSequence(long id, int from, int to) throws MGXDTOException {
