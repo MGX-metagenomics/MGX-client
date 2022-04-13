@@ -11,7 +11,6 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import de.cebitec.mgx.osgiutils.MGXOptions;
 import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,31 +29,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class FileAccessTest {
 
-    @Configuration
-    public static Option[] configuration() {
-        return options(
-                junitBundles(),
-                MGXOptions.clientBundles(),
-                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
-                bundle("reference:file:target/classes")
-        );
-    }
+//    @Configuration
+//    public static Option[] configuration() {
+//        return options(
+//                junitBundles(),
+//                MGXOptions.clientBundles(),
+//                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+//                bundle("reference:file:target/classes")
+//        );
+//    }
 
     @Test
     public synchronized void testListRoot() throws Exception {

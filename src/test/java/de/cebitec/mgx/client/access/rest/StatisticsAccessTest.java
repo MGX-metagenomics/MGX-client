@@ -12,7 +12,6 @@ import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import de.cebitec.mgx.dto.dto.ProfileDTO;
-import de.cebitec.mgx.osgiutils.MGXOptions;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -21,12 +20,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.Option;
 
 /**
  *
@@ -35,15 +28,15 @@ import org.ops4j.pax.exam.Option;
 //@RunWith(PaxExam.class)
 public class StatisticsAccessTest {
 
-    @Configuration
-    public static Option[] configuration() {
-        return options(
-                junitBundles(),
-                MGXOptions.clientBundles(),
-                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
-                bundle("reference:file:target/classes")
-        );
-    }
+//    @Configuration
+//    public static Option[] configuration() {
+//        return options(
+//                junitBundles(),
+//                MGXOptions.clientBundles(),
+//                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+//                bundle("reference:file:target/classes")
+//        );
+//    }
     private MGXDTOMaster master;
 
     @Before

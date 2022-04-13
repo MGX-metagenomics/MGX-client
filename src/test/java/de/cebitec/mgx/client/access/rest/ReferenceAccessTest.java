@@ -6,10 +6,9 @@ import de.cebitec.mgx.client.datatransfer.TransferBase;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.ReferenceDTO;
-import de.cebitec.mgx.dto.dto.RegionDTO;
+import de.cebitec.mgx.dto.dto.ReferenceRegionDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import de.cebitec.mgx.osgiutils.MGXOptions;
 import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.util.Iterator;
@@ -22,12 +21,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.Option;
 
 /**
  *
@@ -36,15 +29,15 @@ import org.ops4j.pax.exam.Option;
 //@RunWith(PaxExam.class)
 public class ReferenceAccessTest {
 
-    @Configuration
-    public static Option[] configuration() {
-        return options(
-                junitBundles(),
-                MGXOptions.clientBundles(),
-                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
-                bundle("reference:file:target/classes")
-        );
-    }
+//    @Configuration
+//    public static Option[] configuration() {
+//        return options(
+//                junitBundles(),
+//                MGXOptions.clientBundles(),
+//                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+//                bundle("reference:file:target/classes")
+//        );
+//    }
 
     @Test
     public void testListGlobal() {
@@ -70,16 +63,16 @@ public class ReferenceAccessTest {
     public void testInterval() {
         System.out.println("testInterval");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<RegionDTO> iter = null;
+        Iterator<ReferenceRegionDTO> iter = null;
         try {
-            iter = master.Reference().byReferenceInterval(4, 0, 99999);
+            iter = master.ReferenceRegion().byReferenceInterval(4, 0, 99999);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {
-            RegionDTO region = iter.next();
+            ReferenceRegionDTO region = iter.next();
             assertEquals("CDS", region.getType());
             cnt++;
         }
@@ -192,9 +185,9 @@ public class ReferenceAccessTest {
 
         int numSubregions = 0;
         try {
-            Iterator<RegionDTO> regionIter = m.Reference().byReferenceInterval(projRefId, 0, projReference.getLength() - 1);
+            Iterator<ReferenceRegionDTO> regionIter = m.ReferenceRegion().byReferenceInterval(projRefId, 0, projReference.getLength() - 1);
             while (regionIter != null && regionIter.hasNext()) {
-                RegionDTO reg = regionIter.next();
+                ReferenceRegionDTO reg = regionIter.next();
                 numSubregions++;
             }
         } catch (MGXDTOException ex) {
@@ -273,7 +266,7 @@ public class ReferenceAccessTest {
         long refId = up.getReferenceIDs().get(0);
 
         try {
-            Iterator<RegionDTO> iter = m.Reference().byReferenceInterval(refId, 0, 3203);
+            Iterator<ReferenceRegionDTO> iter = m.ReferenceRegion().byReferenceInterval(refId, 0, 3203);
             assertNotNull(iter);
             int cnt = 0;
             while (iter.hasNext()) {

@@ -14,7 +14,6 @@ import de.cebitec.mgx.dto.dto.JobParameterListDTO;
 import de.cebitec.mgx.dto.dto.QCResultDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import de.cebitec.mgx.osgiutils.MGXOptions;
 import de.cebitec.mgx.seqstorage.FastaReader;
 import de.cebitec.mgx.seqstorage.FastaWriter;
 import de.cebitec.mgx.sequence.DNASequenceI;
@@ -36,31 +35,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Assume;
-import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
 
 /**
  *
  * @author sjaenick
  */
-@RunWith(PaxExam.class)
+//@RunWith(PaxExam.class)
 public class SeqRunAccessTest {
 
-    @Configuration
-    public static Option[] configuration() {
-        return options(
-                junitBundles(),
-                MGXOptions.clientBundles(),
-                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
-                bundle("reference:file:target/classes")
-        );
-    }
+//    @Configuration
+//    public static Option[] configuration() {
+//        return options(
+//                junitBundles(),
+//                MGXOptions.clientBundles(),
+//                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
+//                bundle("reference:file:target/classes")
+//        );
+//    }
 
     @BeforeClass
     public static void setUpClass() {

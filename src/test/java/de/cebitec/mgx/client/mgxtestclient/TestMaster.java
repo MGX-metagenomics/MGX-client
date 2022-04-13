@@ -76,7 +76,7 @@ public class TestMaster {
             return masterRW;
         }
 
-        String serverURI = "https://mgx.computational.bio.uni-giessen.de/MGX-maven-web/webresources/";
+        String serverURI = "https://mgx-test.computational.bio.uni-giessen.de/MGX-maven-web/webresources/";
         String config = System.getProperty("user.home") + "/.m2/mgx.junit";
         File f = new File(config);
         if (f.exists() && f.canRead()) {
