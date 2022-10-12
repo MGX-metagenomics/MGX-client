@@ -49,6 +49,11 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
                 String.valueOf(attrtypeid2), String.valueOf(jobid2));
     }
 
+    public AttributeDistribution getFilteredDistribution(final long filterAttr_id, final long attrType_id, final long job_id) throws MGXDTOException {
+        return get(AttributeDistribution.class, "Attribute", "getFilteredDistribution",
+                String.valueOf(filterAttr_id), String.valueOf(attrType_id), String.valueOf(job_id));
+    }
+
 //    public List<AttributeCount> getDistributionByRuns(String attributeName, List<Long> seqrun_ids) throws MGXServerException {
 //        String uri = new StringBuilder("/Attribute/getDistributionByRuns/")
 //                .append(attributeName).append("/")

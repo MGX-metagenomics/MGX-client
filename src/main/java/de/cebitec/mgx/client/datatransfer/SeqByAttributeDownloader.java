@@ -7,10 +7,10 @@ import de.cebitec.mgx.dto.dto.AttributeDTOList;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
+import jakarta.ws.rs.ProcessingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
-import javax.ws.rs.ProcessingException;
 
 /**
  *
