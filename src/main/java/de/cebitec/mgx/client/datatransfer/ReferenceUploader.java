@@ -56,6 +56,7 @@ public class ReferenceUploader extends UploadBase {
     public boolean upload() {
         //CallbackI cb = getProgressCallback();
 
+        int regionNum = 1;
         RichSequenceIterator seqIter;
         BufferedReader br;
         try {
@@ -145,7 +146,12 @@ public class ReferenceUploader extends UploadBase {
                 if (elem.getType() != null && (elem.getType().equals("CDS") || elem.getType().equals("rRNA") || elem.getType().equals("tRNA"))) {
                     Annotation annot = elem.getAnnotation();
                     RegionDTO.Builder region = RegionDTO.newBuilder();
-                    region.setName(annot.getProperty("locus_tag").toString());
+                    if (annot.containsProperty("locus_tag")) {
+                        region.setName(annot.getProperty("locus_tag").toString());
+                    } else {
+                        region.setName("unnamed_" + regionNum);
+                        regionNum++;
+                    }
                     region.setType(elem.getType());
                     if (annot.containsProperty("product")) {
                         region.setDescription(annot.getProperty("product").toString());
