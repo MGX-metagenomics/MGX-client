@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -66,8 +68,8 @@ public class TestMaster {
             }
         }
 
-        assert masterRO != null;
-        assert masterRO.getProject().getName().equals("MGX2_Unittest");
+        assertNotNull(masterRO);
+        assertEquals("MGX2_Unittest", masterRO.getProject().getName());
         return masterRO;
     }
 
@@ -120,8 +122,8 @@ public class TestMaster {
             }
         }
 
-        assert masterRW != null;
-        assert masterRW.getProject().getName().equals("MGX_Unittest");
+        assertNotNull(masterRW);
+        assertEquals("MGX2_Unittest", masterRW.getProject().getName());
         return masterRW;
     }
 
