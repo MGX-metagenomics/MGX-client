@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest.util;
 
 import de.cebitec.mgx.client.exception.MGXClientException;
+import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.AssembledRegionDTO;
 import de.cebitec.mgx.dto.dto.AssembledRegionDTOList;
 import de.cebitec.mgx.dto.dto.AssemblyDTO;
@@ -80,6 +81,8 @@ public class RESTPathResolver {
         objmappings.put(GeneCoverageDTO.class, "GeneCoverage");
         objmappings.put(GeneObservationDTO.class, "GeneObservation");
 
+        objmappings.put(dto.BinSearchResultDTO.class, "AssembledRegion");
+
         // list types
         objmappings.put(HabitatDTOList.class, "Habitat");
         objmappings.put(SampleDTOList.class, "Sample");
@@ -100,6 +103,8 @@ public class RESTPathResolver {
         objmappings.put(AssembledRegionDTOList.class, "AssembledRegion");
         objmappings.put(GeneCoverageDTOList.class, "GeneCoverage");
         objmappings.put(GeneObservationDTOList.class, "GeneObservation");
+
+        objmappings.put(dto.BinSearchResultDTOList.class, "AssembledRegion");
 
         // methods
         methodmappings.put("create", "create");
@@ -128,6 +133,7 @@ public class RESTPathResolver {
         methodmappings.put("JobsAndAttributeTypes", "JobsAndAttributeTypes");
         methodmappings.put("getQC", "getQC");
         methodmappings.put("createBulk", "createBulk");
+        methodmappings.put("search", "search");
 
     }
 

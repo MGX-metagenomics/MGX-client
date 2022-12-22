@@ -7,6 +7,8 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.AssembledRegionDTO;
 import de.cebitec.mgx.dto.dto.AssembledRegionDTOList;
 import de.cebitec.mgx.dto.dto.AttributeDTOList;
+import de.cebitec.mgx.dto.dto.BinSearchResultDTO;
+import de.cebitec.mgx.dto.dto.BinSearchResultDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqWriterI;
@@ -58,6 +60,10 @@ public class AssembledRegionAccess extends AccessBase<AssembledRegionDTO, Assemb
 
     public SequenceDTO getDNASequence(long gene_id) throws MGXDTOException {
         return get(SequenceDTO.class, r.resolve(AssembledRegionDTO.class, "getDNASequence", String.valueOf(gene_id)));
+    }
+    
+    public Iterator<BinSearchResultDTO> search(long bin_id, String term) throws MGXDTOException {
+        return get(BinSearchResultDTOList.class, r.resolve(BinSearchResultDTO.class, "search", String.valueOf(bin_id), term)).getResultList().iterator();
     }
 
     public GeneByAttributeDownloader createDownloaderByAttributes(AttributeDTOList attrs, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter, Set<String> seenGeneNames) throws MGXDTOException {
