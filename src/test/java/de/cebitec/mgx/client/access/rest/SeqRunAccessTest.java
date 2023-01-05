@@ -21,20 +21,21 @@ import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
-import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Assume;
+import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -52,20 +53,7 @@ public class SeqRunAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
+    @AfterAll
     public void tearDown() {
         MGXDTOMaster m = TestMaster.getRW();
         Iterator<SeqRunDTO> iter = null;
@@ -105,6 +93,7 @@ public class SeqRunAccessTest {
             refCnt++;
         }
         assertEquals(4, refCnt);
+
     }
 
     @Test
@@ -305,7 +294,7 @@ public class SeqRunAccessTest {
 
         tmpFile.delete();
 
-        assertTrue(up.getErrorMessage(), success);
+        assertTrue(success, up.getErrorMessage());
         assertNotNull(pc.getLastEvent());
         assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
 
@@ -331,7 +320,7 @@ public class SeqRunAccessTest {
         }
         assertNotNull(dto);
         List<QCResultDTO> qc = master.SeqRun().getQC(dto.getId());
-        Assume.assumeTrue(qc.size() == 3);
+        assumeTrue(qc.size() == 3);
         QCResultDTO gc = null;
         for (QCResultDTO q : qc) {
             if (q.getName().equals("GC")) {
@@ -383,7 +372,7 @@ public class SeqRunAccessTest {
         }
 
         assertNotNull(qc);
-        assertEquals("SeqRun without sequences should have returned zero QC reports", 0, qc.size());
+        assertEquals(0, qc.size(), "SeqRun without sequences should have returned zero QC reports");
     }
 
     @Test

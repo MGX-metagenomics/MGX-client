@@ -9,18 +9,17 @@ import de.cebitec.mgx.dto.dto.ReferenceDTO;
 import de.cebitec.mgx.dto.dto.ReferenceRegionDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -38,7 +37,6 @@ public class ReferenceAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-
     @Test
     public void testListGlobal() {
         System.out.println("testListGlobal");
@@ -136,7 +134,7 @@ public class ReferenceAccessTest {
                     break;
                 }
             }
-            assertTrue("reference id 3 was not present in the global repository", found);
+            assertTrue(found, "reference id 3 was not present in the global repository");
 
             UUID taskId = m.Reference().installGlobalReference(3);
 

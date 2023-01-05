@@ -3,12 +3,8 @@ package de.cebitec.mgx.client.access.rest.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -17,22 +13,6 @@ import static org.junit.Assert.*;
 public class XMLValidatorTest {
 
     public XMLValidatorTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
@@ -55,7 +35,7 @@ public class XMLValidatorTest {
     public void testIsValid() throws IOException {
         System.out.println("testIsValid");
         boolean ret = testValid("src/test/resources/invalid.xml");
-        assertEquals("Graph without node named mgx should not be valid", false, ret);
+        assertEquals(false, ret, "Graph without node named mgx should not be valid");
     }
 
     @Test

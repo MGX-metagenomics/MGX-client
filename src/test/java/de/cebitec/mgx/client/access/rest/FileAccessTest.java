@@ -11,7 +11,6 @@ import de.cebitec.mgx.client.mgxtestclient.TestMaster;
 import de.cebitec.mgx.dto.dto.FileDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTO.TaskState;
-import de.cebitec.mgx.testutils.PropCounter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,8 +26,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -46,7 +49,6 @@ public class FileAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-
     @Test
     public synchronized void testListRoot() throws Exception {
         System.out.println("listRoot");
@@ -258,11 +260,11 @@ public class FileAccessTest {
             try {
                 UUID uuid = m.File().delete(newDir);
                 TaskDTO task = m.Task().get(uuid);
-                
+
                 int numRefreshes = 10;
-                System.err.println(" state is "+ task.getState());
+                System.err.println(" state is " + task.getState());
                 while (numRefreshes > 0 && task.getState() != TaskState.FINISHED) {
-                    System.err.println(" state is "+ task.getState());
+                    System.err.println(" state is " + task.getState());
                     try {
                         Thread.sleep(20);
                     } catch (InterruptedException ex) {
@@ -271,8 +273,8 @@ public class FileAccessTest {
                     task = m.Task().get(uuid);
                     numRefreshes--;
                 }
-                
-                assertEquals("directory was not deleted within 200ms", TaskState.FINISHED, task.getState());
+
+                assertEquals(TaskState.FINISHED, task.getState(), "directory was not deleted within 200ms");
             } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
@@ -290,7 +292,7 @@ public class FileAccessTest {
         }
 
         File f = File.createTempFile("uploadTest", "xx");
-        try (FileWriter fw = new FileWriter(f)) {
+        try ( FileWriter fw = new FileWriter(f)) {
             fw.write("Unit Test DATA");
             for (int i = 0; i < 10000; i++) {
                 fw.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -423,7 +425,7 @@ public class FileAccessTest {
         }
 
         File f = File.createTempFile("testUpload", "xxx");
-        try (FileWriter fw = new FileWriter(f)) {
+        try ( FileWriter fw = new FileWriter(f)) {
             fw.write("Unit Test DATA");
         } catch (IOException ex) {
             fail(ex.getMessage());

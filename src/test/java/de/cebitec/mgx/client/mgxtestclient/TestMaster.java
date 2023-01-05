@@ -1,5 +1,6 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
+import com.sun.tools.javac.util.Assert;
 import de.cebitec.gpms.core.GPMSException;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientFactory;
@@ -10,10 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -161,7 +161,7 @@ public class TestMaster {
         } catch (GPMSException ex) {
             fail(ex.getMessage());
         }
-        Assert.assertNotNull(mIter);
+        assertNotNull(mIter);
 
         while (mIter.hasNext()) {
             MembershipI m = mIter.next();
