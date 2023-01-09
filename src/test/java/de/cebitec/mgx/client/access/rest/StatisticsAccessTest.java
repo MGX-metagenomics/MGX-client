@@ -1,6 +1,7 @@
 package de.cebitec.mgx.client.access.rest;
 
 import de.cebitec.mgx.client.MGXDTOMaster;
+import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
@@ -153,7 +154,7 @@ public class StatisticsAccessTest {
 
         try {
             master.Statistics().Clustering(matrix.build(), "XXX", "ward");
-        } catch (MGXServerException ex) {
+        } catch (MGXClientException ex) {
             if (ex.getMessage().contains("Invalid distance method")) {
                 return;
             }
@@ -190,7 +191,7 @@ public class StatisticsAccessTest {
 
         try {
             master.Statistics().Clustering(matrix.build(), "euclidean", "XXX");
-        } catch (MGXServerException ex) {
+        } catch (MGXClientException ex) {
             if (ex.getMessage().contains("Invalid agglomeration method")) {
                 return;
             }
@@ -503,7 +504,7 @@ public class StatisticsAccessTest {
 
         PointDTOList ret = master.Statistics().NMDS(matrix.build());
         assertNotNull(ret);
-
+        
         assertEquals(3, ret.getPointCount());
 
         PointDTO ds1 = null;
