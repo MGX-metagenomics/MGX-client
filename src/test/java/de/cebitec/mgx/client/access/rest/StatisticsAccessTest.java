@@ -41,10 +41,10 @@ public class StatisticsAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-    private MGXDTOMaster master;
+    private static MGXDTOMaster master;
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         master = TestMaster.getRO();
     }
 
