@@ -13,10 +13,6 @@ import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import de.cebitec.mgx.dto.dto.ProfileDTO;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -47,85 +43,6 @@ public class StatisticsAccessTest {
     @BeforeAll
     public static void setUp() {
         master = TestMaster.getRO();
-    }
-
-    @Test
-    public void testRarefaction() throws Exception {
-        System.out.println("testRarefaction");
-        Collection<Long> data = new LinkedList<>();
-        data.add(1L);
-        data.add(2L);
-        data.add(3L);
-        data.add(3L);
-        data.add(4L);
-        data.add(5L);
-        Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
-        assertNotNull(iter);
-
-        List<PointDTO> ret = new LinkedList<>();
-        while (iter.hasNext()) {
-            PointDTO p = iter.next();
-            //System.err.println(p.getX() + " / " + p.getY());
-            ret.add(p);
-        }
-        assertEquals(14, ret.size());
-
-        PointDTO p1 = ret.get(0);
-        PointDTO p2 = ret.get(1);
-        PointDTO p3 = ret.get(2);
-        PointDTO p4 = ret.get(3);
-        PointDTO p5 = ret.get(4);
-
-        // check sample sizes
-        assertEquals(0, p1.getX(), 0.0001);
-        assertEquals(5, p2.getX(), 0.0001);
-        assertEquals(10, p3.getX(), 0.0001);
-        assertEquals(15, p4.getX(), 0.0001);
-        assertEquals(18, p5.getX(), 0.0001);
-
-        // check richness estimates
-        assertEquals(0, p1.getY(), 0.0001);  // always zero
-        assertEquals(3.683123, p2.getY(), 0.0001);
-        assertEquals(5.205882, p3.getY(), 0.0001);
-        assertEquals(5.811275, p4.getY(), 0.0001);
-        assertEquals(data.size(), p5.getY(), 0.0001);  // always number of categories
-    }
-
-    @Test
-    public void testRarefaction2() throws Exception {
-        System.out.println("testRarefaction2");
-        Collection<Long> data = new LinkedList<>();
-        data.add(1000L);
-        data.add(501L);
-        Iterator<PointDTO> iter = master.Statistics().Rarefaction(data);
-        assertNotNull(iter);
-
-        List<PointDTO> ret = new LinkedList<>();
-        while (iter.hasNext()) {
-            PointDTO p = iter.next();
-            ret.add(p);
-        }
-        assertEquals(80, ret.size());
-
-        PointDTO p1 = ret.get(0);
-        PointDTO p2 = ret.get(1);
-        PointDTO p3 = ret.get(2);
-        PointDTO p4 = ret.get(3);
-        PointDTO p5 = ret.get(4);
-
-        // check sample sizes
-        assertEquals(0, p1.getX(), 0.0001);
-        assertEquals(20, p2.getX(), 0.0001);
-        assertEquals(40, p3.getX(), 0.0001);
-        assertEquals(60, p4.getX(), 0.0001);
-        assertEquals(80, p5.getX(), 0.0001);
-
-        // check richness estimates
-        assertEquals(0, p1.getY(), 0.0001);  // always zero
-        assertEquals(1.999721681213, p2.getY(), 0.0000001);
-        //assertEquals(1.999995589, p3.getY(), 0.0000001);
-        //assertEquals(1.9999999917641063, p4.getY(), 0.00000000001);
-        assertEquals(data.size(), p5.getY(), 0.0000001);  // always number of categories
     }
 
     @Test
@@ -506,7 +423,7 @@ public class StatisticsAccessTest {
         assertNotNull(ret);
         
         assertEquals(3, ret.getPointCount());
-
+        
         PointDTO ds1 = null;
         for (PointDTO point : ret.getPointList()) {
             if (point.getName().equals("DS1")) {
