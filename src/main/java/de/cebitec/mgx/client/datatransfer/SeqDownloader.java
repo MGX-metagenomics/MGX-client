@@ -67,21 +67,21 @@ public class SeqDownloader extends DownloadBase {
                 for (SequenceDTO dto : chunk.getSeqList()) {
                     DNASequenceI seq;
                     
-                    byte[] encodedDNA = dto.getSequence().toByteArray();
+                    byte[] dnaseq = FourBitEncoder.decode(dto.getSequence().toByteArray());
                     
                     if (!dto.getQuality().isEmpty()) {
-                        DNAQualitySequenceI qseq = new QualityDNASequence();
-                        qseq.setQuality(QualityEncoder.decode(dto.getQuality().toByteArray(), 
-                                (int)FourBitEncoder.decodeLength(encodedDNA)));
+                        
+                        byte[] decodedQual = QualityEncoder.decode(dto.getQuality().toByteArray(), dnaseq.length);
+                        
+                        DNAQualitySequenceI qseq = new QualityDNASequence(dnaseq, decodedQual);
                         seq = qseq;
                     } else {
-                        seq = new DNASequence();
+                        seq = new DNASequence(dnaseq);
                     }
                     if (dto.getId() != 0) {
                         seq.setId(dto.getId());
                     }
                     seq.setName(dto.getName().getBytes());
-                    seq.setSequence(FourBitEncoder.decode(encodedDNA));
                     writer.addSequence(seq);
                     current_num_elements++;
                 }

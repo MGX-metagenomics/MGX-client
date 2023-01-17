@@ -60,12 +60,15 @@ public class GeneByAttributeDownloader extends SeqDownloader {
             try {
                 for (SequenceDTO dto : chunk.getSeqList()) {
                     DNASequenceI seq;
+                    
+                    byte[] dnaseq = FourBitEncoder.decode(dto.getSequence().toByteArray());
+                    
                     if (!dto.getQuality().isEmpty()) {
-                        DNAQualitySequenceI qseq = new QualityDNASequence();
-                        qseq.setQuality(dto.getQuality().toByteArray());
+                        byte[] qual = dto.getQuality().toByteArray();
+                        DNAQualitySequenceI qseq = new QualityDNASequence(dnaseq, qual);
                         seq = qseq;
                     } else {
-                        seq = new DNASequence();
+                        seq = new DNASequence(dnaseq);
                     }
                     if (dto.getId() != 0) {
                         seq.setId(dto.getId());
@@ -73,7 +76,6 @@ public class GeneByAttributeDownloader extends SeqDownloader {
 
                     if (!seenGeneNames.contains(dto.getName())) {
                         seq.setName(dto.getName().getBytes());
-                        seq.setSequence(FourBitEncoder.decode(dto.getSequence().toByteArray()));
                         writer.addSequence(seq);
                         current_num_elements++;
                         
