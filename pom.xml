@@ -45,7 +45,7 @@
                             de.cebitec.mgx.client.exception
                         </Export-Package>
                         <Import-Package>
-                            jakarta.ws.rs,
+                            javax.ws.rs,
                             de.cebitec.mgx.protobuf.serializer,
                             com.google.common.cache,
                             com.google.protobuf,
