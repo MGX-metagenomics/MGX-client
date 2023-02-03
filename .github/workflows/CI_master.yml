@@ -37,7 +37,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-mgx-cache
+        key: ${{ runner.os }}-mgx1-cache
     - name: Build 'utilities'
       run: |
         git clone -b master https://github.com/MGX-metagenomics/utilities.git
