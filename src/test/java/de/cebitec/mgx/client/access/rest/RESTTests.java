@@ -1,31 +1,11 @@
 package de.cebitec.mgx.client.access.rest;
 
-import de.cebitec.mgx.osgiutils.MGXOptions;
-import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Configuration;
-import static org.ops4j.pax.exam.CoreOptions.bundle;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.PaxExam;
-
 /**
  *
  * @author sj
  */
-@RunWith(PaxExam.class)
 public class RESTTests {
 
-    @Configuration
-    public static Option[] configuration() {
-        return options(
-                junitBundles(),
-                MGXOptions.clientBundles(),
-                systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("WARN"),
-                bundle("reference:file:target/classes")
-        );
-    }
 
 //    @Test
 //    public void testGetAttribute() throws Exception {
