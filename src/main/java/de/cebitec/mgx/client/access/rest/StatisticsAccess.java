@@ -5,14 +5,12 @@ import de.cebitec.mgx.client.exception.MGXClientException;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.MGXDouble;
 import de.cebitec.mgx.dto.dto.MGXDoubleList;
-import de.cebitec.mgx.dto.dto.MGXLongList;
 import de.cebitec.mgx.dto.dto.MGXMatrixDTO;
 import de.cebitec.mgx.dto.dto.MGXString;
 import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import de.cebitec.mgx.dto.dto.ProfileDTO;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -24,14 +22,6 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
 
     public StatisticsAccess(RESTAccessI restAccess) {
         super(restAccess);
-    }
-
-    public Iterator<PointDTO> Rarefaction(Collection<Long> data) throws MGXDTOException {
-        MGXLongList.Builder b = MGXLongList.newBuilder();
-        for (Long n : data) {
-            b.addLong(n);
-        }
-        return put(b.build(), PointDTOList.class, "Statistics", "Rarefaction").getPointList().iterator();
     }
 
     private static final String[] AGGLO = new String[]{"ward", "single", "complete", "average", "mcquitty", "median", "centroid"};
