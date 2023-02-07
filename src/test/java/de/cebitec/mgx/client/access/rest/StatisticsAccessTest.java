@@ -421,9 +421,9 @@ public class StatisticsAccessTest {
 
         PointDTOList ret = master.Statistics().NMDS(matrix.build());
         assertNotNull(ret);
-        
-        assertEquals(3, ret.getPointCount());
-        
+
+        assertEquals(6, ret.getPointCount());
+
         PointDTO ds1 = null;
         for (PointDTO point : ret.getPointList()) {
             if (point.getName().equals("DS1")) {
@@ -438,16 +438,21 @@ public class StatisticsAccessTest {
             assertNotEquals("", point.getName());
             switch (point.getName()) {
                 case "DS1":
-                    assertEquals(1.5105621, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.0205973, Math.abs(point.getY()), 0.001);
+                    assertEquals(0.2093366, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.0077758, Math.abs(point.getY()), 0.001);
                     break;
                 case "DS2":
-                    assertEquals(0.69076839, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.37201421, Math.abs(point.getY()), 0.001);
+                    assertEquals(0.0605400, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.0315531, Math.abs(point.getY()), 0.001);
                     break;
                 case "DS3":
-                    assertEquals(0.81979373, Math.abs(point.getX()), 0.001);
-                    assertEquals(0.35141681, Math.abs(point.getY()), 0.001);
+                    assertEquals(0.14879663, Math.abs(point.getX()), 0.001);
+                    assertEquals(0.02377733, Math.abs(point.getY()), 0.001);
+                    break;
+
+                case "Var1":
+                case "Var2":
+                case "Var3":
                     break;
                 default:
                     fail();
