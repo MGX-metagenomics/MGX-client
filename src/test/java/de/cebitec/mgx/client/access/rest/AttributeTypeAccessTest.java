@@ -29,7 +29,7 @@ public class AttributeTypeAccessTest {
     public void testBySeqRun() throws Exception {
         System.out.println("BySeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<AttributeTypeDTO> types = master.AttributeType().bySeqRun(1);
+        Iterator<AttributeTypeDTO> types = master.AttributeType().bySeqRun(49);
         assertNotNull(types);
         int cnt = 0;
         while (types.hasNext()) {

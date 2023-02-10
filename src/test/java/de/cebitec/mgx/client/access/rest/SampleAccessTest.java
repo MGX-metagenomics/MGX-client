@@ -60,7 +60,7 @@ public class SampleAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         SampleDTO s = master.Sample().fetch(1);
         assertNotNull(s);
-        assertEquals(1, s.getHabitatId());
+        assertEquals(2, s.getHabitatId());
         assertEquals("unknown material", s.getMaterial());
     }
 
@@ -84,7 +84,7 @@ public class SampleAccessTest {
     public void testByHabitatWithSamples() throws Exception {
         System.out.println("ByHabitatWithSamples");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<SampleDTO> iter = master.Sample().byHabitat(1);
+        Iterator<SampleDTO> iter = master.Sample().byHabitat(2);
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {
@@ -99,7 +99,7 @@ public class SampleAccessTest {
     public void testByHabitatWithoutSamples() throws Exception {
         System.out.println("testByHabitatWithoutSamples");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<SampleDTO> iter = master.Sample().byHabitat(2);
+        Iterator<SampleDTO> iter = master.Sample().byHabitat(1);
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {

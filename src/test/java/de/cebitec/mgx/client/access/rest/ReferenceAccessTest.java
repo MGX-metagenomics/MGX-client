@@ -63,7 +63,7 @@ public class ReferenceAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<ReferenceRegionDTO> iter = null;
         try {
-            iter = master.ReferenceRegion().byReferenceInterval(4, 0, 99999);
+            iter = master.ReferenceRegion().byReferenceInterval(65, 0, 99999);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -71,10 +71,10 @@ public class ReferenceAccessTest {
         int cnt = 0;
         while (iter.hasNext()) {
             ReferenceRegionDTO region = iter.next();
-            assertEquals("CDS", region.getType());
+            assertEquals("CDS", region.getType().name());
             cnt++;
         }
-        assertEquals(87, cnt);
+        assertEquals(108, cnt);
     }
 
     @Test
@@ -313,7 +313,8 @@ public class ReferenceAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         String seq = null;
         try {
-            seq = master.Reference().getSequence(4, 0, 9);
+            // ref ID 68 is Streptomyces violaceusniger Tu 4113 chromosome
+            seq = master.Reference().getSequence(68, 0, 9);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

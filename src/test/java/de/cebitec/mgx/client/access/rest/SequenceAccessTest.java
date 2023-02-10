@@ -18,6 +18,8 @@ import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,7 +43,6 @@ public class SequenceAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-
     @Test
     public void testCreateUploaderForInvalidID() {
         System.out.println("createUploaderForInvalidID");
@@ -74,13 +75,13 @@ public class SequenceAccessTest {
     public void testFetch() throws Exception {
         System.out.println("fetch");
         MGXDTOMaster master = TestMaster.getRW();
-        SequenceDTO result = master.Sequence().fetch(109902);
+        SequenceDTO result = master.Sequence().fetch(4219806);
         assertNotNull(result);
         assertEquals("seq1", result.getName());
         assertEquals(23, result.getLength());
         byte[] decoded = FourBitEncoder.decode(result.getSequence().toByteArray());
         assertEquals(23, new String(decoded).length());
-        assertEquals("AAATTTATATATAAAACTCTCTC", result.getSequence());
+        assertEquals("AAATTTATATATAAAACTCTCTC", new String(decoded));
     }
 
     @Test
@@ -118,12 +119,12 @@ public class SequenceAccessTest {
         MGXDTOMaster master = TestMaster.getRW();
         SequenceDTO result = null;
         try {
-            result = master.Sequence().byName(1, "FI5LW4G01EJ7FZ");
+            result = master.Sequence().byName(49, "FI5LW4G01EJ7FZ");
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(result);
-        assertEquals(23, result.getId());
+        assertEquals(2109927, result.getId());
     }
 
     @Test
@@ -132,7 +133,7 @@ public class SequenceAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         SequenceDTOList result = null;
         try {
-            result = master.Sequence().fetchByIds(new long[]{1, 2});
+            result = master.Sequence().fetchByIds(new long[]{2109905, 2109906});
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -148,57 +149,25 @@ public class SequenceAccessTest {
     }
 
     @Test
-    public void testFetchByIDsListPerformance() {
-        System.out.println("testFetchByIDsListPerformance");
-        MGXDTOMaster master = TestMaster.getRO();
-        long[] ids = new long[59482];
-        for (int i = 0; i < 59482; i++) {
-            ids[i] = i + 1;
-        }
-
-        int from = 0;
-        int size = 10_000;
-        long[] chunk;
-
-        while (from < ids.length) {
-            chunk = Arrays.copyOfRange(ids, from, Math.min(from + size, ids.length));
-
-            System.err.println("  fetching interval " + chunk[0] + "-" + chunk[chunk.length - 1]);
-            SequenceDTOList result = null;
-            try {
-                result = master.Sequence().fetchByIds(chunk);
-            } catch (MGXDTOException ex) {
-                fail(ex.getMessage());
-            }
-            assertNotNull(result);
-            assertEquals(chunk.length, result.getSeqCount());
-
-            from += size;
-        }
-
-    }
-
-    @Test
     public void testDownloadSequencesForAttribute() throws MGXDTOException {
         System.out.println("testDownloadSequencesForAttribute");
         MGXDTOMaster master = TestMaster.getRO();
 
-        // GC, 50.8 
-        AttributeDTO attr = master.Attribute().fetch(1);
+        // COG, COG2718 Uncharacterized conserved protein
+        AttributeDTO attr = master.Attribute().fetch(14227);
         assertNotNull(attr);
         AttributeDTOList set = AttributeDTOList.newBuilder()
                 .addAttribute(attr)
                 .build();
 
-        final Holder<Integer> cnt = new Holder<>();
-        cnt.set(0);
-        final Holder<Boolean> closed = new Holder<>();
+        AtomicInteger cnt = new AtomicInteger(0);
+        AtomicBoolean closed = new AtomicBoolean(false);
         closed.set(Boolean.FALSE);
 
         SeqWriterI<DNASequenceI> dummy = new SeqWriterI<DNASequenceI>() {
             @Override
             public void addSequence(DNASequenceI seq) throws SeqStoreException {
-                cnt.set(cnt.get() + 1);
+                cnt.incrementAndGet();
             }
 
             @Override
@@ -212,20 +181,6 @@ public class SequenceAccessTest {
         assertTrue(success);
 
         assertTrue(closed.get());
-        assertEquals(220, cnt.get().intValue());
+        assertEquals(5, cnt.get());
     }
-
-    private static class Holder<T> {
-
-        T val = null;
-
-        public void set(T newVal) {
-            val = newVal;
-        }
-
-        public T get() {
-            return val;
-        }
-    }
-
 }

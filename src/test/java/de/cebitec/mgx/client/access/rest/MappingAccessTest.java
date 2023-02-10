@@ -73,7 +73,7 @@ public class MappingAccessTest {
     public void testByValidSeqRun() throws Exception {
         System.out.println("testByValidSeqRun");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<MappingDTO> it = master.Mapping().bySeqRun(1);
+        Iterator<MappingDTO> it = master.Mapping().bySeqRun(49);
         assertNotNull(it);
         int cnt = 0;
         while (it.hasNext()) {
@@ -104,7 +104,7 @@ public class MappingAccessTest {
     public void testByValidReference() throws Exception {
         System.out.println("testByValidReference");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<MappingDTO> it = master.Mapping().byReference(8);
+        Iterator<MappingDTO> it = master.Mapping().byReference(65);
         assertNotNull(it);
         int cnt = 0;
         while (it.hasNext()) {
@@ -135,7 +135,7 @@ public class MappingAccessTest {
     public void testByValidJob() throws Exception {
         System.out.println("testByValidJob");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<MappingDTO> it = master.Mapping().byJob(124);
+        Iterator<MappingDTO> it = master.Mapping().byJob(12);
         assertNotNull(it);
         int cnt = 0;
         while (it.hasNext()) {
@@ -166,7 +166,7 @@ public class MappingAccessTest {
     public void testOpenMapping() throws Exception {
         System.out.println("openMapping");
         MGXDTOMaster master = TestMaster.getRO();
-        UUID uuid = master.Mapping().openMapping(30);
+        UUID uuid = master.Mapping().openMapping(1);
         assertNotNull(uuid);
         master.Mapping().closeMapping(uuid);
     }
@@ -209,7 +209,7 @@ public class MappingAccessTest {
     public void testMappedSeqs() throws Exception {
         System.out.println("testMappedSeqs");
         MGXDTOMaster master = TestMaster.getRO();
-        UUID uuid = master.Mapping().openMapping(30);
+        UUID uuid = master.Mapping().openMapping(1);
         assertNotNull(uuid);
         int numMappedReads = 0;
         Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 566470, 566480);
@@ -229,7 +229,7 @@ public class MappingAccessTest {
     public void testMappedSeqs2() throws Exception {
         System.out.println("testMappedSeqs2");
         MGXDTOMaster master = TestMaster.getRO();
-        UUID uuid = master.Mapping().openMapping(30);
+        UUID uuid = master.Mapping().openMapping(1);
         assertNotNull(uuid);
         int numMappedReads = 0;
         Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 0, 1000);
@@ -248,7 +248,7 @@ public class MappingAccessTest {
     public void testMappingData() throws Exception {
         System.out.println("MappingData");
         MGXDTOMaster master = TestMaster.getRO();
-        UUID uuid = master.Mapping().openMapping(30);
+        UUID uuid = master.Mapping().openMapping(1);
         assertNotNull(uuid);
         int numMappedReads = 0;
         Iterator<MappedSequenceDTO> iter = master.Mapping().byReferenceInterval(uuid, 0, 500000);
@@ -258,17 +258,17 @@ public class MappingAccessTest {
         while (iter.hasNext()) {
             MappedSequenceDTO ms = iter.next();
             numMappedReads++;
-            if (ms.getSeqId() == 55550) {
+            if (ms.getSeqId() == 2151586) {
                 testms = ms;
             }
         }
         master.Mapping().closeMapping(uuid);
-        assertEquals(94, numMappedReads);
+        assertEquals(92, numMappedReads);
 
         assertNotNull(testms);
-        assertEquals(23010, testms.getStart());
-        assertEquals(22867, testms.getStop());
-        assertEquals(71, testms.getIdentity(), 0.9);
+        assertEquals(436980, testms.getStart());
+        assertEquals(436931, testms.getStop());
+        assertEquals(100, testms.getIdentity(), 0.1);
     }
 
     @Test
@@ -277,7 +277,7 @@ public class MappingAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = null;
         try {
-            uuid = master.Mapping().openMapping(30);
+            uuid = master.Mapping().openMapping(1);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -303,7 +303,7 @@ public class MappingAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         UUID uuid = null;
         try {
-            uuid = master.Mapping().openMapping(30);
+            uuid = master.Mapping().openMapping(1);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -350,7 +350,7 @@ public class MappingAccessTest {
 
         BAMFileDownloader down = null;
         try {
-            down = m.Mapping().createDownloader(30, os);
+            down = m.Mapping().createDownloader(1, os);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -374,7 +374,7 @@ public class MappingAccessTest {
 
         try {
             String md5 = getMD5Checksum(f.getAbsolutePath());
-            assertEquals("8bb7aa4ff0b667b22ba9c7521b00bf91", md5);
+            assertEquals("8a5de64fbc1202879619e8a1f84130e8", md5);
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

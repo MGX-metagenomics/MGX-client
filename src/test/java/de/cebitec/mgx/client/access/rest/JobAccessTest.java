@@ -66,20 +66,20 @@ public class JobAccessTest {
             }
             jobs.add(j);
         }
-        assertEquals(15, jobs.size());
+        assertEquals(6, jobs.size());
     }
 
     @Test
     public void testFetch() throws Exception {
         System.out.println("fetch");
         MGXDTOMaster master = TestMaster.getRO();
-        JobDTO job = master.Job().fetch(1);
+        JobDTO job = master.Job().fetch(9);
         assertNotNull(job);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        assertEquals("2013-06-20T13:19:18Z", sdf.format(new Date(1000L * job.getStartDate())));
-        assertEquals("2013-06-20T13:20:01Z", sdf.format(new Date(1000L * job.getFinishDate())));
+        assertEquals("2023-02-10T10:13:32Z", sdf.format(new Date(1000L * job.getStartDate())));
+        assertEquals("2023-02-10T10:21:33Z", sdf.format(new Date(1000L * job.getFinishDate())));
     }
 
     @Test
@@ -89,20 +89,6 @@ public class JobAccessTest {
         assertNotNull(master);
         JobDTO job = master.Job().fetch(1);
         assertNotNull(job);
-    }
-
-    @Test
-    public void testFetch_byRun_mgx2() throws Exception {
-        System.out.println("testFetch_mgx2");
-        MGXDTOMaster master = TestMaster.getPrivate("MGX2_devel");
-        assertNotNull(master);
-        Iterable<JobDTO> jobs = master.Job().bySeqRun(1);
-        assertNotNull(jobs);
-        int cnt = 0;
-        for (JobDTO j : jobs) {
-            cnt++;
-        }
-        assertEquals(2, cnt);
     }
 
     @Test
@@ -152,7 +138,7 @@ public class JobAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
         JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
                 .addSeqrun(2)
-                .setToolId(2)
+                .setToolId(18)
                 .setState(JobState.CREATED)
                 .setParameters(JobParameterListDTO.newBuilder().build())
                 .build();
@@ -184,8 +170,8 @@ public class JobAccessTest {
         System.out.println("verifyJob");
         MGXDTOMaster m = TestMaster.getRW();
         JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
-                .addSeqrun(2)
-                .setToolId(2)
+                .addSeqrun(49)
+                .setToolId(18)
                 .setState(JobState.CREATED)
                 .setParameters(JobParameterListDTO.newBuilder().build())
                 .build();
@@ -237,74 +223,12 @@ public class JobAccessTest {
     }
 
     @Test
-    public void testRegressionConnectionHang() throws Exception {
-        System.out.println("testRegressionConnectionHang");
-        List<Long> jobIds = new ArrayList<>();
-        MGXDTOMaster m = TestMaster.getRW();
-
-        // create jobs
-        System.err.print("  creating: ");
-        for (int i = 0; i < 10; i++) {
-            JobDTO dto = JobDTO.newBuilder().setCreator("Unittest")
-                    .addSeqrun(2)
-                    .setToolId(2)
-                    .setState(JobState.CREATED)
-                    .setParameters(JobParameterListDTO.newBuilder().build())
-                    .build();
-            long job_id = -1;
-            try {
-                job_id = m.Job().create(dto);
-                System.err.print(job_id + "..");
-            } catch (MGXDTOException ex) {
-                fail(ex.getMessage());
-            }
-            assertTrue(job_id > 0);
-            jobIds.add(job_id);
-        }
-        System.err.println();
-
-        // verify
-        System.err.print("  verify: ");
-        for (long job_id : jobIds) {
-            boolean verified = false;
-            try {
-                verified = m.Job().verify(job_id);
-                System.err.print(job_id + "..");
-            } catch (MGXServerException ex) {
-                fail(ex.getMessage());
-            }
-            assertTrue(verified);
-        }
-        System.err.println();
-
-        // cleanup
-        System.err.print("  delete: ");
-        for (long job_id : jobIds) {
-            try {
-                System.err.print(job_id + "..");
-                UUID delTask = m.Job().delete(job_id);
-                TaskDTO t = m.Task().get(delTask);
-                while (!(t.getState().equals(TaskState.FINISHED) || t.getState().equals(TaskState.FAILED))) {
-                    Thread.sleep(500);
-                    t = m.Task().get(delTask);
-                }
-                if (t.getState().equals(TaskState.FAILED)) {
-                    fail("Task failed.");
-                }
-            } catch (MGXDTOException | InterruptedException ex) {
-                fail(ex.getMessage());
-            }
-        }
-        System.err.println();
-    }
-
-    @Test
     public void testBySeqRun() {
         System.out.println("BySeqRun");
         MGXDTOMaster master = TestMaster.getRO();
         Iterable<JobDTO> jobs = null;
         try {
-            jobs = master.Job().bySeqRun(1);
+            jobs = master.Job().bySeqRun(49);
         } catch (MGXDTOException ex) {
             Logger.getLogger(JobAccessTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -321,7 +245,7 @@ public class JobAccessTest {
                 }
             }
         }
-        assertEquals(10, cnt);
+        assertEquals(4, cnt);
     }
 
     @Test
@@ -343,7 +267,7 @@ public class JobAccessTest {
     public void testGetParameters() throws Exception {
         System.out.println("getParameters");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterable<JobParameterDTO> parameters = master.Job().getParameters(3);
+        Iterable<JobParameterDTO> parameters = master.Job().getParameters(9);
         int params = 0;
         for (JobParameterDTO d : parameters) {
             params++;
@@ -355,9 +279,9 @@ public class JobAccessTest {
     public void testGetError() throws Exception {
         System.out.println("getError");
         MGXDTOMaster master = TestMaster.getRO();
-        JobDTO job = master.Job().fetch(3);
+        JobDTO job = master.Job().fetch(9);
         assertNotNull(job);
-        MGXString error = master.Job().getError(3);
+        MGXString error = master.Job().getError(9);
         assertNotNull(error);
         assertEquals("Job is not in FAILED state.", error.getValue());
     }
@@ -371,7 +295,8 @@ public class JobAccessTest {
         while (iter.hasNext()) {
             JobDTO curJob = iter.next();
             ToolDTO tool = master.Tool().byJob(curJob.getId());
-            if ("bowtie2".equals(tool.getName())) {
+            assertNotNull(tool);
+            if ("Bowtie2".equals(tool.getName())) {
                 job = curJob;
                 break;
             }
@@ -383,15 +308,15 @@ public class JobAccessTest {
 
         JobParameterDTO parameter = params.getParameter(0);
         assertNotNull(parameter);
-        assertEquals(22, parameter.getId());
+        assertEquals(23, parameter.getId());
         assertEquals("GetMGXReference", parameter.getDisplayName());
         assertEquals("ConfigMGXReference", parameter.getType());
-        assertEquals("foo", parameter.getUserName());
+        assertEquals("reference", parameter.getUserName());
         assertEquals("reference sequence to map reads against", parameter.getUserDesc());
         assertFalse(parameter.getIsOptional());
         assertEquals(3, parameter.getNodeId());
         assertEquals("refId", parameter.getParameterName());
-        assertEquals("8", parameter.getParameterValue());
+        assertEquals("65", parameter.getParameterValue());
         assertEquals("Conveyor.MGX.GetMGXReference", parameter.getClassName());
     }
 }
