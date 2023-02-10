@@ -26,7 +26,6 @@ public class SeqUploader extends UploadBase {
     private final long seqrun_id;
     private final SeqReaderI<? extends DNASequenceI> reader;
     private volatile long total_elements = 0;
-    private long duration;
 
     private final static int BASE_PAIR_LIMIT = 2_000_000;
 
@@ -42,7 +41,6 @@ public class SeqUploader extends UploadBase {
             randomNess++;
         }
         super.setChunkSize(5_000 + randomNess);
-        duration = System.currentTimeMillis();
     }
 
     @Override
@@ -153,8 +151,6 @@ public class SeqUploader extends UploadBase {
         }
         fireTaskChange(TransferBase.NUM_ELEMENTS_TRANSFERRED, total_elements);
         fireTaskChange(TransferBase.TRANSFER_COMPLETED, total_elements);
-        duration = System.currentTimeMillis() - duration;
-        System.out.println("transfer done in "+duration + "ms");
     }
 
     private void sendChunk(final SequenceDTOList seqList, final String session_uuid) throws MGXServerException {
