@@ -39,15 +39,15 @@ public class AttributeAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         AttributeDTO attr = null;
         try {
-            attr = master.Attribute().fetch(1);
+            attr = master.Attribute().fetch(9229);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(attr);
         assertNotNull(attr.getValue());
-        assertEquals("50.8", attr.getValue());
-        assertEquals(1, attr.getAttributeTypeId());
-        assertEquals(1, attr.getJobId());
+        assertEquals("Bacteria", attr.getValue());
+        assertEquals(2, attr.getAttributeTypeId());
+        assertEquals(7, attr.getJobId());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class AttributeAccessTest {
 
         Iterator<AttributeDTO> iter = null;
         try {
-            iter = master.Attribute().byJob(3);
+            iter = master.Attribute().byJob(7);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
