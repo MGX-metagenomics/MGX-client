@@ -419,10 +419,6 @@ public class FileAccessTest {
     public synchronized void testUploadSameName() throws IOException {
         System.out.println("testUploadSameName");
         MGXDTOMaster m = TestMaster.getRW();
-        if (m == null) {
-            System.err.println("  private test, skipped");
-            return;
-        }
 
         File f = File.createTempFile("testUpload", "xxx");
         try ( FileWriter fw = new FileWriter(f)) {
