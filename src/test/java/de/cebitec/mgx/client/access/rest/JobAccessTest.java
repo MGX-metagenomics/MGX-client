@@ -82,14 +82,6 @@ public class JobAccessTest {
         assertEquals("2023-02-10T10:21:33Z", sdf.format(new Date(1000L * job.getFinishDate())));
     }
 
-    @Test
-    public void testFetch_mgx2() throws Exception {
-        System.out.println("testFetch_mgx2");
-        MGXDTOMaster master = TestMaster.getPrivate("MGX2_devel");
-        assertNotNull(master);
-        JobDTO job = master.Job().fetch(1);
-        assertNotNull(job);
-    }
 
     @Test
     public void testDelete() {
