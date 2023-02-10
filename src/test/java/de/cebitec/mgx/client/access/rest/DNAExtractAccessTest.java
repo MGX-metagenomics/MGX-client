@@ -8,13 +8,16 @@ package de.cebitec.mgx.client.access.rest;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.mgxtestclient.TestMaster;
-import de.cebitec.mgx.dto.dto;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
+import de.cebitec.mgx.dto.dto.SampleDTO;
+import de.cebitec.mgx.dto.dto.SeqRunDTO;
+import de.cebitec.mgx.dto.dto.TaskDTO;
 import java.util.Iterator;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +69,8 @@ public class DNAExtractAccessTest {
             }
             fail(ex.getMessage());
         }
-        assertNull(iter);
+        assertNotNull(iter);
+        assertFalse(iter.hasNext());
     }
 
     @Test
@@ -75,6 +79,7 @@ public class DNAExtractAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<DNAExtractDTO> iter = null;
         try {
+            // sample 1: "unknown material"
             iter = master.DNAExtract().bySample(1);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
@@ -96,7 +101,7 @@ public class DNAExtractAccessTest {
     public void testFetch() throws Exception {
         System.out.println("fetch");
         MGXDTOMaster master = TestMaster.getRO();
-        DNAExtractDTO ex = master.DNAExtract().fetch(1);
+        DNAExtractDTO ex = master.DNAExtract().fetch(48);
         assertNotNull(ex);
         assertEquals("unknown DNA extract", ex.getName());
     }
@@ -108,23 +113,32 @@ public class DNAExtractAccessTest {
     public void testCreate() throws Exception {
         System.out.println("create");
         MGXDTOMaster master = TestMaster.getRW();
+        
+        SampleDTO sample = master.Sample().fetch(1);
+        assertNotNull(sample);
+        
         DNAExtractDTO d = DNAExtractDTO.newBuilder()
                 .setMethod("foo")
-                .setName("bar")
+                .setName("unittest extract")
                 .setDescription("no description")
-                .setSampleId(1)
+                .setSampleId(sample.getId())
                 .build();
         long id = master.DNAExtract().create(d);
+        assertTrue(id > 0, "ID of new extract should be >0");
+        
+        Iterator<SeqRunDTO> runIter = master.SeqRun().byExtract(id);
+        assertNotNull(runIter);
+        assertFalse(runIter.hasNext(), "A newly created extract does not have seqruns.");
 
         // delete it again
         try {
             UUID delTask = master.DNAExtract().delete(id);
-            dto.TaskDTO t = master.Task().get(delTask);
-            while (!(t.getState().equals(dto.TaskDTO.TaskState.FINISHED) || t.getState().equals(dto.TaskDTO.TaskState.FAILED))) {
+            TaskDTO t = master.Task().get(delTask);
+            while (!(t.getState().equals(TaskDTO.TaskState.FINISHED) || t.getState().equals(TaskDTO.TaskState.FAILED))) {
                 Thread.sleep(500);
                 t = master.Task().get(delTask);
             }
-            if (t.getState().equals(dto.TaskDTO.TaskState.FAILED)) {
+            if (t.getState().equals(TaskDTO.TaskState.FAILED)) {
                 fail("Task failed.");
             }
         } catch (MGXDTOException | InterruptedException ex) {
