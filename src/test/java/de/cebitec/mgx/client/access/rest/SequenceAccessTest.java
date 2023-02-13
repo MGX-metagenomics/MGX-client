@@ -56,7 +56,7 @@ public class SequenceAccessTest {
         assertNotNull(reader);
         SeqUploader up = null;
         try {
-            up = master.Sequence().createUploader(9999, reader);
+            up = master.Sequence().createUploader(9999, false, reader);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

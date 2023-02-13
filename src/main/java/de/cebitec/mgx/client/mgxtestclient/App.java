@@ -145,7 +145,7 @@ public class App {
 
                 // upload sequence data
                 SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(args[argpos]);
-                master.Sequence().sendSequences(seqrun_id, reader);
+                master.Sequence().sendSequences(seqrun_id, false, reader);
                 System.err.println("complete.");
             }
         }

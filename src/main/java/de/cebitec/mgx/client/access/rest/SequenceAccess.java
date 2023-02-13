@@ -35,8 +35,8 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         this.dtomaster = dtomaster;
     }
 
-    public void sendSequences(long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) throws MGXDTOException {
-        SeqUploader seqUploader = new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, reader);
+    public void sendSequences(long seqrun_id, boolean paired, SeqReaderI<? extends DNASequenceI> reader) throws MGXDTOException {
+        SeqUploader seqUploader = new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, paired, reader);
         boolean success = seqUploader.upload();
         if (!success) {
             throw new MGXServerException(seqUploader.getErrorMessage());
@@ -51,8 +51,8 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
         }
     }
 
-    public SeqUploader createUploader(long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) throws MGXDTOException {
-        return new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, reader);
+    public SeqUploader createUploader(long seqrun_id, boolean paired, SeqReaderI<? extends DNASequenceI> reader) throws MGXDTOException {
+        return new SeqUploader(dtomaster, getRESTAccess(), seqrun_id, paired, reader);
     }
 
     public SeqDownloader createDownloader(long seqrun_id, SeqWriterI<? extends DNASequenceI> writer, boolean closeWriter) throws MGXDTOException {

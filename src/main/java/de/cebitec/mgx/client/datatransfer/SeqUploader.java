@@ -24,16 +24,18 @@ import jakarta.ws.rs.ProcessingException;
 public class SeqUploader extends UploadBase {
 
     private final long seqrun_id;
+    private final boolean is_paired;
     private final SeqReaderI<? extends DNASequenceI> reader;
     private volatile long total_elements = 0;
 
     private final static int BASE_PAIR_LIMIT = 2_000_000;
 
-    public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, SeqReaderI<? extends DNASequenceI> reader) {
+    public SeqUploader(MGXDTOMaster dtomaster, RESTAccessI rab, long seqrun_id, boolean paired, SeqReaderI<? extends DNASequenceI> reader) {
         super(dtomaster, rab);
         this.seqrun_id = seqrun_id;
+        this.is_paired = paired;
         this.reader = reader;
-        // add in some randomness to make the numbers appear "nicer"
+        // add in some randomness to make the numbers appear "nicer";
         // generate an even number so interleaved paired-end uploads
         // stay in the correct order
         int randomNess = (int) Math.round(Math.random() * 20);
@@ -62,8 +64,11 @@ public class SeqUploader extends UploadBase {
             while (reader.hasMoreElements()) {
                 DNASequenceI nextElement = reader.nextElement();
 
-                // ignore empty sequences
-                if (nextElement.getSequence().length == 0) {
+                // skip empty sequences for single-ended seqruns
+                //
+                // we can't do this for paired-end because read pairs
+                // would get out of sync
+                if (!is_paired && nextElement.getSequence().length == 0) {
                     continue;
                 }
                 

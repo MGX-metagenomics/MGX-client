@@ -213,7 +213,7 @@ public class SeqRunAccessTest {
             PropCounter pc = new PropCounter();
             SeqUploader up = null;
             try {
-                up = master.Sequence().createUploader(999999, reader);
+                up = master.Sequence().createUploader(999999, false, reader);
             } catch (MGXDTOException ex) {
                 fail(ex.getMessage());
             }
@@ -249,7 +249,7 @@ public class SeqRunAccessTest {
         PropCounter pc = new PropCounter();
         MGXDTOMaster m = TestMaster.getRW();
 
-        SeqUploader up = m.Sequence().createUploader(999999, reader);
+        SeqUploader up = m.Sequence().createUploader(999999, false, reader);
         up.addPropertyChangeListener(pc);
         boolean success = up.upload();
 
@@ -288,7 +288,7 @@ public class SeqRunAccessTest {
 
         PropCounter pc = new PropCounter();
 
-        SeqUploader up = m.Sequence().createUploader(run_id, reader);
+        SeqUploader up = m.Sequence().createUploader(run_id, false, reader);
         up.addPropertyChangeListener(pc);
         boolean success = up.upload();
 
