@@ -42,7 +42,7 @@ public class SeqUploader extends UploadBase {
         if (randomNess % 2 == 1) {
             randomNess++;
         }
-        super.setChunkSize(5_000 + randomNess);
+        super.setChunkSize(8_000 + randomNess);
     }
 
     @Override
