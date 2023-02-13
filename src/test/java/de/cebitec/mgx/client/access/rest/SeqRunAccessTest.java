@@ -54,7 +54,7 @@ public class SeqRunAccessTest {
 //        );
 //    }
     @AfterAll
-    public void tearDown() {
+    public static void tearDown() {
         MGXDTOMaster m = TestMaster.getRW();
         Iterator<SeqRunDTO> iter = null;
         try {
@@ -92,7 +92,7 @@ public class SeqRunAccessTest {
             System.err.println(" [" + run.getId() + "] " + run.getName());
             refCnt++;
         }
-        assertEquals(4, refCnt);
+        assertEquals(6, refCnt);
 
     }
 
@@ -102,7 +102,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         SeqRunDTO dto = null;
         try {
-            dto = master.SeqRun().fetch(3);
+            dto = master.SeqRun().fetch(52);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -117,7 +117,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<SeqRunDTO> iter = null;
         try {
-            iter = master.SeqRun().byJob(7);
+            iter = master.SeqRun().byJob(11);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -125,7 +125,7 @@ public class SeqRunAccessTest {
         boolean success = false;
         while (iter.hasNext()) {
             SeqRunDTO dto = iter.next();
-            if (dto.getId() == 2 && dto.getName().equals("dataset2")) {
+            if (dto.getId() == 50 && dto.getName().equals("dataset2")) {
                 success = true;
             }
         }
@@ -169,7 +169,7 @@ public class SeqRunAccessTest {
 
             MGXDTOMaster master = TestMaster.getRO();
 
-            SeqRunDTO sr1 = master.SeqRun().fetch(1);
+            SeqRunDTO sr1 = master.SeqRun().fetch(49);
             PropCounter pc = new PropCounter();
             final SeqDownloader downloader = master.Sequence().createDownloader(sr1.getId(), writer, true);
             downloader.addPropertyChangeListener(pc);
@@ -314,7 +314,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         SeqRunDTO dto = null;
         try {
-            dto = master.SeqRun().fetch(1);
+            dto = master.SeqRun().fetch(49);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -345,7 +345,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
 
         SeqRunDTO sr = SeqRunDTO.newBuilder()
-                .setExtractId(1)
+                .setExtractId(48)
                 .setName("Unittest-Run")
                 .setSequencingMethod(m.Term().fetch(12))
                 .setSequencingTechnology(m.Term().fetch(1))
@@ -396,7 +396,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         boolean hasQ = true;
         try {
-            hasQ = master.SeqRun().hasQuality(3);
+            hasQ = master.SeqRun().hasQuality(49);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -408,8 +408,8 @@ public class SeqRunAccessTest {
         System.out.println("testWrongSeqRunHasQuality");
         MGXDTOMaster master = TestMaster.getRO();
         try {
-            master.SeqRun().hasQuality(42);
-            fail("Got reply for nonexisting seqrun");
+            boolean hasQuality = master.SeqRun().hasQuality(42);
+            fail("Got reply " + hasQuality + " for nonexisting seqrun");
         } catch (MGXDTOException ex) {
             if (!ex.getMessage().contains("No object of type SeqRun")) {
                 fail(ex.getMessage());
