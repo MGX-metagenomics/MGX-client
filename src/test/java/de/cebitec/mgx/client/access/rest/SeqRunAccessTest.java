@@ -138,12 +138,12 @@ public class SeqRunAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         List<JobAndAttributeTypes> jat = null;
         try {
-            jat = master.SeqRun().getJobsAndAttributeTypes(1);
+            jat = master.SeqRun().getJobsAndAttributeTypes(49);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(jat);
-        assertEquals(10, jat.size());
+        assertEquals(3, jat.size());
 
         int paramCnt = 0;
 
@@ -157,7 +157,7 @@ public class SeqRunAccessTest {
                 assertNotNull(jp.getType());
             }
         }
-        assertEquals(7, paramCnt);
+        assertEquals(6, paramCnt);
     }
 
     @Test
@@ -268,7 +268,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
 
         SeqRunDTO sr = SeqRunDTO.newBuilder()
-                .setExtractId(1)
+                .setExtractId(48)
                 .setName("Unittest-Run")
                 .setSequencingMethod(m.Term().fetch(12))
                 .setSequencingTechnology(m.Term().fetch(1))
