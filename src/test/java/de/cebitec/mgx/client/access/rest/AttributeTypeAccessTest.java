@@ -37,7 +37,7 @@ public class AttributeTypeAccessTest {
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(21, cnt);
+        assertEquals(12, cnt);
     }
 
     @Test
@@ -63,14 +63,14 @@ public class AttributeTypeAccessTest {
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(22, cnt);
+        assertEquals(12, cnt);
     }
 
     @Test
     public void testByJob() throws Exception {
         System.out.println("ByJob");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<AttributeTypeDTO> types = master.AttributeType().byJob(3);
+        Iterator<AttributeTypeDTO> types = master.AttributeType().byJob(9);
         assertNotNull(types);
         int cnt = 0;
         while (types.hasNext()) {
@@ -78,6 +78,6 @@ public class AttributeTypeAccessTest {
             assertNotNull(next);
             cnt++;
         }
-        assertEquals(7, cnt);
+        assertEquals(2, cnt);
     }
 }

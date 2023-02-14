@@ -58,12 +58,12 @@ public class AttributeAccessTest {
 
         AttributeDistribution dist = null;
         try {
-            dist = master.Attribute().getDistribution(6, 3, 1);
+            dist = master.Attribute().getDistribution(3, 7, 49);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
         assertNotNull(dist);
-        assertEquals(5, dist.getAttributeCountsCount());
+        assertEquals(54, dist.getAttributeCountsCount());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AttributeAccessTest {
         AttributeDistribution ad = null;
 
         try {
-            ad = master.Attribute().getHierarchy(6, 3, 1);
+            ad = master.Attribute().getHierarchy(1, 7, 49);
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -86,8 +86,8 @@ public class AttributeAccessTest {
 //            System.err.println(at.getName());
 //        }
 
-        assertEquals(7, ad.getAttributeTypeCount());
-        assertEquals(30, ad.getAttributeCountsCount());
+        assertEquals(9, ad.getAttributeTypeCount());
+        assertEquals(3256, ad.getAttributeCountsCount());
 
         int roots = 0;
         long total = 0;
@@ -97,7 +97,7 @@ public class AttributeAccessTest {
             total += ac.getCount();
             assertNotNull(ac.getAttribute());
             AttributeDTO attr = ac.getAttribute();
-            if (attr.getValue().equals("Root")) {
+            if (attr.getValue().equals("root")) {
                 assertEquals(0, attr.getParentId());
                 roots++;
             } else {
@@ -105,7 +105,7 @@ public class AttributeAccessTest {
             }
         }
         assertEquals(1, roots);
-        assertEquals(339, total);
+        assertEquals(135097, total);
 
     }
 
@@ -117,7 +117,7 @@ public class AttributeAccessTest {
         SearchRequestDTO req = SearchRequestDTO.newBuilder()
                 .setExact(false)
                 .setTerm("meth")
-                .setSeqrunId(2)
+                .setSeqrunId(49)
                 .build();
 
         Iterator<String> iter = null;
@@ -133,7 +133,7 @@ public class AttributeAccessTest {
             cnt++;
             System.err.println(s);
         }
-        assertEquals(179, cnt);
+        assertEquals(319, cnt);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class AttributeAccessTest {
             iter = master.Attribute().find(SearchRequestDTO.newBuilder()
                     .setExact(false)
                     .setTerm("alcohol")
-                    .setSeqrunId(1)
+                    .setSeqrunId(49)
                     .build());
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
@@ -163,7 +163,7 @@ public class AttributeAccessTest {
             cnt++;
             System.err.println(s);
         }
-        assertEquals(8, cnt);
+        assertEquals(10, cnt);
         
         // 
         // upper-case search
@@ -172,7 +172,7 @@ public class AttributeAccessTest {
             iter = master.Attribute().find(SearchRequestDTO.newBuilder()
                     .setExact(false)
                     .setTerm("ALCOHOL")
-                    .setSeqrunId(1)
+                    .setSeqrunId(49)
                     .build());
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
@@ -184,7 +184,7 @@ public class AttributeAccessTest {
             cnt++;
             System.err.println(s);
         }
-        assertEquals(8, cnt);
+        assertEquals(10, cnt);
     }
 
     @Test
@@ -205,6 +205,6 @@ public class AttributeAccessTest {
             cnt++;
             System.err.println(attr.getValue());
         }
-        assertEquals(30, cnt);
+        assertEquals(3256, cnt);
     }
 }

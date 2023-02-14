@@ -24,7 +24,7 @@ public class ObservationAccessTest {
     public void testByRead() throws Exception {
         System.out.println("ByRead");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<ObservationDTO> iter = master.Observation().byRead(4255);
+        Iterator<ObservationDTO> iter = master.Observation().byRead(2109916);
         assertNotNull(iter);
         int numObs = 0;
         while (iter.hasNext()) {
@@ -32,7 +32,7 @@ public class ObservationAccessTest {
             assertNotNull(dto);
             numObs++;
         }
-        assertEquals(13, numObs);
+        assertEquals(7, numObs);
     }
     
 }

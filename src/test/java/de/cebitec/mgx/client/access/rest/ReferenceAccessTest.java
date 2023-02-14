@@ -51,10 +51,10 @@ public class ReferenceAccessTest {
         int refCnt = 0;
         while (iter.hasNext()) {
             ReferenceDTO ref = iter.next();
-            System.err.println(ref.getName());
+            System.err.println(ref.getId() + ": " + ref.getName());
             refCnt++;
         }
-        assertEquals(1663, refCnt);
+        assertEquals(4236, refCnt);
     }
 
     @Test
@@ -128,15 +128,15 @@ public class ReferenceAccessTest {
             Iterator<ReferenceDTO> iterGlobal = m.Reference().listGlobalReferences();
             while (iterGlobal.hasNext()) {
                 ReferenceDTO ref = iterGlobal.next();
-                if (ref.getId() == 3) {
+                if (ref.getId() == 3720) {
                     found = true;
                     refName = ref.getName();
                     break;
                 }
             }
-            assertTrue(found, "reference id 3 was not present in the global repository");
+            assertTrue(found, "reference id 3720 was not present in the global repository");
 
-            UUID taskId = m.Reference().installGlobalReference(3);
+            UUID taskId = m.Reference().installGlobalReference(3720);
 
             task = m.Task().get(taskId);
             assertNotNull(task);
@@ -207,7 +207,7 @@ public class ReferenceAccessTest {
             fail(ex.getMessage());
         }
 
-        assertEquals(553, numSubregions);
+        assertEquals(1772, numSubregions);
     }
 
     @Test
