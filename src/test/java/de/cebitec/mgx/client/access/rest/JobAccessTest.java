@@ -86,7 +86,7 @@ public class JobAccessTest {
         JobDTO job = master.Job().fetch(7);
         List<Long> runIDs = job.getSeqrunList();
         long runID = runIDs.get(0);
-        
+
         assertNotNull(job);
         assertEquals(1, job.getSeqrunCount());
         assertEquals(49, runID);
@@ -184,42 +184,36 @@ public class JobAccessTest {
         }
         assertTrue(job_id > 0);
 
-        //
-        // verify job
-        //
         boolean verified = false;
         try {
+            // verify job
             verified = m.Job().verify(job_id);
+            assertTrue(verified);
+
+            // check job state
+            JobDTO job = m.Job().fetch(job_id);
+            assertNotNull(job);
+            assertEquals(JobState.VERIFIED, job.getState());
+
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
-        }
-        assertTrue(verified);
-
-        //
-        // check job state
-        //
-        JobDTO job = null;
-        try {
-            job = m.Job().fetch(job_id);
-        } catch (MGXDTOException ex) {
-            fail(ex.getMessage());
-        }
-        assertNotNull(job);
-        assertEquals(JobState.VERIFIED, job.getState());
-
-        // cleanup
-        try {
-            UUID delTask = m.Job().delete(job_id);
-            TaskDTO t = m.Task().get(delTask);
-            while (!(t.getState().equals(TaskState.FINISHED) || t.getState().equals(TaskState.FAILED))) {
-                Thread.sleep(500);
-                t = m.Task().get(delTask);
+        } finally {
+            // always delete the job
+            if (job_id > 0) {
+                try {
+                    UUID delTask = m.Job().delete(job_id);
+                    TaskDTO t = m.Task().get(delTask);
+                    while (!(t.getState().equals(TaskState.FINISHED) || t.getState().equals(TaskState.FAILED))) {
+                        Thread.sleep(500);
+                        t = m.Task().get(delTask);
+                    }
+                    if (t.getState().equals(TaskState.FAILED)) {
+                        fail("Task failed.");
+                    }
+                } catch (MGXDTOException | InterruptedException ex) {
+                    fail(ex.getMessage() + ": Manual job deletion might be required for ID " + job_id);
+                }
             }
-            if (t.getState().equals(TaskState.FAILED)) {
-                fail("Task failed.");
-            }
-        } catch (MGXDTOException | InterruptedException ex) {
-            fail(ex.getMessage());
         }
     }
 
