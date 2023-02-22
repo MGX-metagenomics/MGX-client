@@ -45,7 +45,6 @@ public class JobAccessTest {
 //                bundle("reference:file:target/classes")
 //        );
 //    }
-
     @Test
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
@@ -80,6 +79,18 @@ public class JobAccessTest {
         assertEquals("2023-02-10T10:21:33Z", sdf.format(new Date(1000L * job.getFinishDate())));
     }
 
+    @Test
+    public void testHasRuns() throws Exception {
+        System.out.println("testHasRuns");
+        MGXDTOMaster master = TestMaster.getRO();
+        JobDTO job = master.Job().fetch(7);
+        List<Long> runIDs = job.getSeqrunList();
+        long runID = runIDs.get(0);
+        
+        assertNotNull(job);
+        assertEquals(1, job.getSeqrunCount());
+        assertEquals(49, runID);
+    }
 
     @Test
     public void testDelete() {
