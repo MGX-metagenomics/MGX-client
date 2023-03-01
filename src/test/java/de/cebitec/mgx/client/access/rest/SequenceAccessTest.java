@@ -166,12 +166,12 @@ public class SequenceAccessTest {
 
         SeqWriterI<DNASequenceI> dummy = new SeqWriterI<DNASequenceI>() {
             @Override
-            public void addSequence(DNASequenceI seq) throws SeqStoreException {
+            public void addSequence(DNASequenceI seq) {
                 cnt.incrementAndGet();
             }
 
             @Override
-            public void close() throws Exception {
+            public void close() {
                 closed.set(Boolean.TRUE);
             }
         };

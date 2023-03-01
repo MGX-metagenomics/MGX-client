@@ -180,7 +180,7 @@ public class SeqRunAccessTest {
             assertEquals(TransferBase.TRANSFER_COMPLETED, pc.getLastEvent().getPropertyName());
 
             long cnt = 0;
-            SeqReaderI reader = new FastaReader(tmpFile.getAbsolutePath(), false);
+            SeqReaderI<DNASequenceI> reader = new FastaReader(tmpFile.getAbsolutePath(), false);
             while (reader.hasMoreElements()) {
                 reader.nextElement();
                 cnt++;
