@@ -1,6 +1,5 @@
 package de.cebitec.mgx.client.mgxtestclient;
 
-import com.sun.tools.javac.util.Assert;
 import de.cebitec.gpms.core.GPMSException;
 import de.cebitec.gpms.core.MembershipI;
 import de.cebitec.gpms.rest.GPMSClientFactory;
