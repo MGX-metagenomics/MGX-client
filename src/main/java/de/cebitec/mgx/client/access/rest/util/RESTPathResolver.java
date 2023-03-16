@@ -53,7 +53,7 @@ import java.util.Map;
  */
 public class RESTPathResolver {
 
-    protected final static Map<Class, String> objmappings = new HashMap<>();
+    protected final static Map<Class<?>, String> objmappings = new HashMap<>();
     protected final static Map<String, String> methodmappings = new HashMap<>();
     protected final static RESTPathResolver instance = new RESTPathResolver();
 
@@ -140,7 +140,7 @@ public class RESTPathResolver {
     private RESTPathResolver() {
     }
 
-    public static String objPath(Class c) {
+    public static String objPath(Class<?> c) {
         return objmappings.get(c);
     }
 
@@ -148,7 +148,7 @@ public class RESTPathResolver {
         return methodmappings.get(c);
     }
 
-    public final String[] resolve(Class c, String methodName, String... opts) throws MGXClientException {
+    public final String[] resolve(Class<?> c, String methodName, String... opts) throws MGXClientException {
         String[] s = resolve(c, methodName);
         if (opts != null && opts.length > 0) {
             s = Arrays.copyOf(s, s.length + opts.length);
@@ -157,7 +157,7 @@ public class RESTPathResolver {
         return s;
     }
 
-    public final String[] resolve(Class c, String methodName) throws MGXClientException {
+    public final String[] resolve(Class<?> c, String methodName) throws MGXClientException {
         if (!objmappings.containsKey(c)) {
             throw new MGXClientException("Missing REST object mapping path for class " + c.getName() + "/" + methodName);
         }
@@ -170,7 +170,7 @@ public class RESTPathResolver {
         //return new StringBuilder("/").append(objmappings.get(c)).append("/").append(methodmappings.get(m)).append("/").toString();
     }
 
-    public final String resolveClass(Class c) throws MGXClientException {
+    public final String resolveClass(Class<?> c) throws MGXClientException {
         if (!objmappings.containsKey(c)) {
             throw new MGXClientException("Missing REST object mapping path for class " + c.getName());
         }
