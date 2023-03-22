@@ -271,14 +271,19 @@ public class JobAccessTest {
     }
 
     @Test
-    public void testGetError() throws Exception {
+    public void testGetError() {
         System.out.println("getError");
         MGXDTOMaster master = TestMaster.getRO();
-        JobDTO job = master.Job().fetch(9);
-        assertNotNull(job);
-        MGXString error = master.Job().getError(9);
-        assertNotNull(error);
-        assertEquals("Job is not in FAILED state.", error.getValue());
+
+        try {
+            JobDTO job = master.Job().fetch(9);
+            assertNotNull(job);
+            MGXString error = master.Job().getError(9);
+        } catch (MGXDTOException ex) {
+            assertEquals("Job is not in FAILED state.", ex.getMessage());
+            return;
+        }
+        fail();
     }
 
     @Test
