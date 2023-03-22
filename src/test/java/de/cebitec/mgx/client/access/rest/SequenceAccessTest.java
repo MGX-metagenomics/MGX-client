@@ -105,7 +105,8 @@ public class SequenceAccessTest {
         try {
             SequenceDTO result = master.Sequence().byName(1, "doesNotExist");
         } catch (MGXServerException ex) {
-            assertTrue(ex.getMessage() != null && ex.getMessage().contains("Not found"));
+            assertNotNull(ex.getMessage());
+            assertTrue(ex.getMessage().contains(" not found"));
             return; // ok
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
