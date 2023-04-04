@@ -12,12 +12,6 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.src.version>1.8</java.src.version>
-        <java.target.version>1.8</java.target.version>
-        <!--
-        <exam.version>4.13.5</exam.version>
-        <url.version>2.6.10</url.version>
-        -->
     </properties>
     
     <build>
