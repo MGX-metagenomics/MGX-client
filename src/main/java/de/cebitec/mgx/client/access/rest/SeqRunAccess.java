@@ -25,8 +25,8 @@ public class SeqRunAccess extends AccessBase<SeqRunDTO, SeqRunDTOList> {
     }
 
     @Override
-    public Iterator<SeqRunDTO> fetchall() throws MGXDTOException {
-        return fetchlist(SeqRunDTOList.class).getSeqrunList().iterator();
+    public SeqRunDTOList fetchall() throws MGXDTOException {
+        return fetchlist(SeqRunDTOList.class);
     }
 
     @Override

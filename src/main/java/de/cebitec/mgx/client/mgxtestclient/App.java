@@ -86,7 +86,7 @@ public class App {
         char[] password = System.console().readPassword("Password: ");
         MGXDTOMaster master = getMaster(username, password, projectName);
 
-        Iterator<HabitatDTO> it = master.Habitat().fetchall();
+        Iterator<HabitatDTO> it = master.Habitat().fetchall().getHabitatList().iterator();
         while (it != null && it.hasNext()) {
             HabitatDTO habitat = it.next();
             Iterator<SampleDTO> samples = master.Sample().byHabitat(habitat.getId());
@@ -96,7 +96,7 @@ public class App {
         }
 
         DNAExtractDTO extract = null;
-        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
+        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall().getExtractList().iterator();
         while (iter != null && iter.hasNext()) {
             DNAExtractDTO ex = iter.next();
             if (ex.getName().equals(extractName)) {
@@ -110,7 +110,7 @@ public class App {
             System.exit(1);
         }
 
-        Iterator<SeqRunDTO> runiter = master.SeqRun().fetchall();
+        Iterator<SeqRunDTO> runiter = master.SeqRun().fetchall().getSeqrunList().iterator();
         Set<String> runs = new HashSet<>();
         while (runiter.hasNext()) {
             runs.add(runiter.next().getName());

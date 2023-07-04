@@ -45,7 +45,7 @@ public class DNAExtractAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall();
+        Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall().getExtractList().iterator();
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {

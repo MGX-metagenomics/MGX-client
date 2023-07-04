@@ -45,8 +45,8 @@ public class ToolAccess extends AccessBase<ToolDTO, ToolDTOList> {
     }
 
     @Override
-    public Iterator<ToolDTO> fetchall() throws MGXDTOException {
-        return fetchlist(ToolDTOList.class).getToolList().iterator();
+    public ToolDTOList fetchall() throws MGXDTOException {
+        return fetchlist(ToolDTOList.class);
     }
 
     public Iterator<ToolDTO> listGlobalTools() throws MGXDTOException {

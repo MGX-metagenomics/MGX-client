@@ -29,7 +29,7 @@ public class GeneObservationAccess extends AccessBase<GeneObservationDTO, GeneOb
     }
 
     @Override
-    public Iterator<GeneObservationDTO> fetchall() throws MGXDTOException {
+    public GeneObservationDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

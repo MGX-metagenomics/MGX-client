@@ -31,13 +31,13 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
         this.dtomaster = dtomaster;
     }
 
-    public Iterator<FileDTO> fetchall(String baseDir) throws MGXDTOException {
+    public FileDTOList fetchall(String baseDir) throws MGXDTOException {
         if (!baseDir.startsWith(ROOT)) {
             throw new MGXClientException("Invalid path: " + baseDir);
         }
         baseDir = baseDir.replace("/", "|");
         String[] resolve = r.resolve(FileDTOList.class, "fetchall", baseDir);
-        return this.get(FileDTOList.class, resolve).getFileList().iterator();
+        return this.get(FileDTOList.class, resolve);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FileAccess extends AccessBase<FileDTO, FileDTOList> {
     }
 
     @Override
-    public Iterator<FileDTO> fetchall() throws MGXDTOException {
+    public FileDTOList fetchall() throws MGXDTOException {
         return fetchall(".|");
     }
 

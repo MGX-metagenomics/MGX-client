@@ -18,8 +18,8 @@ public class SampleAccess extends AccessBase<SampleDTO, SampleDTOList> {
     }
     
     @Override
-    public Iterator<SampleDTO> fetchall() throws MGXDTOException {
-        return fetchlist(SampleDTOList.class).getSampleList().iterator();
+    public SampleDTOList fetchall() throws MGXDTOException {
+        return fetchlist(SampleDTOList.class);
     }
 
     @Override

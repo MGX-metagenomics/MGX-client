@@ -58,7 +58,7 @@ public class SeqRunAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
         Iterator<SeqRunDTO> iter = null;
         try {
-            iter = m.SeqRun().fetchall();
+            iter = m.SeqRun().fetchall().getSeqrunList().iterator();
             assertNotNull(iter);
             while (iter.hasNext()) {
                 SeqRunDTO sr = iter.next();
@@ -81,7 +81,7 @@ public class SeqRunAccessTest {
         Iterator<SeqRunDTO> iter = null;
         MGXDTOMaster master = TestMaster.getRO();
         try {
-            iter = master.SeqRun().fetchall();
+            iter = master.SeqRun().fetchall().getSeqrunList().iterator();
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

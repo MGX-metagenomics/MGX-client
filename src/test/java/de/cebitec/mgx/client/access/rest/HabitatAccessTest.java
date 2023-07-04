@@ -40,7 +40,7 @@ public class HabitatAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<HabitatDTO> iter = master.Habitat().fetchall();
+        Iterator<HabitatDTO> iter = master.Habitat().fetchall().getHabitatList().iterator();
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {

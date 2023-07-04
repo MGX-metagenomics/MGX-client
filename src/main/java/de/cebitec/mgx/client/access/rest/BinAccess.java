@@ -22,8 +22,8 @@ public class BinAccess extends AccessBase<BinDTO, BinDTOList> {
     }
 
     @Override
-    public Iterator<BinDTO> fetchall() throws MGXDTOException {
-        return fetchlist(BinDTOList.class).getBinList().iterator();
+    public BinDTOList fetchall() throws MGXDTOException {
+        return fetchlist(BinDTOList.class);
     }
 
     public Iterator<BinDTO> byAssembly(long asm_id) throws MGXDTOException {

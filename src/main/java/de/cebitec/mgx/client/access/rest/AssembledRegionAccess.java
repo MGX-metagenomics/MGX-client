@@ -30,8 +30,8 @@ public class AssembledRegionAccess extends AccessBase<AssembledRegionDTO, Assemb
     }
 
     @Override
-    public Iterator<AssembledRegionDTO> fetchall() throws MGXDTOException {
-        return fetchlist(AssembledRegionDTOList.class).getRegionList().iterator();
+    public AssembledRegionDTOList fetchall() throws MGXDTOException {
+        return fetchlist(AssembledRegionDTOList.class);
     }
 
     @Override

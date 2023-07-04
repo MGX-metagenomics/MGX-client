@@ -27,8 +27,8 @@ public class AttributeTypeAccess extends AccessBase<AttributeTypeDTO, AttributeT
     }
 
     @Override
-    public Iterator<AttributeTypeDTO> fetchall() throws MGXDTOException {
-        return fetchlist(AttributeTypeDTOList.class).getAttributeTypeList().iterator();
+    public AttributeTypeDTOList fetchall() throws MGXDTOException {
+        return fetchlist(AttributeTypeDTOList.class);
     }
 
     @Override

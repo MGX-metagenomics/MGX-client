@@ -127,6 +127,7 @@ public class RESTPathResolver {
         methodmappings.put("bySeqRun", "bySeqRun");
         methodmappings.put("byAssembly", "byAssembly");
         methodmappings.put("byBin", "byBin");
+        methodmappings.put("continueSession", "continueSession");
         methodmappings.put("byContig", "byContig");
         methodmappings.put("byGene", "byGene");
         methodmappings.put("getDNASequence", "getDNASequence");

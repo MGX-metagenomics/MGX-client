@@ -69,7 +69,7 @@ public class AttributeAccess extends AccessBase<AttributeDTO, AttributeDTOList> 
     }
 
     @Override
-    public Iterator<AttributeDTO> fetchall() throws MGXDTOException {
+    public AttributeDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

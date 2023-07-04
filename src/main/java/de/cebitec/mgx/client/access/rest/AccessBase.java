@@ -10,7 +10,6 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.client.exception.MGXServerException;
 import de.cebitec.mgx.dto.dto.MGXLong;
 import de.cebitec.mgx.dto.dto.MGXString;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -39,7 +38,7 @@ public abstract class AccessBase<T, U> {
 
     public abstract T fetch(long id) throws MGXDTOException;
 
-    public abstract Iterator<T> fetchall() throws MGXDTOException;
+    public abstract U fetchall() throws MGXDTOException;
 
     public abstract long create(T t) throws MGXDTOException;
 

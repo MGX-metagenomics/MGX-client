@@ -83,7 +83,7 @@ public class ReferenceAccessTest {
         MGXDTOMaster master = TestMaster.getRO();
         Iterator<ReferenceDTO> iter = null;
         try {
-            iter = master.Reference().fetchall();
+            iter = master.Reference().fetchall().getReferenceList().iterator();
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }
@@ -157,7 +157,7 @@ public class ReferenceAccessTest {
         ReferenceDTO projReference = null;
         boolean installSuccess = false;
         try {
-            Iterator<ReferenceDTO> iterProj = m.Reference().fetchall();
+            Iterator<ReferenceDTO> iterProj = m.Reference().fetchall().getReferenceList().iterator();
             while (iterProj.hasNext()) {
                 ReferenceDTO ref = iterProj.next();
                 if (ref.getName().equals(refName)) {
@@ -216,7 +216,7 @@ public class ReferenceAccessTest {
         MGXDTOMaster m = TestMaster.getRW();
 
         try {
-            Iterator<ReferenceDTO> it = m.Reference().fetchall();
+            Iterator<ReferenceDTO> it = m.Reference().fetchall().getReferenceList().iterator();
             while (it.hasNext()) {
                 ReferenceDTO ref = it.next();
                 if (ref.getName().equals("Acetobacter pasteurianus IFO 3283-01-42C plasmid pAPA42C_040")) {
@@ -294,7 +294,7 @@ public class ReferenceAccessTest {
         // make sure they are all gone..
         Iterator<ReferenceDTO> iter = null;
         try {
-            iter = m.Reference().fetchall();
+            iter = m.Reference().fetchall().getReferenceList().iterator();
         } catch (MGXDTOException ex) {
             fail(ex.getMessage());
         }

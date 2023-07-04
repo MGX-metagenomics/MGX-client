@@ -4,7 +4,6 @@ import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.AssemblyDTO;
 import de.cebitec.mgx.dto.dto.AssemblyDTOList;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -18,8 +17,8 @@ public class AssemblyAccess extends AccessBase<AssemblyDTO, AssemblyDTOList> {
     }
 
     @Override
-    public Iterator<AssemblyDTO> fetchall() throws MGXDTOException {
-        return fetchlist(AssemblyDTOList.class).getAssemblyList().iterator();
+    public AssemblyDTOList fetchall() throws MGXDTOException {
+        return fetchlist(AssemblyDTOList.class);
     }
 
     @Override

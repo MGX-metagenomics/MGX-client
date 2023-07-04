@@ -40,7 +40,7 @@ public class SampleAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<SampleDTO> iter = master.Sample().fetchall();
+        Iterator<SampleDTO> iter = master.Sample().fetchall().getSampleList().iterator();
         assertNotNull(iter);
         int cnt = 0;
         while (iter.hasNext()) {

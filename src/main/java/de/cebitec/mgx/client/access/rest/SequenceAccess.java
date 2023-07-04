@@ -123,7 +123,7 @@ public class SequenceAccess extends AccessBase<SequenceDTO, SequenceDTOList> {
     }
 
     @Override
-    public Iterator<SequenceDTO> fetchall() throws MGXDTOException {
+    public SequenceDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

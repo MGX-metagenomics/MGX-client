@@ -18,8 +18,8 @@ public class DNAExtractAccess extends AccessBase<DNAExtractDTO, DNAExtractDTOLis
     }
 
     @Override
-    public Iterator<DNAExtractDTO> fetchall() throws MGXDTOException {
-        return fetchlist(DNAExtractDTOList.class).getExtractList().iterator();
+    public DNAExtractDTOList fetchall() throws MGXDTOException {
+        return fetchlist(DNAExtractDTOList.class);
     }
 
     public Iterator<DNAExtractDTO> bySample(long sample_id) throws MGXDTOException {

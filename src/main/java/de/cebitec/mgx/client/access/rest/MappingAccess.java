@@ -33,8 +33,8 @@ public class MappingAccess extends AccessBase<MappingDTO, MappingDTOList> {
     }
 
     @Override
-    public Iterator<MappingDTO> fetchall() throws MGXDTOException {
-        return fetchlist(MappingDTOList.class).getMappingList().iterator();
+    public MappingDTOList fetchall() throws MGXDTOException {
+        return fetchlist(MappingDTOList.class);
     }
 
     public Iterator<MappingDTO> bySeqRun(long id) throws MGXDTOException {

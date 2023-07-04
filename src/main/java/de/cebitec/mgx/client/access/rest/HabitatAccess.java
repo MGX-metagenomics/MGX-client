@@ -4,7 +4,6 @@ import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.HabitatDTO;
 import de.cebitec.mgx.dto.dto.HabitatDTOList;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -18,8 +17,8 @@ public class HabitatAccess extends AccessBase<HabitatDTO, HabitatDTOList> {
     }
 
     @Override
-    public Iterator<HabitatDTO> fetchall() throws MGXDTOException {
-        return fetchlist(HabitatDTOList.class).getHabitatList().iterator();
+    public HabitatDTOList fetchall() throws MGXDTOException {
+        return fetchlist(HabitatDTOList.class);
     }
 
     @Override

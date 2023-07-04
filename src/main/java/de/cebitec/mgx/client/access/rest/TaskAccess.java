@@ -4,7 +4,6 @@ import de.cebitec.gpms.rest.RESTAccessI;
 import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.TaskDTO;
 import de.cebitec.mgx.dto.dto.TaskDTOList;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -27,7 +26,7 @@ public class TaskAccess extends AccessBase<TaskDTO, TaskDTOList> {
     }
 
     @Override
-    public Iterator<TaskDTO> fetchall() throws MGXDTOException {
+    public TaskDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

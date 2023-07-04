@@ -27,7 +27,7 @@ public class GeneCoverageAccess extends AccessBase<GeneCoverageDTO, GeneCoverage
     }
 
     @Override
-    public Iterator<GeneCoverageDTO> fetchall() throws MGXDTOException {
+    public GeneCoverageDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

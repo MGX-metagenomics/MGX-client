@@ -30,7 +30,7 @@ public class ObservationAccess extends AccessBase<ObservationDTO, ObservationDTO
     }
 
     @Override
-    public Iterator<ObservationDTO> fetchall() throws MGXDTOException {
+    public ObservationDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

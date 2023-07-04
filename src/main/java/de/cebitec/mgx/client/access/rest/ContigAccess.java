@@ -6,7 +6,6 @@ import de.cebitec.mgx.client.exception.MGXDTOException;
 import de.cebitec.mgx.dto.dto.ContigDTO;
 import de.cebitec.mgx.dto.dto.ContigDTOList;
 import de.cebitec.mgx.dto.dto.SequenceDTO;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -23,8 +22,8 @@ public class ContigAccess extends AccessBase<ContigDTO, ContigDTOList> {
     }
 
     @Override
-    public Iterator<ContigDTO> fetchall() throws MGXDTOException {
-        return fetchlist(ContigDTOList.class).getContigList().iterator();
+    public ContigDTOList fetchall() throws MGXDTOException {
+        return fetchlist(ContigDTOList.class);
     }
 
     @Override
@@ -47,8 +46,16 @@ public class ContigAccess extends AccessBase<ContigDTO, ContigDTOList> {
         return super.delete(id, ContigDTO.class);
     }
 
-    public Iterator<ContigDTO> byBin(long bin_id) throws MGXDTOException {
-        return get(ContigDTOList.class, r.resolve(ContigDTOList.class, "byBin", String.valueOf(bin_id))).getContigList().iterator();
+    public ContigDTOList byBin(long bin_id) throws MGXDTOException {
+        // fetch initial chunk; if this chunk has the complete flag set to false,
+        // subsequent calls to continueSession(chunk.getUUID()) are required to 
+        // retrieve the remaining data
+        ContigDTOList dto = get(ContigDTOList.class, r.resolve(ContigDTOList.class, "byBin", String.valueOf(bin_id)));
+        return dto;
+    }
+
+    public ContigDTOList continueSession(UUID session_id) throws MGXDTOException {
+        return get(ContigDTOList.class, r.resolve(ContigDTOList.class, "continueSession", session_id.toString()));
     }
 
     public SequenceDTO getDNASequence(long contig_id) throws MGXDTOException {

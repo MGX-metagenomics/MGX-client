@@ -53,7 +53,7 @@ public class FileAccessTest {
     public synchronized void testListRoot() throws Exception {
         System.out.println("listRoot");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<FileDTO> iter = master.File().fetchall();
+        Iterator<FileDTO> iter = master.File().fetchall().getFileList().iterator();
 
         int numFiles = 0;
         int numDirectories = 0;
@@ -76,7 +76,7 @@ public class FileAccessTest {
     public synchronized void testListDir() throws Exception {
         System.out.println("listDir");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<FileDTO> iter = master.File().fetchall();
+        Iterator<FileDTO> iter = master.File().fetchall().getFileList().iterator();
 
         int numFiles = 0;
         int numDirectories = 0;
@@ -84,7 +84,7 @@ public class FileAccessTest {
             FileDTO f = iter.next();
             System.err.println(f.getName());
             if (f.getIsDirectory()) {
-                Iterator<FileDTO> iter2 = master.File().fetchall(f.getName());
+                Iterator<FileDTO> iter2 = master.File().fetchall(f.getName()).getFileList().iterator();
                 while (iter2.hasNext()) {
                     FileDTO ff = iter2.next();
                     System.err.println(" `-- " + ff.getName());

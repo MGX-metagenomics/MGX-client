@@ -54,7 +54,7 @@ public class AttributeTypeAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<AttributeTypeDTO> types = master.AttributeType().fetchall();
+        Iterator<AttributeTypeDTO> types = master.AttributeType().fetchall().getAttributeTypeList().iterator();
         assertNotNull(types);
         int cnt = 0;
         while (types.hasNext()) {

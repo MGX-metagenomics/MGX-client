@@ -25,8 +25,8 @@ public class ReferenceAccess extends AccessBase<ReferenceDTO, ReferenceDTOList> 
     }
 
     @Override
-    public Iterator<ReferenceDTO> fetchall() throws MGXDTOException {
-        return fetchlist(ReferenceDTOList.class).getReferenceList().iterator();
+    public ReferenceDTOList fetchall() throws MGXDTOException {
+        return fetchlist(ReferenceDTOList.class);
     }
 
     @Override

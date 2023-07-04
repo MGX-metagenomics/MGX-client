@@ -49,7 +49,7 @@ public class JobAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<JobDTO> it = master.Job().fetchall();
+        Iterator<JobDTO> it = master.Job().fetchall().getJobList().iterator();
         assertNotNull(it);
         Set<JobDTO> jobs = new HashSet<>();
         while (it.hasNext()) {
@@ -290,7 +290,7 @@ public class JobAccessTest {
     public void testParams() throws Exception {
         System.out.println("testParams");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<JobDTO> iter = master.Job().fetchall();
+        Iterator<JobDTO> iter = master.Job().fetchall().getJobList().iterator();
         JobDTO job = null;
         while (iter.hasNext()) {
             JobDTO curJob = iter.next();

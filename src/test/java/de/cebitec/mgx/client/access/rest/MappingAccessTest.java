@@ -58,7 +58,7 @@ public class MappingAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<MappingDTO> it = master.Mapping().fetchall();
+        Iterator<MappingDTO> it = master.Mapping().fetchall().getMappingList().iterator();
         assertNotNull(it);
         Set<MappingDTO> data = new HashSet<>();
         while (it.hasNext()) {

@@ -28,8 +28,8 @@ public class ReferenceRegionAccess extends AccessBase<ReferenceRegionDTO, Refere
     }
 
     @Override
-    public Iterator<ReferenceRegionDTO> fetchall() throws MGXDTOException {
-        return fetchlist(ReferenceRegionDTOList.class).getRegionList().iterator();
+    public ReferenceRegionDTOList fetchall() throws MGXDTOException {
+        return fetchlist(ReferenceRegionDTOList.class);
     }
 
     @Override

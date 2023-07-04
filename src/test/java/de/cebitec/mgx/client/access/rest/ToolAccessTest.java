@@ -72,7 +72,7 @@ public class ToolAccessTest {
     public void testFetchall() throws Exception {
         System.out.println("fetchall");
         MGXDTOMaster master = TestMaster.getRO();
-        Iterator<ToolDTO> it = master.Tool().fetchall();
+        Iterator<ToolDTO> it = master.Tool().fetchall().getToolList().iterator();
         assertNotNull(it);
         int cnt = 0;
         while (it.hasNext()) {

@@ -11,7 +11,6 @@ import de.cebitec.mgx.dto.dto.PCAResultDTO;
 import de.cebitec.mgx.dto.dto.PointDTO;
 import de.cebitec.mgx.dto.dto.PointDTOList;
 import de.cebitec.mgx.dto.dto.ProfileDTO;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -107,7 +106,7 @@ public class StatisticsAccess extends AccessBase<PointDTO, PointDTOList> {
     }
 
     @Override
-    public Iterator<PointDTO> fetchall() throws MGXDTOException {
+    public PointDTOList fetchall() throws MGXDTOException {
         throw new UnsupportedOperationException("Not supported.");
     }
 
