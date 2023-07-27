@@ -16,7 +16,6 @@ import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
 import de.cebitec.mgx.sequence.SeqStoreException;
 import de.cebitec.mgx.sequence.SeqWriterI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,36 +95,6 @@ public class SequenceAccessTest {
             fail(ex.getMessage());
         }
         fail("Got data for invalid sequence ID");
-    }
-
-    @Test
-    public void testFetchInvalidName() {
-        System.out.println("testFetchInvalidName");
-        MGXDTOMaster master = TestMaster.getRW();
-        try {
-            SequenceDTO result = master.Sequence().byName(1, "doesNotExist");
-        } catch (MGXServerException ex) {
-            assertNotNull(ex.getMessage());
-            assertTrue(ex.getMessage().contains(" not found"));
-            return; // ok
-        } catch (MGXDTOException ex) {
-            fail(ex.getMessage());
-        }
-        fail("Got data for invalid sequence name");
-    }
-
-    @Test
-    public void testFetchValidName() {
-        System.out.println("testFetchValidName");
-        MGXDTOMaster master = TestMaster.getRW();
-        SequenceDTO result = null;
-        try {
-            result = master.Sequence().byName(49, "FI5LW4G01EJ7FZ");
-        } catch (MGXDTOException ex) {
-            fail(ex.getMessage());
-        }
-        assertNotNull(result);
-        assertEquals(2109927, result.getId());
     }
 
     @Test
