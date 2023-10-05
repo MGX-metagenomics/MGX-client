@@ -74,7 +74,7 @@ public class App {
         if (args.length < 3) {
             System.err.println("Invalid arguments.");
             System.err.println();
-            System.err.println("Usage: MGX_MyProject MyDNAExtract file1.fastq file2.fastq file3.fastq");
+            System.err.println("Usage: MGX_Public MyDNAExtract file1.fastq file2.fastq");
             System.err.println();
             System.exit(1);
         }
