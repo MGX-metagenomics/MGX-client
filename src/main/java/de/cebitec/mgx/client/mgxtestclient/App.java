@@ -6,14 +6,13 @@ import de.cebitec.gpms.rest.GPMSClientFactory;
 import de.cebitec.gpms.rest.GPMSClientI;
 import de.cebitec.mgx.client.MGXDTOMaster;
 import de.cebitec.mgx.dto.dto.DNAExtractDTO;
-import de.cebitec.mgx.dto.dto.HabitatDTO;
-import de.cebitec.mgx.dto.dto.SampleDTO;
 import de.cebitec.mgx.dto.dto.SeqRunDTO;
 import de.cebitec.mgx.dto.dto.TermDTO;
+import de.cebitec.mgx.seqstorage.AlternatingQReader;
+import de.cebitec.mgx.sequence.DNAQualitySequenceI;
 import de.cebitec.mgx.sequence.DNASequenceI;
 import de.cebitec.mgx.sequence.SeqReaderFactory;
 import de.cebitec.mgx.sequence.SeqReaderI;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -71,89 +70,81 @@ public class App {
 //
     public static void main(String[] args) throws Exception {
 
-        if (args.length < 3) {
+        if (args.length == 0) {
             System.err.println("Invalid arguments.");
             System.err.println();
-            System.err.println("Usage: MGX_Public MyDNAExtract file1.fastq file2.fastq");
+            System.err.println("Usage: file1.fastq file2.fastq");
             System.err.println();
             System.exit(1);
         }
 
-        String projectName = args[0];
-        String extractName = args[1];
+        String projectName = "MGX2_TermiteGut";
 
-        String username = System.console().readLine("Username: ");
+        String username = "sjaenick";
         char[] password = System.console().readPassword("Password: ");
         MGXDTOMaster master = getMaster(username, password, projectName);
-
-        Iterator<HabitatDTO> it = master.Habitat().fetchall().getHabitatList().iterator();
-        while (it != null && it.hasNext()) {
-            HabitatDTO habitat = it.next();
-            Iterator<SampleDTO> samples = master.Sample().byHabitat(habitat.getId());
-            while (samples != null && samples.hasNext()) {
-                SampleDTO sample = samples.next();
-            }
-        }
 
         DNAExtractDTO extract = null;
         Iterator<DNAExtractDTO> iter = master.DNAExtract().fetchall().getExtractList().iterator();
         while (iter != null && iter.hasNext()) {
             DNAExtractDTO ex = iter.next();
-            if (ex.getName().equals(extractName)) {
-                extract = ex;
-                break;
-            }
+            extract = ex;
         }
-
+        
         if (extract == null) {
-            System.err.println("No DNA extract named " + extractName);
+            System.err.println("No such extract");
             System.exit(1);
         }
 
-        Iterator<SeqRunDTO> runiter = master.SeqRun().fetchall().getSeqrunList().iterator();
-        Set<String> runs = new HashSet<>();
-        while (runiter.hasNext()) {
-            runs.add(runiter.next().getName());
+        Set<String> runNames = new HashSet<>();
+        List<SeqRunDTO> seqrunList = master.SeqRun().fetchall().getSeqrunList();
+        for (SeqRunDTO sr : seqrunList) {
+            runNames.add(sr.getName());
         }
 
         TermDTO flx = master.Term().fetch(5); // miseq
         TermDTO wgs = master.Term().fetch(12); // wgs
 
-        for (int argpos = 2; argpos < args.length; argpos++) {
-            String fname = new File(args[argpos]).getName();
-            fname = fname.replaceAll(".gz", "");
-            fname = fname.replaceAll(".fastq", "");
-            fname = fname.replaceAll(".fq", "");
-            fname = fname.replaceAll(".fas", "");
-            fname = fname.replaceAll(".fna", "");
+        for (String fname : args) {
+            String runName = fname.replace("_1.fastq.gz", "");
+            
+            String file1 = fname;
+            String file2 = fname.replaceAll("_1.fastq.gz", "_2.fastq.gz");
 
-            if (runs.contains(fname)) {
-                System.err.println("skipping " + fname + ", already present");
+            if (runNames.contains(runName)) {
+                System.err.println("skipping " + runName + ", already present");
             } else {
-
+                System.err.println("will upload " + runName + " with files "+file1 +" and "+file2);
                 // create new seqrun
                 SeqRunDTO sr = SeqRunDTO.newBuilder()
-                        .setName(fname)
+                        .setName(runName)
                         .setExtractId(extract.getId())
                         .setAccession("")
+                        .setIsPaired(true)
                         .setSubmittedToInsdc(false)
                         .setSequencingMethod(wgs)
                         .setSequencingTechnology(flx)
                         .build();
                 long seqrun_id = master.SeqRun().create(sr);
+
                 System.err.print("  created seqrun " + sr.getName() + " with id " + seqrun_id + ", starting sequence import..");
 
                 // upload sequence data
-                SeqReaderI<? extends DNASequenceI> reader = SeqReaderFactory.<DNASequenceI>getReader(args[argpos]);
-                master.Sequence().sendSequences(seqrun_id, false, reader);
+                SeqReaderI<DNAQualitySequenceI> reader1 = (SeqReaderI<DNAQualitySequenceI>) SeqReaderFactory.<DNAQualitySequenceI>getReader(file1);
+                SeqReaderI<DNAQualitySequenceI> reader2 = (SeqReaderI<DNAQualitySequenceI>) SeqReaderFactory.<DNAQualitySequenceI>getReader(file2);
+                
+                SeqReaderI<? extends DNASequenceI> reader = new AlternatingQReader(reader1, reader2);
+
+                master.Sequence().sendSequences(seqrun_id, true, reader);
                 System.err.println("complete.");
             }
         }
+
     }
 
     private static MGXDTOMaster getMaster(String username, char[] password, String pName) throws GPMSException {
 
-        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx-test.computational.bio.uni-giessen.de/MGX-maven-web/webresources/", true);
+        GPMSClientI gpms = GPMSClientFactory.createClient("MyServer", "https://mgx-test.computational.bio.uni-giessen.de/MGX-rest/webresources/", true);
         if (!gpms.login(username, password)) {
             System.err.println("Login failed.");
             System.exit(1);
