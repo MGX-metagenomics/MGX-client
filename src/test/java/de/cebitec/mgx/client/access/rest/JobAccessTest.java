@@ -180,7 +180,7 @@ public class JobAccessTest {
         try {
             job_id = m.Job().create(dto);
         } catch (MGXDTOException ex) {
-            fail(ex.getMessage());
+            fail("Failed to create job: " + ex.getMessage());
         }
         assertTrue(job_id > 0);
 
@@ -188,7 +188,7 @@ public class JobAccessTest {
         try {
             // verify job
             verified = m.Job().verify(job_id);
-            assertTrue(verified);
+            assertTrue(verified, "Job verification failed.");
 
             // check job state
             JobDTO job = m.Job().fetch(job_id);
